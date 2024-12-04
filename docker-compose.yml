@@ -1,0 +1,27 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: caltizm
+      MYSQL_USER: caltizm
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+
+  app:
+    build:
+      context: .
+    container_name: spring_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/caltizm
+      SPRING_DATASOURCE_USERNAME: caltizm
+      SPRING_DATASOURCE_PASSWORD: 1234
