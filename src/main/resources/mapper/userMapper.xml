@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="a">
+
+
+    <select id="selectUserLogin" resultType="LoginRequestDTO">
+        select user_id as userId, password from user where user_id = #{userId}
+    </select>
+
+<!--    <update id="updatePassword" parameterType="UserDTO">-->
+<!--        update User set password = #{password} where user_id = #{user_id}-->
+<!--    </update>-->
+
+    <select id="selectUserInfo" resultType="MyPageResponseDTO">
+        select first_name as firstName, last_name as lastName, user_id as userId, email,
+        phone_number as phoneNumber, birth_date as birthDate, join_date as joinDate, pccc
+        from user
+        where user_id = #{userId}
+    </select>
+
+    <update id="updateUserInfo" parameterType="UserUpdateRequestDTO">
+        update user
+        set first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
+        birth_date = concat(#{birthYear}, '-', #{birthMonth}, '-', #{birthDay}), pccc = #{pccc}
+        where user_id = #{userId}
+    </update>
+
+
+</mapper>

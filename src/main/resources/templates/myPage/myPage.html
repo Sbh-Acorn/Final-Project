@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        table{
+            border-collapse: collapse;
+        }
+        td{
+            border: 1px solid black;
+            padding: 10px;
+        }
+        #birthDateUpdate{
+            display: none;
+        }
+    </style>
+
+    <script>
+        function update(){
+            let firstName = document.querySelector("#firstName");
+            let lastName = document.querySelector("#lastName");
+            let phoneNumber = document.querySelector("#phoneNumber");
+            let pccc = document.querySelector("#pccc");
+
+            let birthDate = document.querySelector("#birthDate");
+            let birthDateUpdate = document.querySelector("#birthDateUpdate");
+            birthDate.style.display = "none";
+            birthDateUpdate.style.display = "block";
+
+            document.querySelector("#birthYearUpdate").value = document.querySelector("#birthYear").value;
+            document.querySelector("#birthMonthUpdate").value = Number(document.querySelector("#birthMonth").value);
+            document.querySelector("#birthDayUpdate").value = Number(document.querySelector("#birthDay").value);
+
+            phoneNumber.value = phoneNumber.value.replaceAll("-", "");
+
+            firstName.removeAttribute("readonly");
+            lastName.removeAttribute("readonly");
+            phoneNumber.removeAttribute("readonly");
+            pccc.removeAttribute("readonly");
+        }
+    </script>
+
+</head>
+<body>
+
+<h2>내 정보</h2>
+
+<div>
+    <form th:action="@{/updateUserInfo}" method="post">
+        <table>
+            <tr>
+                <td>이름</td>
+                <td>
+    <!--                <span th:text="${user.firstName}"></span>-->
+    <!--                <span th:text="${user.lastName}"></span>-->
+                    <input type="text" name="firstName" id="firstName" th:value="${user.firstName}" readonly>
+                    <input type="text" name="lastName" id="lastName" th:value="${user.lastName}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>아이디</td>
+                <td>
+    <!--                <span th:text="${user.userId}"></span>-->
+                    <input type="text" name="userId" th:value="${user.userId}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>이메일</td>
+                <td>
+    <!--                <span th:text="${user.email}"></span>-->
+                    <input type="text" name="email" th:value="${user.email}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>전화번호</td>
+                <td>
+    <!--                <span th:text="${user.phoneNumber}"></span>-->
+                    <input type="text" name="phoneNumber" id="phoneNumber" th:value="${user.phoneNumber}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>생년월일</td>
+                <td>
+    <!--                <span th:text="${user.birthDate}"></span>-->
+                    <div id="birthDate">
+                        <input type="text" id="birthYear" th:value="${user.birthDate.split('-')[0]}" readonly>
+                        년
+                        <input type="text" id="birthMonth" th:value="${user.birthDate.split('-')[1]}" readonly>
+                        월
+                        <input type="text" id="birthDay" th:value="${user.birthDate.split('-')[2]}" readonly>
+                        일
+                    </div>
+
+                    <div id="birthDateUpdate">
+                        <select name="birthYear" id="birthYearUpdate">
+                            <option th:each="year : ${#numbers.sequence(1900, 2024)}" th:value="${year}" th:text="${year}"></option>
+                        </select>
+                        년
+                        <select name="birthMonth" id="birthMonthUpdate">
+                            <option th:each="month : ${#numbers.sequence(1, 12)}" th:value="${month}" th:text="${month}"></option>
+                        </select>
+                        월
+                        <select name="birthDay" id="birthDayUpdate">
+                            <option th:each="day : ${#numbers.sequence(1, 31)}" th:value="${day}" th:text="${day}"></option>
+                        </select>
+                        일
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>가입일</td>
+                <td>
+    <!--                <span th:text="${user.joinDate}"></span>-->
+                    <input type="text" name="joinDate" th:value="${user.joinDate}" readonly>
+                </td>
+            </tr>
+            <tr>
+                <td>개인통관고유번호</td>
+                <td>
+    <!--                <span th:text="${user.pccc}"></span>-->
+                    <input type="text" name="pccc" id="pccc" th:value="${user.pccc}" readonly>
+                </td>
+            </tr>
+        </table>
+        <div>
+            <button type="button" onclick="update()">회원정보 수정</button>
+        </div>
+        <div>
+            <button type="submit">변경 내용 저장</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
