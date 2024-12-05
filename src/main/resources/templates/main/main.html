@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+
+메인
+
+<div>
+    <a th:if="${session.userId == null}" th:href="@{/login}">로그인</a>
+    <a th:if="${session.userId != null}" th:href="@{/logout}">로그아웃</a>
+</div>
+
+<div>
+    <a th:href="@{/myPage}">마이페이지</a>
+</div>
 
 </body>
 </html>
