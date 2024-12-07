@@ -7,7 +7,7 @@ public class MyPageResponseDTO {
 
     private String firstName;
     private String lastName;
-    private String userId;
+//    private String userId;
     private String email;
     private String phoneNumber;
     private String birthDate;

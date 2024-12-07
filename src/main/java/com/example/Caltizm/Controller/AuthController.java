@@ -32,20 +32,20 @@ public class AuthController {
     @PostMapping("/login")
     public String login2(@ModelAttribute LoginRequestDTO loginRequestDTO, HttpSession session){
 
-        String userId = loginRequestDTO.getUserId();
+        String email = loginRequestDTO.getEmail();
         String password = loginRequestDTO.getPassword();
 
-        System.out.println(userId);
+        System.out.println(email);
         System.out.println(password);
         System.out.println(loginRequestDTO);
 
-        LoginRequestDTO user = repository.selectUserLogin(userId);
+        LoginRequestDTO user = repository.selectUserLogin(email);
         if(user == null || !password.equals(user.getPassword())){
-            System.out.println("아이디, 비밀번호 불일치");
+            System.out.println("이메일, 비밀번호 불일치");
             return "redirect:/login";
         }
 
-        session.setAttribute("userId", user.getUserId());
+        session.setAttribute("email", user.getEmail());
 
         return "redirect:/main";
 
