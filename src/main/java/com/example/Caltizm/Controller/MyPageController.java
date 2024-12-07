@@ -1,5 +1,6 @@
 package com.example.Caltizm.Controller;
 
+import com.example.Caltizm.DTO.AddressResponseDTO;
 import com.example.Caltizm.DTO.MyPageResponseDTO;
 import com.example.Caltizm.DTO.UserUpdateRequestDTO;
 import com.example.Caltizm.Repository.UserRepository;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import java.util.List;
+
 @Controller
 public class MyPageController {
 
@@ -18,21 +21,24 @@ public class MyPageController {
     UserRepository repository;
 
     @GetMapping("/myPage")
-    public String myPage(@SessionAttribute(value="userId", required=false) String userId, Model model){
+    public String myPage(@SessionAttribute(value="email", required=false) String email, Model model){
 
-        if(userId == null){
+        if(email == null){
             return "redirect:/login";
         }
 
-        MyPageResponseDTO user = repository.selectUserInfo(userId);
+        MyPageResponseDTO user = repository.selectUserInfo(email);
 
         if(user == null){
             return "redirect:/login";
         }
 
-        model.addAttribute("user", user);
+        List<AddressResponseDTO> addressList = repository.selectAddressAll(email);
 
-        System.out.println(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("addressList", addressList);
+
+        System.out.println(email);
         System.out.println(user);
 
         return "myPage/myPage";
