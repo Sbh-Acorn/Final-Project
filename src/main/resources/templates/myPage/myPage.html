@@ -59,13 +59,13 @@
                     <input type="text" name="lastName" id="lastName" th:value="${user.lastName}" readonly>
                 </td>
             </tr>
-            <tr>
-                <td>아이디</td>
-                <td>
-    <!--                <span th:text="${user.userId}"></span>-->
-                    <input type="text" name="userId" th:value="${user.userId}" readonly>
-                </td>
-            </tr>
+<!--            <tr>-->
+<!--                <td>아이디</td>-->
+<!--                <td>-->
+<!--    &lt;!&ndash;                <span th:text="${user.userId}"></span>&ndash;&gt;-->
+<!--                    <input type="text" name="userId" th:value="${user.userId}" readonly>-->
+<!--                </td>-->
+<!--            </tr>-->
             <tr>
                 <td>이메일</td>
                 <td>
@@ -131,6 +131,30 @@
             <button type="submit">변경 내용 저장</button>
         </div>
     </form>
+
+    <div th:each="address, addressStat : ${addressList}">
+        <h2 th:text="|주소 ${addressStat.count}|"></h2>
+        <table>
+            <tr>
+                <td>도로명주소</td>
+                <td>
+                    <span th:text="${address.address}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>상세주소</td>
+                <td>
+                    <span th:text="${address.detail}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>우편번호</td>
+                <td>
+                    <span th:text="${address.zip_code}"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 </body>
