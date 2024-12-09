@@ -1,9 +1,6 @@
 package com.example.Caltizm.Repository;
 
-import com.example.Caltizm.DTO.AddressResponseDTO;
-import com.example.Caltizm.DTO.LoginRequestDTO;
-import com.example.Caltizm.DTO.MyPageResponseDTO;
-import com.example.Caltizm.DTO.UserUpdateRequestDTO;
+import com.example.Caltizm.DTO.*;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -40,6 +37,12 @@ public class UserRepository {
     public List<AddressResponseDTO> selectAddressAll(String email){
 
         return session.selectList(addressNamespace + "selectAddressAll", email);
+
+    }
+
+    public int insertAddress(AddressRequestDTO addressRequestDTO){
+
+        return session.insert(addressNamespace + "insertAddress", addressRequestDTO);
 
     }
 
