@@ -67,4 +67,14 @@ public class MyPageController {
 
     }
 
+    @GetMapping("/addr")
+    public String addr(){
+        return "myPage/addr";
+    }
+
+    @GetMapping("/addrPopup")
+    public String addrPopup(){
+        return "myPage/addrPopup";
+    }
+
 }
