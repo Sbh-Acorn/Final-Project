@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Brand List</title>
+</head>
+<body>
+<h1>Brand List</h1>
+
+<ul>
+    <th:block th:each="brand : ${brand}">
+        <li>
+            <a th:href="@{'/brand/' + ${brand.name}}" th:text="${brand.name}"></a>
+        </li>
+    </th:block>
+</ul>
+
+</body>
+</html>
