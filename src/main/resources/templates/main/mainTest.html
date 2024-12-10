@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Main Page</title>
+</head>
+<body>
+<!-- 상단 로고 -->
+<header>
+  <a th:href="@{/main}" style="text-decoration: none; font-size: 24px; font-weight: bold;">
+    CALTIZM
+  </a>
+</header>
+
+<!-- 네비게이션 바 -->
+<nav>
+  <a th:href="@{/products}">ALL</a>
+  <a th:href="@{/brands}">BRAND</a>
+  <a th:href="@{/fta}">FTA</a>
+  <a th:href="@{/tax}">TAX</a>
+  <a th:href="@{/community}">COMMUNITY</a>
+</nav>
+
+<!-- 검색 폼 -->
+<form th:action="@{/search}" method="get">
+  <input type="text" name="query" placeholder="Search..." required />
+  <button type="submit">Search</button>
+</form>
+
+<!-- 배너 이미지 -->
+<ul>
+  <li th:each="bi : ${BannerImages}">
+    <a th:href="@{/promotion}" target="_blank">
+      <img th:src="${bi}" alt="Banner Image" />
+    </a>
+  </li>
+</ul>
+
+<!-- 우측 상단 아이콘 -->
+<div>
+  <a th:href="@{/notifications}">🔔 Notifications</a>
+  <a th:href="@{/myPage}">👤 Profile</a>
+  <a th:href="@{/logout}">🚪 Logout</a>
+</div>
+</body>
+</html>
