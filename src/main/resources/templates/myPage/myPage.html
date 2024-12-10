@@ -136,6 +136,12 @@
         <h2 th:text="|주소 ${addressStat.count}|"></h2>
         <table>
             <tr>
+                <td>주소ID</td>
+                <td>
+                    <span th:text="${address.addressId}"></span>
+                </td>
+            </tr>
+            <tr>
                 <td>도로명주소</td>
                 <td>
                     <span th:text="${address.address}"></span>
@@ -151,6 +157,18 @@
                 <td>우편번호</td>
                 <td>
                     <span th:text="${address.zipCode}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>수정</td>
+                <td>
+                    <a th:href="@{/address/update/{id}(id = ${address.addressId})}">주소 수정</a>
+                </td>
+            </tr>
+            <tr>
+                <td>삭제</td>
+                <td>
+                    <a th:href="@{/address/delete/{id}(id = ${address.addressId})}">주소 삭제</a>
                 </td>
             </tr>
         </table>

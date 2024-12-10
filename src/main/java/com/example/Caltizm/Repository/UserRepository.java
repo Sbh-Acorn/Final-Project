@@ -46,4 +46,22 @@ public class UserRepository {
 
     }
 
+    public int deleteAddress(String addressId){
+
+        return session.delete(addressNamespace + "deleteAddress", addressId);
+
+    }
+
+    public AddressResponseDTO selectAddress(String addressId){
+
+        return session.selectOne(addressNamespace + "selectAddress", addressId);
+
+    }
+
+    public int updateAddress(AddressResponseDTO addressResponseDTO){
+
+        return session.update(addressNamespace + "updateAddress", addressResponseDTO);
+
+    }
+
 }

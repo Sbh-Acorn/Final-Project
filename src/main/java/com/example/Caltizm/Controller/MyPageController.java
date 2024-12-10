@@ -90,4 +90,58 @@ public class MyPageController {
 
     }
 
+    @GetMapping("/address/delete/{id}")
+    public String deleteAddress(@SessionAttribute(value="email", required=false) String email,
+                                @PathVariable("id") String id){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
+        int rRow = repository.deleteAddress(id);
+        System.out.println(rRow);
+
+        return "redirect:/myPage";
+
+    }
+
+    @GetMapping("/address/update/{id}")
+    public String addressForm2(@SessionAttribute(value="email", required=false) String email,
+                               @PathVariable("id") String id, Model model){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
+        AddressResponseDTO address = repository.selectAddress(id);
+        System.out.println(address);
+
+        if(address == null){
+            return "redirect:/myPage";
+        }
+
+        model.addAttribute("address", address);
+
+        return "myPage/updateAddress";
+
+    }
+
+    @PostMapping("/address/update/{id}")
+    public String updateAddress(@PathVariable("id") String id,
+                                @SessionAttribute(name="email", required=false) String email,
+                                @ModelAttribute AddressResponseDTO addressResponseDTO){
+
+        System.out.println(addressResponseDTO);
+
+        addressResponseDTO.setAddressId(id);
+        addressResponseDTO.setEmail(email);
+
+        System.out.println(addressResponseDTO);
+
+        int rRow = repository.updateAddress(addressResponseDTO);
+
+        return "redirect:/myPage";
+
+    }
+
 }
