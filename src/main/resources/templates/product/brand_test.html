@@ -7,7 +7,7 @@
 <h1>Brand List</h1>
 
 <ul>
-    <th:block th:each="brand : ${brand}">
+    <th:block th:each="brand : ${brand}" th:if="${not brand.is_deleted}">
         <li>
             <a th:href="@{'/brand/' + ${brand.name}}" th:text="${brand.name}"></a>
         </li>

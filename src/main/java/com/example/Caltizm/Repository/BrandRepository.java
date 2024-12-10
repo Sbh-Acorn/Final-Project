@@ -20,7 +20,7 @@ public class BrandRepository {
     @Autowired
     SqlSession session;
 
-    public Set<BrandDTO> collectAndInsertBrandData() throws IOException {
+    public void collectAndInsertBrandData() throws IOException {
         Set<BrandDTO> brands = service.collectBrand();
         // 안전 업데이트 모드 끄기
         session.update("brand.setSafeUpdateOff");
@@ -47,7 +47,7 @@ public class BrandRepository {
 
         // 안전 업데이트 모드 다시 켜기
         session.update("brand.setSafeUpdateOn");
-        return brands;
+
     }
 
     public List<BrandDTO> getAllBrand(){
