@@ -64,4 +64,10 @@ public class UserRepository {
 
     }
 
+    public int updatePassword(PasswordUpdateRequestDTO passwordUpdateRequestDTO){
+
+        return session.update(userNamespace + "updatePassword", passwordUpdateRequestDTO);
+
+    }
+
 }

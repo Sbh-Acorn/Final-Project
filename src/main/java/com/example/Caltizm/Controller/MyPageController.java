@@ -1,9 +1,6 @@
 package com.example.Caltizm.Controller;
 
-import com.example.Caltizm.DTO.AddressRequestDTO;
-import com.example.Caltizm.DTO.AddressResponseDTO;
-import com.example.Caltizm.DTO.MyPageResponseDTO;
-import com.example.Caltizm.DTO.UserUpdateRequestDTO;
+import com.example.Caltizm.DTO.*;
 import com.example.Caltizm.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -139,6 +136,49 @@ public class MyPageController {
         System.out.println(addressResponseDTO);
 
         int rRow = repository.updateAddress(addressResponseDTO);
+
+        return "redirect:/myPage";
+
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@SessionAttribute(value="email", required=false) String email,
+                                 @ModelAttribute PasswordRequestDTO passwordRequestDTO){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
+        LoginRequestDTO user = repository.selectUserLogin(email);
+        if(user == null){
+            return "redirect:/login";
+        }
+
+        String currentPassword = passwordRequestDTO.getCurrentPassword();
+        String newPassword1 = passwordRequestDTO.getNewPassword1();
+        String newPassword2 = passwordRequestDTO.getNewPassword2();
+
+        if(!currentPassword.equals(user.getPassword())){
+            System.out.println("현재 비밀번호 불일치");
+            return "redirect:/myPage";
+        }
+
+        if(!newPassword1.equals(newPassword2)){
+            System.out.println("새 비밀번호 불일치");
+            return "redirect:/myPage";
+        }
+
+        if(currentPassword.equals(newPassword1)){
+            System.out.println("비밀번호가 변경 전과 동일");
+            return "redirect:/myPage";
+        }
+
+        PasswordUpdateRequestDTO passwordUpdateRequestDTO = new PasswordUpdateRequestDTO();
+        passwordUpdateRequestDTO.setEmail(email);
+        passwordUpdateRequestDTO.setNewPassword(newPassword1);
+
+        repository.updatePassword(passwordUpdateRequestDTO);
+        System.out.println("비밀번호 변경 완료");
 
         return "redirect:/myPage";
 

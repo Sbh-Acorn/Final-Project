@@ -10,10 +10,6 @@
         select email, password from user where email = #{email}
     </select>
 
-<!--    <update id="updatePassword" parameterType="UserDTO">-->
-<!--        update User set password = #{password} where user_id = #{user_id}-->
-<!--    </update>-->
-
     <select id="selectUserInfo" resultType="MyPageResponseDTO">
         select first_name as firstName, last_name as lastName, email,
         phone_number as phoneNumber, birth_date as birthDate, join_date as joinDate, pccc
@@ -25,6 +21,12 @@
         update user
         set first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
         birth_date = concat(#{birthYear}, '-', #{birthMonth}, '-', #{birthDay}), pccc = #{pccc}
+        where email = #{email}
+    </update>
+
+    <update id="updatePassword" parameterType="PasswordUpdateRequestDTO">
+        update user
+        set password = #{newPassword}
         where email = #{email}
     </update>
 
