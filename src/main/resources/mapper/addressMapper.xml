@@ -3,16 +3,21 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="b">
+<mapper namespace="address">
 
 
     <select id="selectAddressAll" resultType="AddressResponseDTO">
-        select u.email, a.address, a.detail, a.zip_code
+        select u.email, a.address, a.detail, a.zip_code as zipCode
         from address a
         join user u
         on a.user_id = u.user_id
         where email = #{email}
     </select>
+
+    <insert id="insertAddress" parameterType="AddressRequestDTO">
+        insert into address(user_id, address, detail, zip_code)
+        values((select user_id from user where email = #{email}), #{address}, #{detail}, #{zipCode});
+    </insert>
 
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.example.Caltizm.Controller;
 
+import com.example.Caltizm.DTO.AddressRequestDTO;
 import com.example.Caltizm.DTO.AddressResponseDTO;
 import com.example.Caltizm.DTO.MyPageResponseDTO;
 import com.example.Caltizm.DTO.UserUpdateRequestDTO;
@@ -7,10 +8,7 @@ import com.example.Caltizm.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,6 +36,8 @@ public class MyPageController {
         model.addAttribute("user", user);
         model.addAttribute("addressList", addressList);
 
+        System.out.println(addressList);
+
         System.out.println(email);
         System.out.println(user);
 
@@ -61,6 +61,29 @@ public class MyPageController {
         System.out.println(userUpdateRequestDTO);
 
         int rRow = repository.updateUserInfo(userUpdateRequestDTO);
+        System.out.println(rRow);
+
+        return "redirect:/myPage";
+
+    }
+
+    @GetMapping("/address/create")
+    public String addressForm(){
+        return "myPage/addAddress";
+    }
+
+    @PostMapping("/address/create")
+    public String createAddress(@SessionAttribute(value="email", required=false) String email,
+                                @ModelAttribute AddressRequestDTO addressRequestDTO){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
+        addressRequestDTO.setEmail(email);
+        System.out.println("addressRequestDTO: " + addressRequestDTO);
+
+        int rRow = repository.insertAddress(addressRequestDTO);
         System.out.println(rRow);
 
         return "redirect:/myPage";
