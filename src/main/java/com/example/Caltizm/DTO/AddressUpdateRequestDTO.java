@@ -3,7 +3,7 @@ package com.example.Caltizm.DTO;
 import lombok.Data;
 
 @Data
-public class AddressResponseDTO {
+public class AddressUpdateRequestDTO {
 
     private String addressId;
     private String email;
