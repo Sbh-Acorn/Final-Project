@@ -24,7 +24,7 @@ public class GetBrandDataService {
     public static Set<String> collectBrandURL(String BASE_URL) throws IOException {
         Set<String> brandURL = new HashSet<>();
 
-        Document doc = Jsoup.connect(BASE_URL).get();
+        Document doc = fetchWithRetry(BASE_URL);
         Elements linkElements = doc.select("a.supplier--item--link");
 
         for (Element linkElement : linkElements) {
@@ -46,7 +46,7 @@ public class GetBrandDataService {
         for( String url : brandURL){
             futures[index++] = CompletableFuture.runAsync(() -> {
                 try {
-                    Document brandDoc = Jsoup.connect(url).get();
+                    Document brandDoc = fetchWithRetry(url);
                     BrandDTO brand = extractBrand(brandDoc);
                     synchronized (brands) { // 동기화된 접근
                         brands.add(brand);
@@ -79,5 +79,31 @@ public class GetBrandDataService {
         BrandDTO brand = new BrandDTO(name, logoImgURL, profile);
 
         return brand;
+    }
+
+    //에러페이지 재시도 로직
+    public static Document fetchWithRetry(String url) throws IOException {
+        int retries = 0;
+        while (retries < 3) {
+            try {
+                // Jsoup로 URL을 요청
+                return Jsoup.connect(url)
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+                        .timeout(10000) // 타임아웃 설정
+                        .get();
+            } catch (IOException e) {
+                retries++;
+                System.out.println("Error fetching page (attempt " + retries + "): " + url);
+                if (retries >= 3) {
+                    throw new IOException("Failed to fetch page after " + retries + " attempts: " + url, e);
+                }
+                try {
+                    Thread.sleep(2000); // 2초 대기 후 재시도
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+            }
+        }
+        throw new IOException("Failed to fetch page: " + url);
     }
 }

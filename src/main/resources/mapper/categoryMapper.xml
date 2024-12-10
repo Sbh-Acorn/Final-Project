@@ -50,4 +50,7 @@
         VALUES (#{category3}, #{category2Id});
     </insert>
 
+
+
+
 </mapper>

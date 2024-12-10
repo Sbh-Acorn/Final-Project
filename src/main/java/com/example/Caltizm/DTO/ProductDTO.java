@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 public class ProductDTO {
 
         public String brand;
-        public String itemCode;
+        public String product_id;
+        public String image_url;
         public String name;
-        public String currentPrice;
-        public String originalPrice;
-        public String detail;
+        public Double original_price; // null 허용
+        public double current_price;
+        public String description;
         public String category1;
         public String category2;
         public String category3;
-        public String imgURL;
-        public boolean FTA = false;
-        public boolean excludedVoucher;
+        public boolean is_excludedVoucher;
+
 
 }

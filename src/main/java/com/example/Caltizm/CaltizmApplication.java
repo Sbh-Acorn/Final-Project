@@ -13,10 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CaltizmApplication {
 
 	@Autowired
-	private BrandRepository repository;
+	private BrandRepository brandRepo;
 
 	@Autowired
-	private ProductRepository repository2;
+	private ProductRepository productRepo;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CaltizmApplication.class, args);
@@ -26,8 +26,8 @@ public class CaltizmApplication {
 	@PostConstruct
 	public void init() {
 		try {
-			repository.collectAndInsertBrandData();
-			repository2.collectAndInsertCategoryData();
+			brandRepo.collectAndInsertBrandData();
+			productRepo.collectAndInsertProductData();
 		} catch (Exception e) {
 			e.printStackTrace(); // 예외 처리
 		}

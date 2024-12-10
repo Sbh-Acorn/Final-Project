@@ -20,6 +20,7 @@ public class BrandRepository {
     @Autowired
     SqlSession session;
 
+
     public void collectAndInsertBrandData() throws IOException {
         Set<BrandDTO> brands = service.collectBrand();
         // 안전 업데이트 모드 끄기
