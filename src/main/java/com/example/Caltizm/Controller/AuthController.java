@@ -15,13 +15,6 @@ public class AuthController {
     @Autowired
     UserRepository repository;
 
-    @GetMapping("/main")
-    public String main(){
-
-        return "main/main";
-
-    }
-
     @GetMapping("/login")
     public String login1(){
 
