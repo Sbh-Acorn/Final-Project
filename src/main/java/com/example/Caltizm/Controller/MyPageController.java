@@ -65,8 +65,14 @@ public class MyPageController {
     }
 
     @GetMapping("/address/create")
-    public String addressForm(){
+    public String addressForm(@SessionAttribute(value="email", required=false) String email){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
         return "myPage/addAddress";
+
     }
 
     @PostMapping("/address/create")
