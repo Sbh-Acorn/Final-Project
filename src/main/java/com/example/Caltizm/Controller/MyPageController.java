@@ -1,9 +1,6 @@
 package com.example.Caltizm.Controller;
 
-import com.example.Caltizm.DTO.AddressRequestDTO;
-import com.example.Caltizm.DTO.AddressResponseDTO;
-import com.example.Caltizm.DTO.MyPageResponseDTO;
-import com.example.Caltizm.DTO.UserUpdateRequestDTO;
+import com.example.Caltizm.DTO.*;
 import com.example.Caltizm.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -68,8 +65,14 @@ public class MyPageController {
     }
 
     @GetMapping("/address/create")
-    public String addressForm(){
+    public String addressForm(@SessionAttribute(value="email", required=false) String email){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
         return "myPage/addAddress";
+
     }
 
     @PostMapping("/address/create")
@@ -85,6 +88,103 @@ public class MyPageController {
 
         int rRow = repository.insertAddress(addressRequestDTO);
         System.out.println(rRow);
+
+        return "redirect:/myPage";
+
+    }
+
+    @GetMapping("/address/delete/{id}")
+    public String deleteAddress(@SessionAttribute(value="email", required=false) String email,
+                                @PathVariable("id") String id){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
+        int rRow = repository.deleteAddress(id);
+        System.out.println(rRow);
+
+        return "redirect:/myPage";
+
+    }
+
+    @GetMapping("/address/update/{id}")
+    public String addressForm2(@SessionAttribute(value="email", required=false) String email,
+                               @PathVariable("id") String id, Model model){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
+        AddressResponseDTO address = repository.selectAddress(id);
+        System.out.println(address);
+
+        if(address == null){
+            return "redirect:/myPage";
+        }
+
+        model.addAttribute("address", address);
+
+        return "myPage/updateAddress";
+
+    }
+
+    @PostMapping("/address/update/{id}")
+    public String updateAddress(@PathVariable("id") String id,
+                                @SessionAttribute(name="email", required=false) String email,
+                                @ModelAttribute AddressResponseDTO addressResponseDTO){
+
+        System.out.println(addressResponseDTO);
+
+        addressResponseDTO.setAddressId(id);
+        addressResponseDTO.setEmail(email);
+
+        System.out.println(addressResponseDTO);
+
+        int rRow = repository.updateAddress(addressResponseDTO);
+
+        return "redirect:/myPage";
+
+    }
+
+    @PostMapping("/changePassword")
+    public String changePassword(@SessionAttribute(value="email", required=false) String email,
+                                 @ModelAttribute PasswordFormDTO passwordFormDTO){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
+        LoginRequestDTO user = repository.selectUserLogin(email);
+        if(user == null){
+            return "redirect:/login";
+        }
+
+        String currentPassword = passwordFormDTO.getCurrentPassword();
+        String newPassword1 = passwordFormDTO.getNewPassword1();
+        String newPassword2 = passwordFormDTO.getNewPassword2();
+
+        if(!currentPassword.equals(user.getPassword())){
+            System.out.println("현재 비밀번호 불일치");
+            return "redirect:/myPage";
+        }
+
+        if(!newPassword1.equals(newPassword2)){
+            System.out.println("새 비밀번호 불일치");
+            return "redirect:/myPage";
+        }
+
+        if(currentPassword.equals(newPassword1)){
+            System.out.println("비밀번호가 변경 전과 동일");
+            return "redirect:/myPage";
+        }
+
+        PasswordUpdateDTO passwordUpdateDTO = new PasswordUpdateDTO();
+        passwordUpdateDTO.setEmail(email);
+        passwordUpdateDTO.setNewPassword(newPassword1);
+
+        repository.updatePassword(passwordUpdateDTO);
+        System.out.println("비밀번호 변경 완료");
 
         return "redirect:/myPage";
 
