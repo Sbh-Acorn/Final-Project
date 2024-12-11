@@ -24,7 +24,7 @@
         where email = #{email}
     </update>
 
-    <update id="updatePassword" parameterType="PasswordUpdateRequestDTO">
+    <update id="updatePassword" parameterType="PasswordUpdateDTO">
         update user
         set password = #{newPassword}
         where email = #{email}

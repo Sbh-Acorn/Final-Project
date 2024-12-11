@@ -149,7 +149,7 @@ public class MyPageController {
 
     @PostMapping("/changePassword")
     public String changePassword(@SessionAttribute(value="email", required=false) String email,
-                                 @ModelAttribute PasswordRequestDTO passwordRequestDTO){
+                                 @ModelAttribute PasswordFormDTO passwordFormDTO){
 
         if(email == null){
             return "redirect:/login";
@@ -160,9 +160,9 @@ public class MyPageController {
             return "redirect:/login";
         }
 
-        String currentPassword = passwordRequestDTO.getCurrentPassword();
-        String newPassword1 = passwordRequestDTO.getNewPassword1();
-        String newPassword2 = passwordRequestDTO.getNewPassword2();
+        String currentPassword = passwordFormDTO.getCurrentPassword();
+        String newPassword1 = passwordFormDTO.getNewPassword1();
+        String newPassword2 = passwordFormDTO.getNewPassword2();
 
         if(!currentPassword.equals(user.getPassword())){
             System.out.println("현재 비밀번호 불일치");
@@ -179,11 +179,11 @@ public class MyPageController {
             return "redirect:/myPage";
         }
 
-        PasswordUpdateRequestDTO passwordUpdateRequestDTO = new PasswordUpdateRequestDTO();
-        passwordUpdateRequestDTO.setEmail(email);
-        passwordUpdateRequestDTO.setNewPassword(newPassword1);
+        PasswordUpdateDTO passwordUpdateDTO = new PasswordUpdateDTO();
+        passwordUpdateDTO.setEmail(email);
+        passwordUpdateDTO.setNewPassword(newPassword1);
 
-        repository.updatePassword(passwordUpdateRequestDTO);
+        repository.updatePassword(passwordUpdateDTO);
         System.out.println("비밀번호 변경 완료");
 
         return "redirect:/myPage";

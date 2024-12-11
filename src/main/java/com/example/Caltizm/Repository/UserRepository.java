@@ -64,9 +64,9 @@ public class UserRepository {
 
     }
 
-    public int updatePassword(PasswordUpdateRequestDTO passwordUpdateRequestDTO){
+    public int updatePassword(PasswordUpdateDTO passwordUpdateDTO){
 
-        return session.update(userNamespace + "updatePassword", passwordUpdateRequestDTO);
+        return session.update(userNamespace + "updatePassword", passwordUpdateDTO);
 
     }
 

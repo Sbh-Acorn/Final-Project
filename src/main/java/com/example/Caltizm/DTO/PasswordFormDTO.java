@@ -3,7 +3,7 @@ package com.example.Caltizm.DTO;
 import lombok.Data;
 
 @Data
-public class PasswordRequestDTO {
+public class PasswordFormDTO {
 
     private String currentPassword;
     private String newPassword1;
