@@ -8,10 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class ProductRepository {
@@ -151,7 +148,15 @@ public class ProductRepository {
         System.out.println("수집 및 DB 저장 완료");
         }
 
+    public List<ProductDTO> getProduct(){
+        List<ProductDTO> products = session.selectList("product.selectAll");
+        return products;
 
+    }
+    public ProductDTO getBrandByName (String name){
+        ProductDTO product = session.selectOne("product.selectOne" , name);
+        return product;
+    }
 
 
     public static void main(String[] args) {

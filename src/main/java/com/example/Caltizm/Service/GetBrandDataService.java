@@ -9,9 +9,7 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -40,26 +38,35 @@ public class GetBrandDataService {
         Set<String> brandURL = collectBrandURL(BASE_URL);
         Set<BrandDTO> brands = new TreeSet<>(); // 순서대로 저장되게끔
 
-        CompletableFuture<Void>[] futures = new CompletableFuture[brandURL.size()];
-        int index = 0;
+        // CompletableFuture 배열 대신 List 사용
+        List<CompletableFuture<Void>> futuresList = new ArrayList<>();
 
-        for( String url : brandURL){
-            futures[index++] = CompletableFuture.runAsync(() -> {
+        for (String url : brandURL) {
+            futuresList.add(CompletableFuture.runAsync(() -> {
                 try {
+                    // 페이지 로드
                     Document brandDoc = fetchWithRetry(url);
+
+                    // BrandDTO 객체 추출
                     BrandDTO brand = extractBrand(brandDoc);
-                    synchronized (brands) { // 동기화된 접근
+
+                    // 동기화된 접근으로 brands에 추가
+                    synchronized (brands) {
                         brands.add(brand);
                     }
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Error while fetching page " + url);
+                    e.printStackTrace();
                 }
-            });
+            }));
         }
 
-        CompletableFuture.allOf(futures).join();
+        // 모든 비동기 작업이 완료될 때까지 대기
+        CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[0])).join();
+
         return brands;
     }
+
 
 
 
@@ -94,7 +101,7 @@ public class GetBrandDataService {
             } catch (IOException e) {
                 retries++;
                 System.out.println("Error fetching page (attempt " + retries + "): " + url);
-                if (retries >= 3) {
+                if (retries >= 10) {
                     throw new IOException("Failed to fetch page after " + retries + " attempts: " + url, e);
                 }
                 try {

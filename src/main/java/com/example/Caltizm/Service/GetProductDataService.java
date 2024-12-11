@@ -8,7 +8,9 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,53 +18,91 @@ import java.util.concurrent.CompletableFuture;
 public class GetProductDataService {
 
 
-    private static final String BASE_URL = "https://www.cultizm.com/latest/";
+    private static final String BASE_URL = "https://www.cultizm.com/Supplier";
     private static final int ITEMS_PER_PAGE = 36; // 페이지당 표시되는 상품 수
 
 
-    // 총 페이지 수를 계산하는 메서드
-    public static int calculateTotalPages() {
+    //    브랜드 url 수집하기
+    public static Set<String> collectUrls() {
+        Set<String> urls = new HashSet<>();
+
         try {
-            // 첫 페이지 로드
-            Document firstPageDoc = fetchWithRetry(BASE_URL);
+            Document doc = fetchWithRetry(BASE_URL);
+            Elements urlElements = doc.select("a.supplier--item--link");
 
-            // 총 아이템 수를 포함하는 태그 찾기
-            Element totalItemsElement = firstPageDoc.selectFirst("p.emz-article-count");
-            if (totalItemsElement == null) {
-                System.out.println("총 아이템 정보를 찾을 수 없습니다.");
-                return 0;
+            for (Element urlElement : urlElements) {
+                String url = urlElement.attr("href");
+                urls.add(url);
             }
-
-            // 총 아이템 수 파싱
-            int totalItems = Integer.parseInt(totalItemsElement.text().replaceAll("[^0-9]", ""));
-            int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
-            System.out.println("총 아이템 수: " + totalItems);
-            System.out.println("총 페이지 수: " + totalPages);
-            return totalPages;
-
+            System.out.println("수집된 브랜드 링크: " + urls.size() + "개");
         } catch (IOException e) {
-            System.out.println("카테고리 페이지를 로드하는 동안 오류 발생.");
+            System.out.println("Error while fetching page " + BASE_URL);
             e.printStackTrace();
         }
-        return 0;
+        return urls;
     }
+
+    //    각 url 아이템 수 수집하여 페이지 수 계산하기
+    //    상품링크 수집
+    public static Set<String> collectPageUrls() {
+        Set<String> urls = collectUrls();
+        Set<String> pageUrls = new HashSet<>();
+
+        // CompletableFuture 배열 대신 List 사용
+        List<CompletableFuture<Void>> futuresList = new ArrayList<>();
+
+        for (String url : urls) {
+            futuresList.add(CompletableFuture.runAsync(() -> {
+                try {
+                    // 페이지 로드
+                    Document pageDoc = fetchWithRetry(url);
+
+                    // 총 아이템 수 추출
+                    Element totalItemsElement = pageDoc.selectFirst("p.emz-article-count");
+                    if (totalItemsElement == null) {
+                        System.out.println("총 아이템 정보를 찾을 수 없습니다.");
+                    } else {
+                        // 총 아이템 수 파싱
+                        int totalItems = Integer.parseInt(totalItemsElement.text().replaceAll("[^0-9]", ""));
+                        int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+
+                        // 각 페이지 URL 생성
+                        for (int page = 1; page <= totalPages; page++) {
+                            String pageUrl = url + "?p=" + page;
+                            synchronized (pageUrls) {  // 동기화된 접근으로 여러 스레드에서 수정되는 문제 방지
+                                pageUrls.add(pageUrl);
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    System.out.println("Error while fetching product page: " + url);
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    System.out.println("에러페이지: " + url);
+                    e.printStackTrace();
+                }
+            }));
+        }
+
+        // 모든 비동기 작업이 완료될 때까지 대기
+        CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[0])).join();
+        System.out.println("수집된 페이지 링크 : " + pageUrls.size() + "개");
+        return pageUrls;
+    }
+
 
 
     // 페이지별 상품 URL 수집 메서드
     public static Set<String> collectProductUrlsAsync() {
-        int totalPages = calculateTotalPages();
+        Set<String> pageUrls = collectPageUrls();
+
         Set<String> productUrls = new HashSet<>();
-        CompletableFuture<Void>[] futures = new CompletableFuture[totalPages];
-
-        for (int page = 1; page <= totalPages; page++) {
-            int currentPage = page; // page 변수를 final처럼 사용하기 위해 복사
-            futures[page - 1] = CompletableFuture.runAsync(() -> {
-                String pageUrl = BASE_URL + "?p=" + currentPage;
-                System.out.println("Scraping page: " + pageUrl);
-
+        List<CompletableFuture<Void>> futuresList = new ArrayList<>();
+        for (String url : pageUrls) {
+            futuresList.add(CompletableFuture.runAsync(() -> {
                 try {
                     // 페이지 로드
-                    Document pageDoc = fetchWithRetry(pageUrl);
+                    Document pageDoc = fetchWithRetry(url);
 
                     // 상품 링크 추출
                     Elements links = pageDoc.select("a.product--title");
@@ -73,53 +113,58 @@ public class GetProductDataService {
                         }
                     }
                 } catch (IOException e) {
-                    System.out.println("Error while fetching page " + currentPage);
+                    System.out.println("Error while fetching page " + url);
                     e.printStackTrace();
                 }
-            });
+            }));
         }
+
         // 모든 비동기 작업이 완료될 때까지 대기
-        CompletableFuture.allOf(futures).join();
+        CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[0])).join();
         System.out.println("수집된 제품 링크: " + productUrls.size() + "개");
         return productUrls;
     }
 
     // 상품 세부 정보 수집 메서드 (비동기 처리)
-    public static Set<ProductDTO> collectProductDetailsAsync(){
+    public static Set<ProductDTO> collectProductDetailsAsync() {
         Set<String> productUrls = collectProductUrlsAsync();
 
         Set<ProductDTO> products = new HashSet<>();
-        CompletableFuture<?>[] futures = new CompletableFuture[productUrls.size()];
-        int index = 0;
+
+        // CompletableFuture 배열 대신 List 사용
+        List<CompletableFuture<Void>> futuresList = new ArrayList<>();
+
         for (String productUrl : productUrls) {
-
-            futures[index++] = CompletableFuture.runAsync(() -> {
+            futuresList.add(CompletableFuture.runAsync(() -> {
                 try {
-
+                    // 상품 페이지 로드
                     Document productDoc = fetchWithRetry(productUrl);
+
+                    // ProductDTO 객체 추출
                     ProductDTO product = extractProduct(productDoc);
-//                    System.out.println(product);
+
+                    // 동기화된 접근으로 products에 추가
                     synchronized (products) {
                         products.add(product);
                     }
 
-                    //                    Thread.sleep(1000);  // 1초 대기 후 다음 요청
                 } catch (IOException e) {
                     System.out.println("Error while fetching product page: " + productUrl);
                     e.printStackTrace();
                 } catch (Exception e) {
-                    System.out.println("에러페이지: " + productUrl);
+                    System.out.println("Error occurred with product page: " + productUrl);
                     e.printStackTrace();
                 }
-            });
+            }));
         }
 
         // 모든 비동기 작업이 완료될 때까지 대기
-        CompletableFuture.allOf(futures).join();
+        CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[0])).join();
         System.out.println("수집된 상품: " + products.size() + "개");
 
         return products;
     }
+
 
     // 데이터 추출 메서드
     public static ProductDTO extractProduct(Document productDoc) {
@@ -134,8 +179,8 @@ public class GetProductDataService {
         Element nameElement = productDoc.selectFirst("h1.product--title");
         String name = nameElement.text();
         // 현재 판매가 가격 추출
-        Element currentPriceElement = productDoc.selectFirst("span.price--content.content--default");
-        String current_price = currentPriceElement.text();
+        Element currentPriceElement = productDoc.selectFirst("span.price--content");
+        String current_price = currentPriceElement.ownText();
         current_price = current_price.replaceAll("[^0-9.,]", ""); // 숫자와 ',' 또는 '.'만 남김
         current_price = current_price.replace(",", ""); // 쉼표 제거
         double currentPriceValue = Double.parseDouble(current_price); // String -> double 변환
@@ -172,8 +217,8 @@ public class GetProductDataService {
         boolean is_excludedVoucher = excludedVoucherElements.stream()
                 .anyMatch(element -> "This item is excluded from all vouchers".equals(element.text()));
 
-        ProductDTO product = new ProductDTO(brand,product_id,image_url,name,originalPriceValue,currentPriceValue,description,
-                category1,category2,category3,is_excludedVoucher);
+        ProductDTO product = new ProductDTO(brand, product_id, image_url, name, originalPriceValue, currentPriceValue, description,
+                category1, category2, category3, is_excludedVoucher);
 
 
         return product;
@@ -193,7 +238,7 @@ public class GetProductDataService {
             } catch (IOException e) {
                 retries++;
                 System.out.println("Error fetching page (attempt " + retries + "): " + url);
-                if (retries >= 3) {
+                if (retries >= 10) {
                     throw new IOException("Failed to fetch page after " + retries + " attempts: " + url, e);
                 }
                 try {
@@ -206,4 +251,11 @@ public class GetProductDataService {
         throw new IOException("Failed to fetch page: " + url);
     }
 
+
+    public static void main(String[] args) {
+
+//        Set<ProductDTO> productDTOs = collectProductDetailsAsync();
+//        System.out.println(productDTOs);
+    }
 }
+
