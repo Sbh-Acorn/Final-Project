@@ -127,6 +127,7 @@ public class GetProductDataService {
 
     // 상품 세부 정보 수집 메서드 (비동기 처리)
     public static Set<ProductDTO> collectProductDetailsAsync() {
+//        ExecutorService executorService = Executors.newFixedThreadPool(10);
         Set<String> productUrls = collectProductUrlsAsync();
 
         Set<ProductDTO> products = new HashSet<>();
@@ -254,8 +255,8 @@ public class GetProductDataService {
 
     public static void main(String[] args) {
 
-//        Set<ProductDTO> productDTOs = collectProductDetailsAsync();
-//        System.out.println(productDTOs);
+        Set<ProductDTO> productDTOs = collectProductDetailsAsync();
+        System.out.println(productDTOs);
     }
 }
 
