@@ -20,6 +20,6 @@ public class MainController {
                 "/bannerImages/4.webp"
         );
         model.addAttribute("BannerImages",bannerImages);
-        return "main/mainTest";
+        return "main/main";
     }
 }
