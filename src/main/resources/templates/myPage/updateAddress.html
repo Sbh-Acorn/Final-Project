@@ -59,15 +59,15 @@
 </head>
 <body>
 
-<h2>주소록 추가</h2>
+<h2>주소록 수정</h2>
 <input type="button" onclick="execDaumPostcode()" value="주소 찾기"><br>
-<form th:action="@{/address/create}" method="post">
+<form th:action="@{/address/update/{id}(id = ${address.addressId})}" method="post">
     <input type="text" id="address" placeholder="주소" readonly><br>
     <input type="text" id="extraAddress" placeholder="참고항목" readonly><br>
-    <input type="text" id="addressEnglish" name="address" placeholder="영어주소" readonly><br>
-    <input type="text" id="postcode" name="zipCode" placeholder="우편번호" readonly><br>
-    <input type="text" id="detailAddress" name="detail" placeholder="상세주소"><br>
-    <button>주소록 추가</button>
+    <input type="text" id="addressEnglish" name="address" placeholder="영어주소" th:value="${address.address}" readonly><br>
+    <input type="text" id="postcode" name="zipCode" placeholder="우편번호" th:value="${address.zipCode}" readonly><br>
+    <input type="text" id="detailAddress" name="detail" placeholder="상세주소" th:value="${address.detail}"><br>
+    <button>주소록 수정</button>
 </form>
 
 </body>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .product-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .product-card {
+            width: 18%;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            max-height: 150px;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+
+        .product-brand {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 14px;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .product-original-price {
+            font-size: 14px;
+            color: #bbb;
+            text-decoration: line-through;
+        }
+
+        .product-description {
+            font-size: 12px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+<h1>Product List</h1>
+<div class="product-container">
+    <!-- Thymeleaf 반복문으로 상품 리스트 표시 -->
+    <div class="product-card" th:each="product : ${products}">
+        <a th:href="@{/product/{product_id}(product_id=${product.product_id})}">
+            <img class="product-image" th:src="${product.image_url}" alt="Product Image">
+            <div class="product-brand" th:text="${product.brand}">Brand Name</div>
+            <div class="product-name" th:text="${product.name}">Product Name</div>
+            <div class="product-price" th:text="'€' + ${product.current_price}"></div>
+            <div class="product-original-price" th:if="${product.original_price != null}" th:text="'€' + ${product.original_price}">€109.00</div>
+        </a>
+    </div>
+
+
+
+</div>
+</body>
+</html>

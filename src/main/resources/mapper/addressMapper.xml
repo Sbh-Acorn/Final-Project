@@ -7,7 +7,7 @@
 
 
     <select id="selectAddressAll" resultType="AddressResponseDTO">
-        select u.email, a.address, a.detail, a.zip_code as zipCode
+        select a.address_id as addressId, u.email, a.address, a.detail, a.zip_code as zipCode
         from address a
         join user u
         on a.user_id = u.user_id
@@ -18,6 +18,23 @@
         insert into address(user_id, address, detail, zip_code)
         values((select user_id from user where email = #{email}), #{address}, #{detail}, #{zipCode});
     </insert>
+
+    <delete id="deleteAddress">
+        delete from address
+        where address_id = #{addressId}
+    </delete>
+
+    <select id="selectAddress" resultType="AddressResponseDTO">
+        select address_id as addressId, user_id as userId, address, detail, zip_code as zipCode
+        from address
+        where address_id = #{addressId}
+    </select>
+
+    <update id="updateAddress">
+        update address
+        set address = #{address}, detail = #{detail}, zip_code = #{zipCode}
+        where address_id = #{addressId}
+    </update>
 
 
 </mapper>
