@@ -3,10 +3,121 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="a">
+<mapper namespace="product">
+    <!-- 안전모두 온&오프 -->
+    <update id="setSafeUpdateOff">
+        SET SQL_SAFE_UPDATES = 0;
+    </update>
+
+    <update id="setSafeUpdateOn">
+        SET SQL_SAFE_UPDATES = 1;
+    </update>
+    <!--     모든 상품의 삭제 여부를 true로  -->
+    <update id="setDeletedTrue">
+        UPDATE Product SET is_deleted = true;
+    </update>
+
+    <!--   모든 상품의 FTA 여부를 false로 -->
+    <update id="setFTAFalse">
+        UPDATE Product SET is_deleted = false;
+    </update>
+
+    <!-- 동일한 id 존재 여부 -->
+
+    <select id="checkId" resultType="int" parameterType="string">
+        SELECT COUNT(1)
+        FROM Product
+        WHERE product_id  = #{product_id};
+    </select>
+
+    <!--  동일한 이름이 테이블에 존재하면 삭제여부를 false로  -->
+    <update id="setDeletedFalse" parameterType="string">
+        UPDATE Product SET is_deleted = false WHERE product_id = #{product_id};
+    </update>
+
+    <!--    브랜드아이디 찾기-->
+        <select id="brandId" parameterType="string" resultType="int">
+            SELECT brand_id
+            FROM Brand
+            WHERE name = #{brand};
+        </select>
+
+    <!--    카테고리 1 찾기-->
+        <select id="category1Id" parameterType="string" resultType="int">
+            SELECT category1_id
+            FROM Category1
+            WHERE name = #{category1};
+        </select>
+    <!--    카테고리 2 찾기-->
+         <select id="category2Id" parameterType="string" resultType="int">
+            SELECT category2_id
+            FROM Category2
+            WHERE name = #{category2};
+        </select>
+    <!--    카테고리 3 찾기-->
+         <select id="category3Id" parameterType="string" resultType="int">
+            SELECT category3_id
+            FROM Category3
+            WHERE name = #{category3};
+        </select>
 
 
+    <insert id="insert" parameterType="java.util.Map">
+        INSERT INTO Product (product_id, brand_id, image_url, name,original_price,current_price,description,
+                            category1_id,category2_id,category3_id,is_excludedVoucher)
+        VALUES (#{product_id}, #{brand_id}, #{image_url}, #{name},#{original_price},#{current_price},#{description},
+        #{category1_id},#{category2_id},#{category3_id},#{is_excludedVoucher});
+    </insert>
 
+<!--    fta 여부-->
+    <update id="setFTA" parameterType="String">
+        UPDATE Product SET is_fta = true WHERE product_id = #{product_id};
+    </update>
+
+
+    <!--    전체조회-->
+    <select id="selectAll" resultType="ProductDTO">
+        SELECT
+        p.product_id,
+        b.name AS brand,                          -- 브랜드 이름
+        p.image_url,
+        p.name,
+        p.original_price,
+        p.current_price,
+        p.description,
+        c1.name AS category1,                     -- 카테고리1 이름
+        c2.name AS category2,                     -- 카테고리2 이름
+        c3.name AS category3,                     -- 카테고리3 이름
+        p.is_excludedVoucher
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id  -- 카테고리2 테이블과 조인
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id  -- 카테고리3 테이블과 조인
+        WHERE p.is_deleted = false;                           -- 삭제되지 않은 제품만 조회
+    </select>
+
+    <!--    개별조회-->
+    <select id="selectOne" resultType="ProductDTO" parameterType="String">
+        SELECT
+        p.product_id,
+        b.name AS brand,                          -- 브랜드 이름
+        p.image_url,
+        p.name,
+        p.original_price,
+        p.current_price,
+        p.description,
+        c1.name AS category1,                     -- 카테고리1 이름
+        c2.name AS category2,                     -- 카테고리2 이름
+        c3.name AS category3,                     -- 카테고리3 이름
+        p.is_excludedVoucher
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id  -- 카테고리2 테이블과 조인
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id  -- 카테고리3 테이블과 조인
+        WHERE p.name = #{name} AND p.is_deleted = false;     -- 제품 이름으로 검색, 삭제되지 않은 제품만 조회
+    </select>
 
 
 </mapper>
