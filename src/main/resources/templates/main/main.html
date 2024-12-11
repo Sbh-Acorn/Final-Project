@@ -9,13 +9,13 @@
 메인
 
 <div>
-    <a th:if="${session.userId == null}" th:href="@{/login}">로그인</a>
-    <a th:if="${session.userId != null}" th:href="@{/logout}">로그아웃</a>
+    <a th:if="${session.email == null}" th:href="@{/login}">로그인</a>
+    <a th:if="${session.email != null}" th:href="@{/logout}">로그아웃</a>
 </div>
 
-<div>
-    <a th:href="@{/myPage}">마이페이지</a>
-</div>
+    <div>
+        <a th:href="@{/myPage}">마이페이지</a>
+    </div>
 
 </body>
 </html>
