@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Brand Detail</title>
+</head>
+<body>
+<h1 th:text="${brand.name}">Brand Name</h1>
+
+<img th:src="${brand.logo_url}" alt="Brand Logo" width="150">
+<p th:text="${brand.description}"></p>
+
+<a href="/brand">Brand List</a>
+
+
+
+</body>
+</html>
