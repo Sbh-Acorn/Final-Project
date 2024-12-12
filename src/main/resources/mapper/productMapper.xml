@@ -119,5 +119,30 @@
         WHERE p.name = #{name} AND p.is_deleted = false;     -- 제품 이름으로 검색, 삭제되지 않은 제품만 조회
     </select>
 
+    <select id="selectProductInBrand" resultType="ProductDTO" parameterType="String">
+        SELECT
+        p.product_id,
+        b.name AS brand,                          -- 브랜드 이름
+        p.image_url,
+        p.name,
+        p.original_price,
+        p.current_price,
+        p.description,
+        c1.name AS category1,                     -- 카테고리1 이름
+        c2.name AS category2,                     -- 카테고리2 이름
+        c3.name AS category3,                     -- 카테고리3 이름
+        p.is_excludedVoucher
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id  -- 카테고리2 테이블과 조인
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id  -- 카테고리3 테이블과 조인
+        WHERE p.is_deleted = false AND b.name = #{name};            -- 삭제되지 않은 제품만 조회
+    </select>
 
+    <select id="selectCartItemInfo" resultType="CartDTO" parameterType="String">
+        SELECT name AS productName, current_price AS price
+        FROM Product
+        WHERE product_id = #{product_id};
+    </select>
 </mapper>

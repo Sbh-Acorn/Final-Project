@@ -1,5 +1,6 @@
 package com.example.Caltizm.Repository;
 
+import com.example.Caltizm.DTO.CartDTO;
 import com.example.Caltizm.DTO.CategoryDTO;
 import com.example.Caltizm.DTO.ProductDTO;
 import com.example.Caltizm.Service.GetFTADataService;
@@ -23,7 +24,7 @@ public class ProductRepository {
     SqlSession session;
 
 
-    public void collectAndInsertProductData(){
+    public void collectAndInsertProductData() {
         Set<ProductDTO> products = service.collectProductDetailsAsync();
         Set<CategoryDTO> category1 = new HashSet<>();
         for (ProductDTO product : products) {
@@ -34,9 +35,9 @@ public class ProductRepository {
             category1.add(category);
         }
 
-        for(CategoryDTO category : category1){
-            int checkName = session.selectOne("category.checkName1" , category.getCategory1());
-            if(checkName < 1){
+        for (CategoryDTO category : category1) {
+            int checkName = session.selectOne("category.checkName1", category.getCategory1());
+            if (checkName < 1) {
                 session.insert("category.insert1", category.getCategory1());
             }
         }
@@ -53,11 +54,11 @@ public class ProductRepository {
             category2.add(category);
         }
 
-        for(CategoryDTO category : category2){
-            int checkName = session.selectOne("category.checkName2" , category.getCategory2());
-            if(checkName < 1){
+        for (CategoryDTO category : category2) {
+            int checkName = session.selectOne("category.checkName2", category.getCategory2());
+            if (checkName < 1) {
                 int category1ID = session.selectOne("category.category1ID", category.getCategory1());
-                if(category1ID > 0) {
+                if (category1ID > 0) {
                     Map<String, Object> params = new HashMap<>();
                     params.put("category2", category.getCategory2());
                     params.put("category1Id", category1ID);
@@ -82,14 +83,14 @@ public class ProductRepository {
             category3.add(category);
         }
 
-        for(CategoryDTO category : category3){
-            if(category.getCategory3() != null){
+        for (CategoryDTO category : category3) {
+            if (category.getCategory3() != null) {
                 int checkName = session.selectOne("category.checkName3", category.getCategory3());
-                if(checkName < 1){
+                if (checkName < 1) {
 
                     int category2ID = session.selectOne("category.category2ID", category.getCategory2());
 
-                    if( category2ID > 0) {
+                    if (category2ID > 0) {
                         Map<String, Object> params = new HashMap<>();
                         params.put("category3", category.getCategory3());
                         params.put("category2Id", category2ID);
@@ -106,33 +107,33 @@ public class ProductRepository {
         session.update("product.setDeletedTrue");
 
         //상품 불러오기
-        for (ProductDTO product :  products){
+        for (ProductDTO product : products) {
             //동일한 상품이 있는지?
-            int checkId = session.selectOne("product.checkId" , product.getProduct_id());
-            if(checkId > 0){
+            int checkId = session.selectOne("product.checkId", product.getProduct_id());
+            if (checkId > 0) {
                 //동일한 이름이 테이블에 존재하면 삭제여부를 false로
                 session.update("product.setDeletedFalse", product.getProduct_id());
-            }else{
+            } else {
                 //아이디 찾기
                 Map<String, Object> params = new HashMap<>();
-                int brand_id = session.selectOne("product.brandId" , product.getBrand());
-                int category1_id = session.selectOne("product.category1Id" , product.getCategory1());
-                int category2_id = session.selectOne("product.category2Id" , product.getCategory2());
-                if(product.getCategory3() != null)
-                {int category3_id = session.selectOne("product.category3Id" , product.getCategory3());
-                    params.put("category3_id" , category3_id);
+                int brand_id = session.selectOne("product.brandId", product.getBrand());
+                int category1_id = session.selectOne("product.category1Id", product.getCategory1());
+                int category2_id = session.selectOne("product.category2Id", product.getCategory2());
+                if (product.getCategory3() != null) {
+                    int category3_id = session.selectOne("product.category3Id", product.getCategory3());
+                    params.put("category3_id", category3_id);
                 }
-                params.put("product_id" , product.getProduct_id());
-                params.put("brand_id" , brand_id);
-                params.put("image_url" , product.getImage_url());
-                params.put("name" , product.getName());
-                params.put("original_price" , product.getOriginal_price());
-                params.put("current_price" , product.getCurrent_price());
-                params.put("description" , product.getDescription());
-                params.put("category1_id" , category1_id);
-                params.put("category2_id" , category2_id);
-                params.put("is_excludedVoucher" , product.is_excludedVoucher());
-                session.insert("product.insert" , params);
+                params.put("product_id", product.getProduct_id());
+                params.put("brand_id", brand_id);
+                params.put("image_url", product.getImage_url());
+                params.put("name", product.getName());
+                params.put("original_price", product.getOriginal_price());
+                params.put("current_price", product.getCurrent_price());
+                params.put("description", product.getDescription());
+                params.put("category1_id", category1_id);
+                params.put("category2_id", category2_id);
+                params.put("is_excludedVoucher", product.is_excludedVoucher());
+                session.insert("product.insert", params);
             }
 
 
@@ -142,25 +143,29 @@ public class ProductRepository {
 
         //FTA 가능 여부
         Set<String> FTA = FTAservice.collectFTAItemCode();
-        for(String product_id : FTA){
-            session.update("product.setFTA" , product_id );
-            }
-        System.out.println("수집 및 DB 저장 완료");
+        for (String product_id : FTA) {
+            session.update("product.setFTA", product_id);
         }
+        System.out.println("수집 및 DB 저장 완료");
+    }
 
-    public List<ProductDTO> getProduct(){
+    public List<ProductDTO> getProduct() {
         List<ProductDTO> products = session.selectList("product.selectAll");
         return products;
 
     }
-    public ProductDTO getBrandByName (String name){
-        ProductDTO product = session.selectOne("product.selectOne" , name);
+
+    public ProductDTO getBrandByName(String name) {
+        ProductDTO product = session.selectOne("product.selectOne", name);
         return product;
     }
 
 
-    public static void main(String[] args) {
-//        ProductRepository repository = new ProductRepository();
-//        repository.collectAndInsertProductData();
+    public CartDTO getCartItemInfo(String product_id) {
+        CartDTO cartItemInfo = session.selectOne("product.selectCartItemInfo", product_id);
+        return cartItemInfo;
     }
+
+
 }
+

@@ -2,13 +2,16 @@ package com.example.Caltizm.Repository;
 
 
 import com.example.Caltizm.DTO.BrandDTO;
+import com.example.Caltizm.DTO.ProductDTO;
 import com.example.Caltizm.Service.GetBrandDataService;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Repository
@@ -60,6 +63,18 @@ public class BrandRepository {
         BrandDTO brand = session.selectOne("brand.selectOne" , name);
         return brand;
     }
+    public Map<String , Object> getBrandAndProduct (String name){
+        Map<String , Object> brandAndProduct = new HashMap<>();
+        BrandDTO brand = session.selectOne("brand.selectOne" , name);
+        List<ProductDTO> products = session.selectList("product.selectProductInBrand", name);
+
+        brandAndProduct.put("brand" , brand);
+        brandAndProduct.put("products" , products);
+
+        return brandAndProduct;
+
+    }
+
 
 }
 
