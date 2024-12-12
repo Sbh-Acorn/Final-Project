@@ -102,6 +102,10 @@
              th:text="${product.is_excludedVoucher} ? '쿠폰 사용 불가' : '쿠폰 사용 가능'">
             쿠폰 상태
         </div>
+
+        <div>
+            <a th:href="@{/wishlist/add/{id}(id = ${product.product_id})}">위시리스트 추가</a>
+        </div>
     </div>
 </div>
 </body>

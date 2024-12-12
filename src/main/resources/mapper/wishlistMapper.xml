@@ -3,9 +3,27 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="a">
+<mapper namespace="wishlist">
 
 
+    <insert id="insertWishlist" parameterType="WishlistAddDTO">
+        insert into wishlist(user_id, product_id)
+        values((select user_id from user where email = #{email}), #{productId})
+    </insert>
+
+    <select id="selectWishlist" resultType="WishlistDTO">
+        select w.wishlist_id as wishlistId, p.product_id as productId,
+        p.name, b.name as brandName, p.image_url as imageUrl,
+        p.original_price as originalPrice, p.current_price as currentPrice
+        from wishlist w
+        join product p
+        on w.product_id = p.product_id
+        join user u
+        on w.user_id = u.user_id
+        join brand b
+        on b.brand_id = p.brand_id
+        where u.email = #{email}
+    </select>
 
 
 
