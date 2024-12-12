@@ -25,6 +25,15 @@
         where u.email = #{email}
     </select>
 
+    <delete id="deleteWishlist">
+        delete from wishlist where wishlist_id = #{wishlistId}
+    </delete>
+
+    <select id="isInWishlist" parameterType="WishlistAddDTO" resultType="int">
+        select count(*) from wishlist
+        where user_id = (select user_id from user where email = #{email}) and product_id = #{productId}
+    </select>
+
 
 
 </mapper>

@@ -28,4 +28,16 @@ public class WishlistRepository {
 
     }
 
+    public int deleteWishlist(String wishlistId){
+
+        return session.delete(namespace + "deleteWishlist", wishlistId);
+
+    }
+
+    public int isInWishlist(WishlistAddDTO wishlistAddDTO){
+
+        return session.selectOne(namespace + "isInWishlist", wishlistAddDTO);
+
+    }
+
 }

@@ -12,7 +12,8 @@
         }
 
         .wishlist-container {
-            width: 500px;
+            width: 1000px;
+            margin: 0 auto;
         }
 
         .wishlist-item {
@@ -45,6 +46,7 @@
             font-size: 16px;
             color: #333;
             margin-bottom: 8px;
+            width: 600px;
         }
 
         .item-price {
@@ -65,6 +67,7 @@
 <body>
 
 <div class="wishlist-container">
+    <h2>위시리스트</h2>
     <div class="wishlist-item" th:each="item : ${wishlist}">
         <div>
             <img class="item-image" th:src="${item.imageUrl}">
@@ -76,6 +79,9 @@
         <div>
             <div class="item-original-price" th:if="${item.originalPrice != null}" th:text="${'€' + item.originalPrice}"></div>
             <div class="item-price" th:text="'€' + ${item.currentPrice}"></div>
+        </div>
+        <div>
+            <a th:href="@{/wishlist/delete/{id}(id = ${item.wishlistId})}">삭제</a>
         </div>
     </div>
 </div>

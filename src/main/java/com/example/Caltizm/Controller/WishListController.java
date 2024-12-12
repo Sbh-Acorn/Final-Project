@@ -38,8 +38,8 @@ public class WishListController {
 //
 //    }
 
-    @GetMapping("/wishlist/add/{id}")
-    public String addWishlist(@PathVariable("id") String productId,
+    @GetMapping("/wishlist/add/{productId}")
+    public String addWishlist(@PathVariable("productId") String productId,
                               @SessionAttribute(value="email", required=false) String email){
 
         if(email == null){
@@ -52,6 +52,13 @@ public class WishListController {
         wishlistAddDTO.setEmail(email);
         wishlistAddDTO.setProductId(productId);
         System.out.println(wishlistAddDTO);
+
+        int cnt = repository.isInWishlist(wishlistAddDTO);
+        System.out.println("cnt: " + cnt);
+        if(cnt > 0){
+            System.out.println("이미 위시리스트에 등록됨");
+            return "redirect:/product/" + productId;
+        }
 
         int rRow = repository.insertWishlist(wishlistAddDTO);
         System.out.println(rRow);
@@ -72,6 +79,23 @@ public class WishListController {
         model.addAttribute("wishlist", wishlist);
 
         return "wishlist/wishlist";
+
+    }
+
+    @GetMapping("/wishlist/delete/{wishlistId}")
+    public String deleteWishlist(@PathVariable("wishlistId") String wishlistId,
+                                 @SessionAttribute(value="email", required=false) String email){
+
+        if(email == null){
+            return "redirect:/login";
+        }
+
+        System.out.println(wishlistId);
+
+        int rRow = repository.deleteWishlist(wishlistId);
+        System.out.println(rRow);
+
+        return "redirect:/wishlist";
 
     }
 
