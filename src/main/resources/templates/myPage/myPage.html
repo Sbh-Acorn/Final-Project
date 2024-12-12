@@ -136,6 +136,12 @@
         <h2 th:text="|주소 ${addressStat.count}|"></h2>
         <table>
             <tr>
+                <td>주소ID</td>
+                <td>
+                    <span th:text="${address.addressId}"></span>
+                </td>
+            </tr>
+            <tr>
                 <td>도로명주소</td>
                 <td>
                     <span th:text="${address.address}"></span>
@@ -150,10 +156,50 @@
             <tr>
                 <td>우편번호</td>
                 <td>
-                    <span th:text="${address.zip_code}"></span>
+                    <span th:text="${address.zipCode}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>수정</td>
+                <td>
+                    <a th:href="@{/address/update/{id}(id = ${address.addressId})}">주소 수정</a>
+                </td>
+            </tr>
+            <tr>
+                <td>삭제</td>
+                <td>
+                    <a th:href="@{/address/delete/{id}(id = ${address.addressId})}">주소 삭제</a>
                 </td>
             </tr>
         </table>
+    </div>
+    <a th:href="@{/address/create}">주소 추가</a>
+
+    <div>
+        <h2>비밀번호 변경</h2>
+        <form th:action="@{/changePassword}" method="post">
+            <table>
+                <tr>
+                    <td>현재 비밀번호</td>
+                    <td>
+                        <input type="password" name="currentPassword">
+                    </td>
+                </tr>
+                <tr>
+                    <td>새 비밀번호</td>
+                    <td>
+                        <input type="password" name="newPassword1">
+                    </td>
+                </tr>
+                <tr>
+                    <td>새 비밀번호 확인</td>
+                    <td>
+                        <input type="password" name="newPassword2">
+                    </td>
+                </tr>
+            </table>
+            <button>비밀번호 변경</button>
+        </form>
     </div>
 </div>
 

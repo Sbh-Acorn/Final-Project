@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="category">
+
+    <select id="checkName1" resultType="int" parameterType="string">
+        SELECT COUNT(1)
+        FROM Category1
+        WHERE name = #{category1};
+    </select>
+
+    <insert id="insert1" parameterType="string">
+        INSERT INTO Category1 (name)
+        VALUES (#{category1});
+    </insert>
+
+    <select id="checkName2" resultType="int" parameterType="string">
+        SELECT COUNT(1)
+        FROM Category2
+        WHERE name = #{category2};
+    </select>
+
+    <select id="category1ID" resultType="int" parameterType="string">
+        SELECT category1_id
+        FROM Category1
+        WHERE name = #{category1};
+    </select>
+
+    <insert id="insert2" parameterType="java.util.Map">
+        INSERT INTO Category2 (name, category1_id)
+        VALUES (#{category2}, #{category1Id});
+    </insert>
+
+    <select id="checkName3" resultType="int" parameterType="java.util.Map">
+        SELECT COUNT(1)
+        FROM Category3
+        WHERE name = #{category3};
+    </select>
+
+    <select id="category2ID" resultType="int" parameterType="string">
+        SELECT category2_id
+        FROM Category2
+        WHERE name = #{category2};
+    </select>
+
+    <insert id="insert3" parameterType="java.util.Map">
+        INSERT INTO Category3 (name, category2_id)
+        VALUES (#{category3}, #{category2Id});
+    </insert>
+
+
+
+
+</mapper>

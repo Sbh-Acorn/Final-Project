@@ -1,0 +1,82 @@
+main {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#banner_wrap {
+    width: 100%;
+    height: 800px;
+    overflow: hidden;
+    position: relative;
+}
+
+#banner_wrap .btn_wrap {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+
+#banner_wrap:hover .btn_wrap{
+    opacity: 1; /* 투명도를 완전히 표시 */
+    visibility: visible; /* 보이도록 설정 */
+}
+
+.btn_wrap {
+    position: absolute;
+    top: 360px;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(250, 235, 215, 0.6);
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.btn_wrap:hover {
+    background-color: rgba(250, 235, 215, 0.8);
+}
+
+.btn {
+    width: 30px;
+    height: 30px;
+}
+
+#prev_btn_wrap {
+    left: 50px;
+}
+
+#next_btn_wrap {
+    right: 50px;
+}
+
+#banner {
+    width: 400%;
+    height: 800px;
+    display: flex;
+    position: relative;
+    z-index: 10;
+}
+
+.banner_img_wrap {
+    width: 100%;
+    height: 800px;
+}
+
+.banner_img {
+    width: 100%;
+    height: 800px;
+}
+
+#random_text {
+    position: absolute;
+    top: 580px;
+    right: 200px;
+    color: white;
+    font-weight: bold;
+    font-size: 48px;
+    z-index: 20;
+}
