@@ -206,7 +206,7 @@
         <span class="cart-item-price" th:text="'€' + ${item.price}">€99.99</span>
         <span class="cart-item-quantity" th:text="'수량: ' + ${item.quantity}">수량: 1</span>
         <form th:action="@{/cart/remove}" method="post" style="display:inline;">
-            <input type="hidden" name="productName" th:value="${item.productName}">
+            <input type="hidden" name="product_id" th:value="${item.product_id}">
             <button type="submit" class="remove-item-button">삭제</button>
         </form>
     </div>

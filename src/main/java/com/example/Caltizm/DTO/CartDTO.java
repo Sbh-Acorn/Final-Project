@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartDTO {
 
+    private String product_id;
     private String productName;
     private double price;
     private int quantity = 1;  // 기본값을 1로 설정
 
-    public CartDTO(String productName, double price) {
+    public CartDTO(String product_id, String productName, double price) {
         this.productName = productName;
         this.price = price;
     }

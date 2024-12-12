@@ -141,7 +141,7 @@
     </select>
 
     <select id="selectCartItemInfo" resultType="CartDTO" parameterType="String">
-        SELECT name AS productName, current_price AS price
+        SELECT product_id, name AS productName, current_price AS price
         FROM Product
         WHERE product_id = #{product_id};
     </select>
