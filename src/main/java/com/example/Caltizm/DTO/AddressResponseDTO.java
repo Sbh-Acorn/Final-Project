@@ -5,9 +5,10 @@ import lombok.Data;
 @Data
 public class AddressResponseDTO {
 
-    private String user_id;
+    private String addressId;
+    private String email;
     private String address;
     private String detail;
-    private String zip_code;
+    private String zipCode;
 
 }
