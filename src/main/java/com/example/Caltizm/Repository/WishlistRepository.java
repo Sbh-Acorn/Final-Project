@@ -1,6 +1,6 @@
 package com.example.Caltizm.Repository;
 
-import com.example.Caltizm.DTO.WishlistAddDTO;
+import com.example.Caltizm.DTO.WishlistRequestDTO;
 import com.example.Caltizm.DTO.WishlistDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,9 @@ public class WishlistRepository {
 
     String namespace = "wishlist.";
 
-    public int insertWishlist(WishlistAddDTO wishlistAddDTO){
+    public int insertWishlist(WishlistRequestDTO wishlistRequestDTO){
 
-        return session.insert(namespace + "insertWishlist", wishlistAddDTO);
+        return session.insert(namespace + "insertWishlist", wishlistRequestDTO);
 
     }
 
@@ -28,15 +28,15 @@ public class WishlistRepository {
 
     }
 
-    public int deleteWishlist(String wishlistId){
+    public int deleteWishlist(WishlistRequestDTO wishlistRequestDTO){
 
-        return session.delete(namespace + "deleteWishlist", wishlistId);
+        return session.delete(namespace + "deleteWishlist", wishlistRequestDTO);
 
     }
 
-    public int isInWishlist(WishlistAddDTO wishlistAddDTO){
+    public int isInWishlist(WishlistRequestDTO wishlistRequestDTO){
 
-        return session.selectOne(namespace + "isInWishlist", wishlistAddDTO);
+        return session.selectOne(namespace + "isInWishlist", wishlistRequestDTO);
 
     }
 

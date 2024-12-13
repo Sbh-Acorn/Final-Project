@@ -16,12 +16,17 @@
             margin: 0 auto;
         }
 
+        .wishlist-container a{
+            text-decoration: none;
+        }
+
         .wishlist-item {
             border: 1px solid #ddd;
             padding: 16px;
             text-align: center;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .wishlist-item:hover {
@@ -73,15 +78,19 @@
             <img class="item-image" th:src="${item.imageUrl}">
         </div>
         <div>
-            <div class="item-brand" th:text="${item.brandName}"></div>
-            <div class="item-name" th:text="${item.name}"></div>
+            <a th:href="@{/brand/{id}(id = ${item.brandName})}">
+                <div class="item-brand" th:text="${item.brandName}"></div>
+            </a>
+            <a th:href="@{/product/{id}(id = ${item.productId})}">
+                <div class="item-name" th:text="${item.name}"></div>
+            </a>
         </div>
         <div>
             <div class="item-original-price" th:if="${item.originalPrice != null}" th:text="${'€' + item.originalPrice}"></div>
             <div class="item-price" th:text="'€' + ${item.currentPrice}"></div>
         </div>
         <div>
-            <a th:href="@{/wishlist/delete/{id}(id = ${item.wishlistId})}">삭제</a>
+            <a th:href="@{/wishlist/delete/{id}(id = ${item.productId})}">삭제</a>
         </div>
     </div>
 </div>
