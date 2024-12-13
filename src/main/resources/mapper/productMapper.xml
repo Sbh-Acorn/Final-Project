@@ -19,7 +19,7 @@
 
     <!--   모든 상품의 FTA 여부를 false로 -->
     <update id="setFTAFalse">
-        UPDATE Product SET is_deleted = false;
+        UPDATE Product SET is_fta = false;
     </update>
 
     <!-- 동일한 id 존재 여부 -->
@@ -88,7 +88,8 @@
         c1.name AS category1,                     -- 카테고리1 이름
         c2.name AS category2,                     -- 카테고리2 이름
         c3.name AS category3,                     -- 카테고리3 이름
-        p.is_excludedVoucher
+        p.is_excludedVoucher,
+        p.is_fta
         FROM Product p
         LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
         LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인
@@ -110,7 +111,8 @@
         c1.name AS category1,                     -- 카테고리1 이름
         c2.name AS category2,                     -- 카테고리2 이름
         c3.name AS category3,                     -- 카테고리3 이름
-        p.is_excludedVoucher
+        p.is_excludedVoucher,
+        p.is_fta
         FROM Product p
         LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
         LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인
@@ -131,7 +133,8 @@
         c1.name AS category1,                     -- 카테고리1 이름
         c2.name AS category2,                     -- 카테고리2 이름
         c3.name AS category3,                     -- 카테고리3 이름
-        p.is_excludedVoucher
+        p.is_excludedVoucher,
+        p.is_fta
         FROM Product p
         LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
         LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인

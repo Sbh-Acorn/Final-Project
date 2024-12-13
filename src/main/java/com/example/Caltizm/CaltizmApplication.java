@@ -25,13 +25,13 @@ public class CaltizmApplication {
 	// 애플리케이션 시작 후 DB에 데이터 삽입
 //	첫 실행 시 주석 해제하기
 //	DB에 데이터 저장 후에는 주석 처리하면 실행 안 됨
-//	@PostConstruct
-//	public void init() {
-//		try {
-//			brandRepo.collectAndInsertBrandData();
-//			productRepo.collectAndInsertProductData();
-//		} catch (Exception e) {
-//			e.printStackTrace(); // 예외 처리
-//		}
-//	}
+	@PostConstruct
+	public void init() {
+		try {
+			brandRepo.collectAndInsertBrandData();
+			productRepo.collectAndInsertProductData();
+		} catch (Exception e) {
+			e.printStackTrace(); // 예외 처리
+		}
+	}
 }

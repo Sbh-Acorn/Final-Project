@@ -191,6 +191,24 @@
         .add-to-cart-button:hover {
             background-color: #27ae60;
         }
+
+        .cart-button {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background-color: #2ecc71;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+        }
+
+        .cart-button:hover {
+            background-color: #27ae60;
+        }
     </style>
 </head>
 <body>
@@ -244,6 +262,10 @@
         </form>
     </div>
 </div>
+
+<!-- 장바구니 보기 버튼 -->
+<a href="/cart/view" class="cart-button">장바구니</a>
+
 <script>
     const sidebar = document.getElementById('cart-sidebar');
 
