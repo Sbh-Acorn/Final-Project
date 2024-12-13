@@ -20,6 +20,9 @@ public class signupController {
         return "auth/signup";
     }
 
+    @GetMapping("/signupTest")
+    public String signup2() {return "auth/signup_ui"; }
+
     @PostMapping("/signup")
     public  String register(@ModelAttribute SignupRequestDTO user,
                             @ModelAttribute UserAddressDTO address) {

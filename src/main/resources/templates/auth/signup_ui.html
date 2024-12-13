@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/sign_up.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <script defer th:src="@{/js/sign_up.js}"></script>
+</head>
+<body>
+<main>
+    <h1>CALTIZM</h1>
+    <form th:action="@{/}">
+        <div id="margin_box"></div>
+        <span class="title">필수입력</span><br>
+        <div id="signUp_box">
+            <div class="bigbox">
+                <div id="name_box" class="box">
+                    <input type="text" id="first_name" class="input" placeholder="성">
+                    <input type="text" id="last_name" class="input" placeholder="이름">
+                </div>
+                <div id="email_box" class="box">
+                    <input type="text" id="email" class="input" placeholder="이메일을 입력해주세요">
+                </div>
+                <div id="phone_box" class="box">
+                    <input type="text" id="phone" class="input" placeholder="- 없이 전화번호를 입력해주세요">
+                </div>
+                <div id="birth_box" class="box">
+                    <input type="text" id="birth" class="input" placeholder="생년월일을 8자로 적어주세요">
+                </div>
+            </div>
+            <div class="bigbox address_bigbox" id="address_box_box">
+                <div id="address_box" class="box">
+                    <p class="input">영문주소</p>
+                    <input type="text" style="display: none;">
+                </div>
+                <div id="postcode_box" class="box">
+                    <p class="input">우편번호</p>
+                    <input type="text" style="display: none;">
+                </div>
+                <div id="detailed_address_box" class="box">
+                    <input type="text" class="input" placeholder="상세주소를 입력해주세요">
+                </div>
+            </div>
+            <div id="plus_btn">
+                <img th:rc="@{/img/plus.svg}" alt="">
+            </div>
+            <div class="bigbox">
+                <div id="passwd_box" class="box">
+                    <input type="password" id="passwd" class="input" placeholder="비밀번호를 입력해주세요">
+                    <input type="password" id="passwd_check" class="input" placeholder="비밀번호 확인">
+                </div>
+            </div>
+        </div>
+        <p class="title" id="title2">필수입력</p>
+        <div class="bigbox" id="boxbox">
+            <div id="pcc_box" class="box">
+                <input type="text" id="pcc" class="input" placeholder="개인통관고유번호">
+            </div>
+        </div>
+        <button id="btn">가입</button>
+    </form>
+</main>
+</body>
+</html>
