@@ -1,10 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/product.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/product.js}"></script>
 </head>
 <body>
-
+<header>
+    <div id="logo_wrap">
+        <h1 id="logo">CALTIZM</h1>
+    </div>
+    <div id="wrap_wrap">
+        <div id="wrap1">
+            <div id="header_input_wrap">
+                <form th:action="@{/}" id="header_form">
+                    <input type="text" id="header_input">
+                    <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
+                </form>
+            </div>
+            <div id="header_icon_wrap">
+                <img th:src="@{/img/header_wishlist.svg}" alt="" id="header_wishlist" class="header_icon">
+                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
+                <div id="header_alarm_dropdown">
+                    현재 내용이 없습니다.
+                </div>
+                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
+                <ul id="header_profile_dropdown">
+                    <li class="header_profile_dropdown_list">로그인</li>
+                    <li class="header_profile_dropdown_list">회원가입</li>
+                </ul>
+                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+            </div>
+        </div>
+        <div id="wrap2">
+            <ul id="header_nav">
+                <li class="header_list">ALL</li>
+                <li class="header_list">BRAND</li>
+                <li class="header_list">FTA</li>
+                <li class="header_list">TAX</li>
+                <li class="header_list">COMMUNITY</li>
+            </ul>
+        </div>
+    </div>
+</header>
+<main>
+    <div id="left_box">
+        <div id="selected_wrap">
+            <p id="selected_txt">선택한 항목</p>
+            <ul id="selected_ul">
+                <li class="selected_li">
+                    <p class="selected_li_txt">Spring</p>
+                    <img th:src="@{/img/close.svg}" alt="" class="selected_li_close">
+                </li>
+                <li class="selected_li">
+                    <p class="selected_li_txt">Spring</p>
+                    <img th:src="@{/img/close.svg}" alt="" class="selected_li_close">
+                </li>
+                <li class="selected_li">
+                    <p class="selected_li_txt">Spring</p>
+                    <img th:src="@{/img/close.svg}" alt="" class="selected_li_close">
+                </li>
+                <li class="selected_li">
+                    <p class="selected_li_txt">Spring</p>
+                    <img th:src="@{/img/close.svg}" alt="" class="selected_li_close">
+                </li>
+            </ul>
+        </div>
+        <p class="filter_txt">BRAND</p>
+        <form th:action="@{/}">
+            <div class="filter_wrap">
+                <ul class="filter_checkbox">
+                    <li class="filter_check">
+                        <label for="brand1">
+                            <input type="checkbox" id="brand1" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="brand2">
+                            <input type="checkbox" id="brand2" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="brand3">
+                            <input type="checkbox" id="brand3" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="brand4">
+                            <input type="checkbox" id="brand4" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="brand5">
+                            <input type="checkbox" id="brand5" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="brand6">
+                            <input type="checkbox" id="brand6" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="brand7">
+                            <input type="checkbox" id="brand7" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="brand8">
+                            <input type="checkbox" id="brand8" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <p class="filter_txt">CATEGORY</p>
+            <div class="filter_wrap">
+                <ul class="filter_checkbox">
+                    <li class="filter_check">
+                        <label for="category1">
+                            <input type="checkbox" id="category1" class="check">
+                            <p>123</p>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <p class="filter_txt">PRICE</p>
+            <div class="custom-range">
+                <input type="range" id="range" min="0" max="100" value="50">
+                <div class="thumb thumb-left"></div>
+                <div class="thumb thumb-right"></div>
+                <div class="range-track"></div>
+            </div>
+            <p class="range_value">From $<b id="value1">25</b> to $<b id="value2">75</b></p>
+            <hr class="hr1">
+            <p class="filter_txt">TAX</p>
+            <div id="tax_wrap" class="filter_wrap">
+                <ul class="filter_checkbox">
+                    <li class="filter_check">
+                        <label for="tax">
+                            <input type="checkbox" id="tax" class="check">
+                            <p>TAX</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="not_tax">
+                            <input type="checkbox" id="not_tax" class="check">
+                            <p>NOT TAX</p>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <p class="filter_txt">FTA</p>
+            <div id="fta_wrap" class="filter_wrap">
+                <ul class="filter_checkbox">
+                    <li class="filter_check">
+                        <label for="fta">
+                            <input type="checkbox" id="fta" class="check">
+                            <p>FTA</p>
+                        </label>
+                    </li>
+                    <li class="filter_check">
+                        <label for="not_fta">
+                            <input type="checkbox" id="not_fta" class="check">
+                            <p>NOT FTA</p>
+                        </label>
+                    </li>
+                </ul>
+            </div>
+            <button id="filter_btn" type="submit">item found</button>
+        </form>
+    </div>
+    <div id="right_box">
+        <ul id="item_box_wrap">
+            <li class="item_box">
+                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
+                <p class="item_brand">Houston</p>
+                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
+                <p class="item_price">￦100,000 (￦140,000)</p>
+            </li>
+            <li class="item_box">
+                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
+                <p class="item_brand">Houston</p>
+                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
+                <p class="item_price">￦100,000 (￦140,000)</p>
+            </li>
+            <li class="item_box">
+                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
+                <p class="item_brand">Houston</p>
+                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
+                <p class="item_price">￦100,000 (￦140,000)</p>
+            </li>
+            <li class="item_box">
+                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
+                <p class="item_brand">Houston</p>
+                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
+                <p class="item_price">￦100,000 (￦140,000)</p>
+            </li>
+            <li class="item_box">
+                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
+                <p class="item_brand">Houston</p>
+                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
+                <p class="item_price">￦100,000 (￦140,000)</p>
+            </li>
+            <li class="item_box">
+                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
+                <p class="item_brand">Houston</p>
+                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
+                <p class="item_price">￦100,000 (￦140,000)</p>
+            </li>
+        </ul>
+    </div>
+</main>
 </body>
 </html>
