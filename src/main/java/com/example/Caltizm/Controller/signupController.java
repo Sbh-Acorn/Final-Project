@@ -25,7 +25,7 @@ public class signupController {
     }
 
     @GetMapping("/signupTest")
-    public String signup2() {return "auth/signup_ui"; }
+    public String signup2() {return "auth/signupTest"; }
 
     @PostMapping("/signup")
     public  String register(@ModelAttribute SignupRequestDTO user,
@@ -49,7 +49,8 @@ public class signupController {
         System.out.println(details);
         System.out.println(details.size());
 
-        if(addresses.size() == zipCodes.size() && addresses.size() == details.size()){
+        if(!addresses.isEmpty() && !zipCodes.isEmpty() && !details.isEmpty()
+                && addresses.size() == zipCodes.size() && addresses.size() == details.size()){
             for(int i=0; i<addresses.size(); i++){
                 UserAddressDTO addr = new UserAddressDTO();
                 addr.setAddress(addresses.get(i));
