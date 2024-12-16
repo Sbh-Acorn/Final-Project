@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/addr.css}">
+</head>
+<body>
+<main>
+    <h1>CALTIZM</h1>
+    <div class="big_box">
+        <form th:action="@{/}">
+            <p class="title">주소록 추가</p>
+            <div class="input_wrap">
+                <div class="box">
+                    <p class="input">영문주소</p>
+                    <input type="text" name="addr" style="display: none;" required>
+                </div>
+                <div class="box">
+                    <p class="input">우편번호</p>
+                    <input type="text" name="postcode" style="display: none;" required>
+                </div>
+                <div class="box">
+                    <input type="text" name="detailed" class="input" placeholder="상세주소를 입력해주세요" required>
+                </div>
+            </div>
+            <button class="btn" type="submit">주소록 추가</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

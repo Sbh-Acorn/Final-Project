@@ -1,10 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/mylist.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
 </head>
 <body>
-
+<header>
+    <div id="logo_wrap">
+        <h1 id="logo">CALTIZM</h1>
+    </div>
+    <div id="wrap_wrap">
+        <div id="wrap1">
+            <div id="header_input_wrap">
+                <input type="text" id="header_input">
+                <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
+            </div>
+            <div id="header_icon_wrap">
+                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
+                <div id="header_alarm_dropdown">
+                    현재 내용이 없습니다.
+                </div>
+                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
+                <ul id="header_profile_dropdown">
+                    <li class="header_profile_dropdown_list">로그인</li>
+                    <li class="header_profile_dropdown_list">회원가입</li>
+                </ul>
+                <ul id="header_profile_dropdown2">
+                    <li class="header_profile_dropdown_list">로그아웃</li>
+                    <li class="header_profile_dropdown_list">마이페이지</li>
+                </ul>
+                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+            </div>
+        </div>
+        <div id="wrap2">
+            <ul id="header_nav">
+                <li class="header_list">ALL</li>
+                <li class="header_list">BRAND</li>
+                <li class="header_list">FTA</li>
+                <li class="header_list">TAX</li>
+                <li class="header_list">COMMUNITY</li>
+            </ul>
+        </div>
+    </div>
+</header>
+<main>
+    <div id="wrap_wrap2">
+        <p class="title">위시리스트</p>
+        <hr>
+        <ul class="list_wrap">
+            <form th:action="@{/}">
+                <li class="list">
+                    <div class="close_wrap">
+                        <img th:src="@{/img/close.svg}" alt="" class="close">
+                    </div>
+                    <p class="price">₩75,000</p>
+                    <div class="img_wrap">
+                        <img th:src="@{/img/item_img.jpg}" alt="" class="img">
+                    </div>
+                    <div class="info_box">
+                        <p class="info_title">BOUCLE WOOL ZIP FLEECE JACKET</p>
+                        <ul class="info_wrap">
+                            <li class="info">₩105,000 <b class="small">원래가격</b></li>
+                            <li class="info">19% 부가가치세</li>
+                            <li class="info">25% 쿠폰적용</li>
+                            <li class="info">FTA 미적용</li>
+                        </ul>
+                    </div>
+                </li>
+            </form>
+            <form th:action="@{/}">
+                <li class="list">
+                    <div class="close_wrap">
+                        <img th:src="@{/img/close.svg}" alt="" class="close">
+                    </div>
+                    <p class="price">₩125,000</p>
+                    <div class="img_wrap">
+                        <img th:src="@{/img/item_img.jpg}" alt="" class="img">
+                    </div>
+                    <div class="info_box">
+                        <p class="info_title">WOOL ZIP FLEECE JACKET</p>
+                        <ul class="info_wrap">
+                            <li class="info">₩145,000 <b class="small">원래가격</b></li>
+                            <li class="info">29% 부가가치세</li>
+                            <li class="info">25% 쿠폰적용</li>
+                            <li class="info">FTA 적용</li>
+                        </ul>
+                    </div>
+                </li>
+            </form>
+        </ul>
+    </div>
+</main>
 </body>
 </html>

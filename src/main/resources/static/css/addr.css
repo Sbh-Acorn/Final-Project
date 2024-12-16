@@ -1,0 +1,72 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 42px;
+    color: rgba(141, 138, 138, 1);
+    cursor: pointer;
+    margin-bottom: 50px;
+}
+
+.big_box {
+    width: 580px;
+    padding: 35px 45px;
+    border: 1px solid rgba(172, 172, 172, 1);
+}
+
+.title {
+    font-size: 22px;
+}
+
+.input_wrap {
+    margin: 40px 0;
+}
+
+.box {
+    border: 1px solid rgba(172, 172, 172, 1);
+    width: 100%;
+    padding: 10px 20px;
+    margin-bottom: 15px;
+}
+
+.box p {
+    color: rgb(135, 120, 120);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn {
+    width: 100%;
+    border: 1px solid rgba(172, 172, 172, 1);
+    background-color: rgba(251, 186, 186, 0.8);
+    padding: 8px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: rgba(251, 186, 186, 1);
+}
+
+#btn2 {
+    margin-top: 10px;
+    background-color: rgba(219, 249, 213, 0.6);
+    color: black;
+}
+
+#btn2:hover {
+    background-color: rgba(219, 249, 213, 1);
+}
+
+
+
+
+#addr p, #postcode p {
+    cursor: auto;
+}
