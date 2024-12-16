@@ -74,6 +74,14 @@
         UPDATE Product SET is_fta = true WHERE product_id = #{product_id};
     </update>
 
+    <select id="noMatchFTA" parameterType="String" resultType="String">
+        SELECT name
+        FROM Product
+        WHERE product_id != #{product_id};
+    </select>
+
+
+
 
     <!--    전체조회-->
     <select id="selectAll" resultType="ProductDTO">
@@ -148,4 +156,6 @@
         FROM Product
         WHERE product_id = #{product_id};
     </select>
+
+
 </mapper>

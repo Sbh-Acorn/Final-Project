@@ -2,7 +2,7 @@ package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.BrandDTO;
 import com.example.Caltizm.DTO.ProductDTO;
-import com.example.Caltizm.Repository.BrandRepository;
+import com.example.Caltizm.Repository.DataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class BrandController_Test {
 
     @Autowired
-    BrandRepository repository;
+    DataRepository repository;
 
     @GetMapping("/brand")
     public String brandList(Model model) throws IOException {

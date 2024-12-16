@@ -36,6 +36,8 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.jsoup:jsoup:1.14.3'
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.27.0'
+
 }
 
 tasks.named('bootJar') {

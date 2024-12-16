@@ -2,7 +2,7 @@ package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.CartDTO;
 import com.example.Caltizm.DTO.ProductDTO;
-import com.example.Caltizm.Repository.ProductRepository;
+import com.example.Caltizm.Repository.DataRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ProductController_Test {
 
     @Autowired
-    ProductRepository repository;
+    DataRepository repository;
 
     // 모든 메서드에서 사용할 제품 리스트를 미리 로드
     @ModelAttribute("products")

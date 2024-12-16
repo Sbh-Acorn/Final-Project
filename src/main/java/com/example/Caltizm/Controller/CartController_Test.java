@@ -2,7 +2,7 @@ package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.CartDTO;
 import com.example.Caltizm.DTO.ProductDTO;
-import com.example.Caltizm.Repository.ProductRepository;
+import com.example.Caltizm.Repository.DataRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class CartController_Test {
 
     @Autowired
-    ProductRepository repository;
+    DataRepository repository;
 
     // 모든 메서드에서 사용할 제품 리스트를 미리 로드
     @ModelAttribute("products")
@@ -106,7 +106,6 @@ public class CartController_Test {
 
     @PostMapping("/view/remove")
     public String viewRemoveCart(@RequestParam(name = "product_id") String product_id,
-                             @RequestParam(name = "current_product_id") String current_product_id,
                              HttpSession session,Model model) {
         // 세션에서 장바구니 가져오기
         List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
