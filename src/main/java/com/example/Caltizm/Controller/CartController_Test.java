@@ -53,7 +53,7 @@ public class CartController_Test {
         }
         // 장바구니 정보 세션에 저장
         session.setAttribute("cartList", cartList);
-        model.addAttribute("cartList", cartList);
+//        model.addAttribute("cartList", cartList);
         return "redirect:/product/" + product_id;
     }
 
@@ -86,7 +86,7 @@ public class CartController_Test {
             cartList = new ArrayList<>();
         }
 
-        session.setAttribute("cartList", cartList);
+//        session.setAttribute("cartList", cartList);
         model.addAttribute("cartList", cartList);
 
         List<ProductDTO> products = (List<ProductDTO>) model.getAttribute("products");

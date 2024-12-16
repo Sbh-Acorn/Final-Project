@@ -157,5 +157,18 @@
         WHERE product_id = #{product_id};
     </select>
 
+    <select id="selectPreviousPrice" resultType="double">
+        select current_price from product where product_id = #{product_id}
+    </select>
+
+    <update id="updateCurrentPrice" parameterType="ProductPriceDTO">
+        update product set current_price = #{currentPrice} where product_id = #{productId}
+    </update>
+
+    <insert id="insertPriceDrop" parameterType="PriceDropDTO">
+        insert into pricedrop(product_id, previous_price, current_price, created_at)
+        values(#{productId}, #{previousPrice}, #{currentPrice}, now())
+    </insert>
+
 
 </mapper>

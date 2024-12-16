@@ -1,9 +1,6 @@
 package com.example.Caltizm.Repository;
 
-import com.example.Caltizm.DTO.BrandDTO;
-import com.example.Caltizm.DTO.CartDTO;
-import com.example.Caltizm.DTO.CategoryDTO;
-import com.example.Caltizm.DTO.ProductDTO;
+import com.example.Caltizm.DTO.*;
 import com.example.Caltizm.Service.GetDataService;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,6 +164,23 @@ public class DataRepository {
             if (checkId > 0) {
                 //동일한 이름이 테이블에 존재하면 삭제여부를 false로
                 session.update("product.setDeletedFalse", product.getProduct_id());
+
+                double previousPrice = session.selectOne("product.selectPreviousPrice", product.getProduct_id());
+                double currentPrice = product.getCurrent_price();
+                if(currentPrice != previousPrice){
+                    ProductPriceDTO productPriceDTO = new ProductPriceDTO();
+                    productPriceDTO.setProductId(product.getProduct_id());
+                    productPriceDTO.setCurrentPrice(currentPrice);
+                    session.update("product.updateCurrentPrice", productPriceDTO);
+                    System.out.println(product.getProduct_id() + " 가격 변경: " + previousPrice + " -> " + currentPrice);
+                    if(currentPrice < previousPrice){
+                        PriceDropDTO priceDropDTO = new PriceDropDTO();
+                        priceDropDTO.setProductId(product.getProduct_id());
+                        priceDropDTO.setPreviousPrice(previousPrice);
+                        priceDropDTO.setCurrentPrice(currentPrice);
+                        session.insert("product.insertPriceDrop", priceDropDTO);
+                    }
+                }
             } else {
                 //아이디 찾기
                 Map<String, Object> params = new HashMap<>();

@@ -28,10 +28,10 @@ import java.util.regex.Pattern;
 @Service
 public class GetDataService {
 
-    private static final String BASE_URL = "https://www.cultizm.com/";
-    private static final String BRAND_URL1 = "https://www.cultizm.com/clothing/";
-    private static final String BRAND_URL2 = "https://www.cultizm.com/footwear/";
-    private static final String BRAND_URL3 = "https://www.cultizm.com/accessories/";
+    private static final String BASE_URL = "https://www.cultizm.com/kor/";
+    private static final String BRAND_URL1 = "https://www.cultizm.com/kor/clothing/";
+    private static final String BRAND_URL2 = "https://www.cultizm.com/kor/footwear/";
+    private static final String BRAND_URL3 = "https://www.cultizm.com/kor/accessories/";
     private static final String FTA_URL = "https://www.cultizm.com/kor/fta-items/";
     private static final int ITEMS_PER_PAGE = 36; // 페이지당 표시되는 상품 수
 
@@ -125,7 +125,7 @@ public class GetDataService {
 
         //이름 추출
         Elements nameElement = brandDoc.select("h1.panel--title.is--underline");
-        String name = nameElement.text().replace("Items from", "").trim();
+        String name = nameElement.text().replaceFirst("^Brand", "").trim();
         //로고 이미지 링크 추출
         Elements imgElement = brandDoc.select("img.vendor--image");
         String logoImgURL = imgElement.attr("src");
@@ -474,6 +474,9 @@ public class GetDataService {
 //        //        System.out.println(products);
 //        List<String> bannerImages = service.collectBannerImage();
 //        System.out.println(bannerImages);
+
+        List<String> list = collectBannerImage();
+        System.out.println(list);
 
     }
 }
