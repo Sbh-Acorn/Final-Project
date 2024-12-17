@@ -19,10 +19,15 @@
     <div id="wrap_wrap">
         <div id="wrap1">
             <div id="header_input_wrap">
-                <input type="text" id="header_input" placeholder="상품명을 입력하세요">
+                <input type="text" id="header_input" placeholder="상품명을 입력하세요" autocomplete="off">
                 <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
+
                 <!-- 검색 결과 목록 -->
-                <div id="search_results" class="search-dropdown"></div>
+                <div id="search_results" class="search-dropdown">
+                    <ul>
+                        <!-- 동적 데이터 추가될 부분 -->
+                    </ul>
+                </div>
             </div>
             <div id="header_icon_wrap">
                 <!-- 알림 아이콘 -->
