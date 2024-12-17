@@ -80,7 +80,7 @@ public class WishListController {
         List<WishlistDTO> wishlist = repository.selectWishlist(email);
         model.addAttribute("wishlist", wishlist);
 
-        return "wishlist/wishlist";
+        return "wishlist/wishlistTest";
 
     }
 
@@ -103,13 +103,13 @@ public class WishListController {
         System.out.println("cnt: " + cnt);
         if(cnt < 1){
             System.out.println("위시리스트에 없음");
-            return "redirect:/wishlist";
+            return "redirect:/wishlistTest";
         }
 
         int rRow = repository.deleteWishlist(wishlistRequestDTO);
         System.out.println(rRow);
 
-        return "redirect:/wishlist";
+        return "redirect:/wishlistTest";
 
     }
 
