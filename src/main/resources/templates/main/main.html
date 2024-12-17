@@ -19,29 +19,42 @@
     <div id="wrap_wrap">
         <div id="wrap1">
             <div id="header_input_wrap">
-                <input type="text" id="header_input">
+                <input type="text" id="header_input" placeholder="상품명을 입력하세요">
                 <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
+                <!-- 검색 결과 목록 -->
+                <div id="search_results" class="search-dropdown"></div>
             </div>
             <div id="header_icon_wrap">
+                <!-- 알림 아이콘 -->
                 <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
                 <div id="header_alarm_dropdown">
                     현재 내용이 없습니다.
                 </div>
+
+                <!-- 프로필 아이콘 -->
                 <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
-                <ul id="header_profile_dropdown">
+
+                <!-- 로그인/회원가입 메뉴 -->
+                <ul id="header_profile_dropdown" class="dropdown" th:if="${sessionEmail == null}">
                     <li class="header_profile_dropdown_list">
-                        <a th:if="${session.email == null}" th:href="@{/login}">로그인</a>
+                        <a th:href="@{/login}">로그인</a>
                     </li>
-                    <li class="header_profile_dropdown_list">회원가입</li>
-                </ul>
-                <ul id="header_profile_dropdown2">
                     <li class="header_profile_dropdown_list">
-                        <a th:if="${session.email != null}" th:href="@{/logout}">로그아웃</a>
+                        <a th:href="@{/signup}">회원가입</a>
+                    </li>
+                </ul>
+
+                <!-- 로그아웃/마이페이지 메뉴 -->
+                <ul id="header_profile_dropdown2" class="dropdown" th:if="${sessionEmail != null}">
+                    <li class="header_profile_dropdown_list">
+                        <a th:href="@{/logout}">로그아웃</a>
                     </li>
                     <li class="header_profile_dropdown_list">
                         <a th:href="@{/myPage}">마이페이지</a>
                     </li>
                 </ul>
+
+                <!-- 장바구니 아이콘 -->
                 <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
             </div>
         </div>
@@ -65,10 +78,11 @@
             <img th:src="@{/img/next.svg}" alt="" class="btn">
         </div>
         <ul id="banner">
-            <li class="banner_img_wrap"><img th:src="@{/img/img1.png}" alt="" class="banner_img"></li>
-            <li class="banner_img_wrap"><img th:src="@{/img/img2.jpg}" alt="" class="banner_img"></li>
-            <li class="banner_img_wrap"><img th:src="@{/img/img3.jpg}" alt="" class="banner_img"></li>
-            <li class="banner_img_wrap"><img th:src="@{/img/img4.jpg}" alt="" class="banner_img"></li>
+            <li th:each="bi : ${BannerImages}">
+                <a th:href="@{/promotion}" target="_blank">
+                    <img th:src="${bi}" alt="Banner Image" />
+                </a>
+            </li>
         </ul>
         <p id="random_text">This is the Random Text</p>
     </div>
