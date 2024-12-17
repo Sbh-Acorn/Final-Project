@@ -1,0 +1,266 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 42px;
+    color: rgba(141, 138, 138, 1);
+    cursor: pointer;
+    margin-bottom: 40px;
+}
+
+#tab_wrap {
+    width: 580px;
+    display: flex;
+    z-index: 20;
+    position: relative; /* box-shadow를 안쪽으로 적용하기 위해 필요 */
+    box-shadow: inset 0 -0.5px 0 rgba(148, 147, 147, 0.4); /* 안쪽으로 1px border-bottom처럼 보이게 설정 */
+}
+
+.tab {
+    padding: 8px 15px;
+    z-index: 30;
+    font-weight: 500;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.tab:nth-child(1) {
+    border-top: 1px solid rgba(148, 147, 147, 0.4);
+    border-left: 1px solid rgba(148, 147, 147, 0.4);
+    border-right: 1px solid rgba(148, 147, 147, 0.4);
+    border-bottom: 1px solid white;
+}
+
+.box_wrap {
+    margin-top: 20px;
+    border: 1px solid rgba(148, 147, 147, 0.4);
+    padding: 15px;
+}
+
+.btn_wrap {
+    display: flex;
+    justify-content: right;
+}
+
+.btn {
+    width: 110px;
+    height: 28px;
+    border: 1px solid rgba(148, 147, 147, 0.4);
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    background-color: rgba(190, 190, 190, 0.6);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: rgba(190, 190, 190, 0.8);
+}
+
+.info_wrap {
+    width: 96%;
+    margin: 15px 10px 20px 10px;
+}
+
+.info {
+    display: flex;
+    border-bottom: 1px solid rgba(148, 147, 147, 0.4);
+}
+
+.info p {
+    padding: 16px 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.info_input {
+    padding: 16px 20px;
+    font-size: 12px;
+    font-weight: bold;
+    width: 400px;
+}
+
+
+.info:nth-child(1) {
+    border-top: 1px solid rgba(148, 147, 147, 0.4);
+}
+
+.info p:nth-child(1) {
+    background-color: rgba(217, 217, 217, 0.2);
+    border-right: 1px solid rgba(148, 147, 147, 0.4);
+    text-align: center;
+    width: 140px;
+}
+
+#pwd_btn {
+    width: 140px;
+    height: 35px;
+    border: 1px solid rgba(148, 147, 147, 0.4);
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    background-color: rgba(190, 190, 190, 0.6);
+    font-size: 13px;
+    font-weight: bold;
+}
+
+#pwd_btn:hover {
+    background-color: rgba(190, 190, 190, 0.8);
+}
+
+#pwd_wrap, #pwd_check_wrap {
+    width: 400px;
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+}
+
+.info input {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+
+.info2 {
+    display: flex;
+    border-bottom: 1px solid rgba(148, 147, 147, 0.4);
+}
+
+.info2 p {
+    padding: 10px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.info2:nth-child(1) {
+    border-top: 1px solid rgba(148, 147, 147, 0.4);
+}
+
+.info2 p:nth-child(1) {
+    background-color: rgba(217, 217, 217, 0.2);
+    border-right: 1px solid rgba(148, 147, 147, 0.4);
+    text-align: center;
+    width: 80px;
+}
+
+.info2 p:nth-child(2) {
+    padding: 10px 30px;
+}
+
+
+
+
+
+
+
+
+
+.modal_wrap {
+    position: fixed;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(158, 155, 155, 0.6);
+    z-index: 100;
+}
+
+.modal {
+    width: 520px;
+    height: 700px;
+    background-color: white;
+    border: 1px solid black;
+    padding: 25px 35px;
+}
+
+.modal_title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title_txt {
+    font-size: 28px;
+}
+
+#close_wrap {
+    width: 28px;
+    height: 40px;
+    visibility: visible;
+}
+
+.close_wrap {
+    visibility: hidden;
+}
+
+.modal_box:hover .close_wrap {
+    visibility: visible;
+}
+
+#close {
+    width: 28px;
+    height: 28px;
+    cursor: auto;
+}
+
+.close {
+    width: 18px;
+    height: 18px;
+    cursor: auto;
+}
+
+.modal_boxs {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.modal_box {
+    width: 100%;
+    padding: 15px 20px;
+    border: 1px solid rgba(148, 147, 147, 0.4);
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.modal_box:hover {
+    background-color: rgba(250, 245, 238, 0.6);
+}
+
+.modal_box_title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+}
+
+.modal_box_items {
+    margin: 20px 0 10px 0;
+}
+
+.modal_box_item {
+    font-size: 14px;
+    margin: 10px 0;
+    font-weight: 400;
+}
+
+.modal_btn {
+    width: 100%;
+    padding: 5px 0;
+    border: 1px solid rgba(148, 147, 147, 0.4);
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    background-color: rgba(251, 186, 186, 0.8);
+}
+
+.modal_btn:hover {
+    background-color: rgba(251, 186, 186, 1);
+}

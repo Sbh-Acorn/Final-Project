@@ -42,6 +42,11 @@ public class MyPageController {
 
     }
 
+    @GetMapping("/myPage_ui")
+    public String myPage2() {
+        return "myPage/myPage_ui";
+    }
+
     @PostMapping("/updateUserInfo")
     public String update(@ModelAttribute UserUpdateRequestDTO userUpdateRequestDTO){
 
