@@ -1,17 +1,17 @@
 package com.example.Caltizm.DTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class UserUpdateRequestDTO {
+@AllArgsConstructor
+public class UserUpdateDTO {
 
     private String email;
     private String firstName;
     private String lastName;
     private String phoneNumber;
-    private String birthYear;
-    private String birthMonth;
-    private String birthDay;
+    private String birthDate;
     private String pccc;
 
 }

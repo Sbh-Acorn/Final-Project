@@ -77,7 +77,7 @@ h1 {
     font-weight: bold;
 }
 
-.info_input {
+.info_input, .info_input_readonly {
     padding: 16px 20px;
     font-size: 12px;
     font-weight: bold;

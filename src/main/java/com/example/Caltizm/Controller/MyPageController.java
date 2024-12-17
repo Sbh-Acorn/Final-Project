@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MyPageController {
@@ -38,7 +40,7 @@ public class MyPageController {
         System.out.println(email);
         System.out.println(user);
 
-        return "myPage/myPage";
+        return "myPage/mypage_ui";
 
     }
 
@@ -47,25 +49,76 @@ public class MyPageController {
         return "myPage/myPage_ui";
     }
 
+//    @PostMapping("/updateUserInfo")
+//    public String update(@SessionAttribute(value="email", required=false) String email,
+//                         @ModelAttribute UserUpdateFormDTO userUpdateFormDTO){
+//
+//        if(email == null){
+//            return "redirect:/login";
+//        }
+//
+//        System.out.println(userUpdateFormDTO);
+//
+//        String[] name = userUpdateFormDTO.getName().split(" ");
+//        if(name.length != 2){
+//            return "redirect:/myPage";
+//        }
+//        String firstName = name[0];
+//        String lastName = name[1];
+//
+//        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(email, firstName, lastName,
+//                userUpdateFormDTO.getPhoneNumber(), userUpdateFormDTO.getBirthDate(),
+//                userUpdateFormDTO.getPccc() != null ? userUpdateFormDTO.getPccc() : null);
+//        System.out.println(userUpdateDTO);
+//
+//        int rRow = repository.updateUserInfo(userUpdateFormDTO);
+//        System.out.println(rRow);
+//
+//        return "redirect:/myPage";
+//
+//    }
+
+    @ResponseBody
     @PostMapping("/updateUserInfo")
-    public String update(@ModelAttribute UserUpdateRequestDTO userUpdateRequestDTO){
+    public Map<String, String> update(@SessionAttribute(value="email", required=false) String email,
+                         @RequestBody UserUpdateFormDTO userUpdateFormDTO){
 
-        String phoneNumber = userUpdateRequestDTO.getPhoneNumber().replaceAll("-", "");
+        Map<String, String> response = new HashMap<>();
 
-        String part1 = phoneNumber.substring(0, 3);
-        String part2 = phoneNumber.substring(3, 7);
-        String part3 = phoneNumber.substring(7);
+        if(email == null){
+            response.put("status", "session_invalid");
+            response.put("message", "로그인 해주세요.");
+            return response;
+        }
 
-        String newPhoneNumber = part1 + "-" + part2 + "-" + part3;
+        System.out.println(userUpdateFormDTO);
 
-        userUpdateRequestDTO.setPhoneNumber(newPhoneNumber);
+        String[] name = userUpdateFormDTO.getName().split(" ");
+        if(name.length != 2){
+            response.put("status", "input_invalid");
+            response.put("message", "유효하지 않은 입력입니다.");
+            return response;
+        }
+        String firstName = name[0];
+        String lastName = name[1];
 
-        System.out.println(userUpdateRequestDTO);
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(email, firstName, lastName,
+                userUpdateFormDTO.getPhoneNumber(), userUpdateFormDTO.getBirthDate(),
+                userUpdateFormDTO.getPccc() != null ? userUpdateFormDTO.getPccc() : null);
+        System.out.println(userUpdateDTO);
 
-        int rRow = repository.updateUserInfo(userUpdateRequestDTO);
+        int rRow = repository.updateUserInfo(userUpdateDTO);
         System.out.println(rRow);
 
-        return "redirect:/myPage";
+        if(rRow != 1){
+            response.put("status", "update_fail");
+            response.put("message", "정보가 수정되지 않았습니다.");
+            return response;
+        }
+
+        response.put("status", "update_success");
+        response.put("message", "정보가 수정되었습니다.");
+        return response;
 
     }
 
@@ -76,7 +129,7 @@ public class MyPageController {
             return "redirect:/login";
         }
 
-        return "myPage/addAddress";
+        return "myPage/addAddress_ui";
 
     }
 
@@ -130,7 +183,7 @@ public class MyPageController {
 
         model.addAttribute("address", address);
 
-        return "myPage/updateAddress";
+        return "myPage/updateAddress_ui";
 
     }
 
@@ -147,6 +200,7 @@ public class MyPageController {
         System.out.println(addressResponseDTO);
 
         int rRow = repository.updateAddress(addressResponseDTO);
+        System.out.println(rRow);
 
         return "redirect:/myPage";
 
@@ -165,21 +219,15 @@ public class MyPageController {
             return "redirect:/login";
         }
 
-        String currentPassword = passwordFormDTO.getCurrentPassword();
         String newPassword1 = passwordFormDTO.getNewPassword1();
         String newPassword2 = passwordFormDTO.getNewPassword2();
-
-        if(!currentPassword.equals(user.getPassword())){
-            System.out.println("현재 비밀번호 불일치");
-            return "redirect:/myPage";
-        }
 
         if(!newPassword1.equals(newPassword2)){
             System.out.println("새 비밀번호 불일치");
             return "redirect:/myPage";
         }
 
-        if(currentPassword.equals(newPassword1)){
+        if(newPassword1.equals(user.getPassword())){
             System.out.println("비밀번호가 변경 전과 동일");
             return "redirect:/myPage";
         }
