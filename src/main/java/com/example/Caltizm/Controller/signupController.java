@@ -42,13 +42,6 @@ public class signupController {
         List<String> addresses = List.of(request.getParameterValues("address"));
         List<String> details = List.of(request.getParameterValues("detail"));
 
-        System.out.println(addresses);
-        System.out.println(addresses.size());
-        System.out.println(zipCodes);
-        System.out.println(zipCodes.size());
-        System.out.println(details);
-        System.out.println(details.size());
-
         if(!addresses.isEmpty() && !zipCodes.isEmpty() && !details.isEmpty()
                 && addresses.size() == zipCodes.size() && addresses.size() == details.size()){
             for(int i=0; i<addresses.size(); i++){
