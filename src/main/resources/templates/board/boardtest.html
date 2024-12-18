@@ -2,18 +2,61 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
 </head>
 <body>
+<h1>게시판</h1>
 
-<h1>Board Page</h1>
+<!-- 전체 게시판 목록 출력 -->
+<h2>전체 게시판</h2>
+<ul>
+    <li th:each="post : ${boardAll}">
+        <span th:text="${post.title}"></span> -
+        <span th:text="${post.user_id}"></span> -
+        <span th:text="${post.created_at}"></span>
+    </li>
+</ul>
 
-<div>
-    <div th:each="post : ${boardAll}">
+<!-- 공지사항 게시판 목록 출력 -->
+<h2>공지사항</h2>
+<ul>
+    <li th:each="post : ${boardNotice}">
+        <span th:text="${post.title}"></span> -
+        <span th:text="${post.user_id}"></span> -
+        <span th:text="${post.created_at}"></span>
+    </li>
+</ul>
 
-    </div>
-</div>
+<!-- 자유게시판 목록 출력 -->
+<h2>자유게시판</h2>
+<ul>
+    <li th:each="post : ${boardFree}">
+        <span th:text="${post.title}"></span> -
+        <span th:text="${post.user_id}"></span> -
+        <span th:text="${post.created_at}"></span>
+    </li>
+</ul>
 
-</div>
+<!-- 리뷰 게시판 목록 출력 -->
+<h2>리뷰</h2>
+<ul>
+    <li th:each="post : ${boardReview}">
+        <span th:text="${post.title}"></span> -
+        <span th:text="${post.user_id}"></span> -
+        <span th:text="${post.created_at}"></span>
+    </li>
+</ul>
+
+<!-- Q&A 게시판 목록 출력 -->
+<h2>Q&A</h2>
+<ul>
+    <li th:each="post : ${boardQna}">
+        <span th:text="${post.title}"></span> -
+        <span th:text="${post.user_id}"></span> -
+        <span th:text="${post.created_at}"></span>
+    </li>
+</ul>
+
 </body>
 </html>

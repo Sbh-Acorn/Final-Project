@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 작성</title>
+    <link th:href="@{/post/summernote-lite.css}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script th:src="@{/post/summernote-lite.js}"></script>
+    <script th:src="@{/post/lang/summernote-ko-KR.js}"></script>
+</head>
+<body>
+
+<!-- 게시글 작성 폼 -->
+<form id="postForm" th:action="@{/savePost}" method="post">
+    <!-- 말머리 선택 -->
+    <div class="form-group">
+        <label for="subject">말머리</label>
+        <select id="subject" name="subject" class="form-control">
+            <option value="자유게시판">자유게시판</option>
+            <option value="리뷰">리뷰</option>
+            <option value="Q&A">Q&A</option>
+        </select>
+    </div>
+
+    <!-- 제목 입력 -->
+    <div class="form-group">
+        <label for="title">제목</label>
+        <input type="text" id="title" name="title" class="form-control" placeholder="제목을 입력하세요" required>
+    </div>
+
+    <!-- Summernote 에디터 -->
+    <div class="form-group">
+        <label for="summernote">내용</label>
+        <textarea class="form-control" id="summernote" name="content" required></textarea>
+    </div>
+
+    <!-- 게시글 등록 버튼 -->
+    <button type="submit" class="btn btn-primary">등록</button>
+</form>
+
+<script>
+    $(document).ready(function (){
+    // textarea summernote 적용하기
+    $("#summernote").summernote({
+        codeviewFilter: false,                              // 코드 보기 필터 비활성화
+        codeviewIframeFilter: false,                        // 코드 보기 iframe 필터 비활성화
+
+        height: 400,                                        // 에디터 높이
+        minHeight: null,                                    // 최소 높이
+        maxHeight: null,                                    // 최대 높이
+        lang: "ko-KR",                                      // 에디터 한글 설정
+        focus : true,                                       // 에디터 포커스 설정
+        // ['0.5','0.8','1.0','1.2','1.4','1.5','1.6','1.8','2.0','3.0']
+        toolbar: [
+            ['fontname', ['fontname']],                     // 글꼴 설정
+            ['fontsize', ['fontsize']],                     // 글자 크기
+            ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],  // 글자 스타일 설정
+            ['color', ['forecolor','color']],               // 글자색
+            ['table', ['table']],                           // 표 생성
+            ['insert', ['picture', 'link','video']],        // 이미지, 링크 , 동영상
+            ['para', ['ul', 'ol', 'paragraph']],            // 문단 스타일 설정
+            ['height', ['height']],                         // 줄간격
+            ['view', ['codeview','fullscreen', 'help']]     // 코드보기, 전체화면, 도움말
+        ],
+        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋음체','바탕체'], // 추가한 글꼴
+        fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'], // 추가한 폰트사이즈
+        callbacks : {
+            // 파일 업로드
+            onImageUpload : function (files) {
+                for(let i=0; i < files.length; i++){
+                    // 이미지가 여러개일 경우
+                    imageUpload(files[i]);
+                }
+            },
+            // 파일 삭제
+            onMediaDelete: function ($target){
+                if(confirm("이미지를 삭제하시겠습니까?")){
+                    let fileName = $target.attr('src').split('/').pop();
+                    deleteFile(fileName);
+                }
+            }
+        }
+    });
+
+    // Summernote 내용을 폼 전송 전에 textarea에 저장
+        $("#postForm").on("submit", function () {
+            const content = $("#summernote").summernote("code");
+            $("textarea[name='content']").val(content);
+        });
+});
+
+
+    // 이미지 업로드
+function imageUpload(file){
+    let formData = new FormData();
+    formData.append("file", file);
+
+    $.ajax({
+       url : "/imageUpload",
+       type : "POST",
+       data : formData,
+        // contentType, processData 설정 안하면 TypeError: Illegal invocation 오류가 발생한다
+       contentType: false,
+       processData: false,
+       encType : "multipart/form-data",
+       success : function (data) {
+           // 글에 이미지 넣을때 크기 설정
+           // $("#summernote").summernote("insertImage", "/uploadPath/image/"+data, function (data){
+           //     data.css("width" , "100%");
+           // });
+
+           // 글에 이미지 넣기
+           $("#summernote").summernote("insertImage", "/uploadPath/image/"+data);
+       },
+        error(e){
+           console.log("error : "+ e);
+        }
+    });
+}
+
+    // 이미지 삭제
+function deleteFile(fileName) {
+    let formData = new FormData();
+    formData.append("file", fileName);
+
+    $.ajax({
+        url : "/imageDelete",
+        type : "POST",
+        data : formData,
+        // contentType, processData 설정 안하면 TypeError: Illegal invocation 오류가 발생한다
+        contentType: false,
+        processData: false,
+        encType : "multipart/form-data"
+    });
+}
+</script>
+
+
+
+
+</body>
+</html>

@@ -20,4 +20,10 @@ public class PostDTO {
     private boolean is_deleted;
 
 
+    public PostDTO(String subject, String title, String content) {
+        this.subject = subject;
+        this.title = title;
+        this.content = content;
+    }
+
 }

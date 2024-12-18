@@ -13,6 +13,7 @@ public class BoardRepository {
     @Autowired
     SqlSession session;
 
+
     // 전체 게시글 조회
     public List<PostDTO> selectAll() {
         return session.selectList("board.all");
@@ -37,4 +38,12 @@ public class BoardRepository {
     public List<PostDTO> selectQna() {
         return session.selectList("board.qna");
     }
+
+    // 게시글 작성
+    public int insertPost(PostDTO postDTO){
+        return session.insert("board.insert-post",postDTO);}
+
+    // 유저 아이디 가져오기
+    public int getUser(String email){
+        return session.selectOne("board.user_id",email);}
 }
