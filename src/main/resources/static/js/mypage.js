@@ -38,6 +38,8 @@ $update.addEventListener("click", () => {
         $infoInput[0].focus();
     } else {
         if (checkNum()) {
+            sendRequest();
+
             $tabWrap.style.pointerEvents = 'auto';
             $addressInfoWrap.style.pointerEvents = 'auto';
 
@@ -96,11 +98,40 @@ function checkNum() {
 
     const $infoInput = document.querySelectorAll(".info_input");
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 3; i++) {
         if ($infoInput[i].value.trim() === '') {
             $infoInput[i].focus();
             return false;
         };
     }
     return true;
+}
+
+function sendRequest(){
+    let email = document.querySelector("#email").value;
+    let name = document.querySelector("#name").value;
+    let phone = document.querySelector("#phone").value;
+    let birth = document.querySelector("#birth").value;
+    let pcc = document.querySelector("#pcc").value;
+
+    let data = {
+        email: email,
+        name: name,
+        phoneNumber: phone,
+        birthDate: birth,
+        pccc: pcc
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/updateUserInfo",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function(response){
+            alert(response.message);
+        },
+        error: function(xhr, status, error){
+            console.error("Error:", error);
+        }
+    });
 }

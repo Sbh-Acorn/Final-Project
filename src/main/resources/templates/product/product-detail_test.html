@@ -210,6 +210,7 @@
             background-color: #27ae60;
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="banner">
@@ -261,6 +262,9 @@
             <input type="hidden" name="product_id" th:value="${product.product_id}">
             <button type="submit" class="add-to-cart-button">장바구니에 담기</button>
         </form>
+
+        <button class="wishlist-btn">위시리스트 추가</button>
+        <input type="hidden" name="product_id" id="productId" th:value="${product.product_id}">
     </div>
 </div>
 
@@ -278,6 +282,25 @@
         if (!sidebar.contains(event.target) && !event.target.closest('#cart-toggle')) {
             sidebar.classList.remove('active');
         }
+    });
+</script>
+
+<script>
+    $(".wishlist-btn").click(function(){
+        let productId = $("#productId").val();
+        $.ajax({
+            url: "/wishlist/add",
+            type: "POST",
+            data: {
+                productId: productId
+            },
+            success: function(response){
+                alert(response.message);
+            },
+            error: function(xhr, status, error){
+                console.log("Error:", error);
+            }
+        });
     });
 </script>
 </body>

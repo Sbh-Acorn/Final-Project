@@ -34,10 +34,31 @@ public class WishlistRepository {
 
     }
 
-    public int isInWishlist(WishlistRequestDTO wishlistRequestDTO){
+    public boolean isInWishlist(WishlistRequestDTO wishlistRequestDTO){
 
-        return session.selectOne(namespace + "isInWishlist", wishlistRequestDTO);
+        int result = session.selectOne(namespace + "isInWishlist", wishlistRequestDTO);
+        return result > 0;
 
+    }
+
+    public int insertNotification(){
+
+        return session.insert(namespace + "insertNotification");
+
+    }
+
+    public int updateNotificationSent(){
+
+        return session.update(namespace + "updateNotificationSent");
+
+    }
+
+    public void setSafeUpdateOff(){
+        session.update(namespace + "setSafeUpdateOff");
+    }
+
+    public void setSafeUpdateOn(){
+        session.update(namespace + "setSafeUpdateOn");
     }
 
 }

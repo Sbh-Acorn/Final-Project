@@ -84,7 +84,7 @@
 <!--       ajax 구현부 -->
         <div id="product-info" data-code="${product.code}" data-userid="${userid}"></div>
 
-        <div id="wishlist_btn" class="btn">
+        <div id="wishlist_btn" class="btn" th:data-product-id="${product.product_id}">
             <p id="wishlist_txt">위시리스트에 추가</p>
             <img th:src="@{/img/product_wishlist.svg}" alt="" id="wishlist_img">
         </div>

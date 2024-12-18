@@ -9,29 +9,29 @@ $closeModal.addEventListener("click", () => {
 checkBox();
 
 // 여기 삭제하시면 됩니다!!!
-$btn.addEventListener("click", () => {
-
-    const newLi = document.createElement("li");
-    newLi.className = "modal_box";
-    newLi.innerHTML = `
-        <form action="">
-            <div class="modal_box_title">
-                <p class="box_title_txt">주소록</p>
-                <div class="close_wrap">
-                    <img src="/img/close.svg" alt="" class="close">
-                </div>
-            </div>
-            <div class="modal_box_items">
-                <p class="modal_box_item">Geombae-ro, Guri-si, Gyeonggi-do, Republic of Korea, KoreaKoreaKoreaKoreaKoreaKoreaKorea</p>
-                <p class="modal_box_item">우편번호 - 0123456</p>
-                <p class="modal_box_item">홍길시 홍길동 홍길로123 홍길아파트 홍길홍길</p>
-            </div>
-        </form>
-    `;
-
-    $modalBoxs.appendChild(newLi);
-    checkBox();
-});
+//$btn.addEventListener("click", () => {
+//
+//    const newLi = document.createElement("li");
+//    newLi.className = "modal_box";
+//    newLi.innerHTML = `
+//        <form action="">
+//            <div class="modal_box_title">
+//                <p class="box_title_txt">주소록</p>
+//                <div class="close_wrap">
+//                    <img src="/img/close.svg" alt="" class="close">
+//                </div>
+//            </div>
+//            <div class="modal_box_items">
+//                <p class="modal_box_item">Geombae-ro, Guri-si, Gyeonggi-do, Republic of Korea, KoreaKoreaKoreaKoreaKoreaKoreaKorea</p>
+//                <p class="modal_box_item">우편번호 - 0123456</p>
+//                <p class="modal_box_item">홍길시 홍길동 홍길로123 홍길아파트 홍길홍길</p>
+//            </div>
+//        </form>
+//    `;
+//
+//    $modalBoxs.appendChild(newLi);
+//    checkBox();
+//});
 // 여기입니다!
 
 function deleteBox() {

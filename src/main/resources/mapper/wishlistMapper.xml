@@ -35,6 +35,29 @@
         where user_id = (select user_id from user where email = #{email}) and product_id = #{productId}
     </select>
 
+    <insert id="insertNotification">
+        insert into notification(user_id, product_id, created_at)
+        select w.user_id, w.product_id, now()
+        from wishlist w
+        join pricedrop p
+        on w.product_id = p.product_id
+        where p.notification_sent = FALSE;
+    </insert>
+
+    <update id="updateNotificationSent">
+        update pricedrop
+        set notification_sent = TRUE
+        where notification_sent = FALSE;
+    </update>
+
+    <update id="setSafeUpdateOff">
+        SET SQL_SAFE_UPDATES = 0;
+    </update>
+
+    <update id="setSafeUpdateOn">
+        SET SQL_SAFE_UPDATES = 1;
+    </update>
+
 
 
 </mapper>

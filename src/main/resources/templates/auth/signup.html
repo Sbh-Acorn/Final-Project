@@ -8,6 +8,18 @@
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <script defer th:src="@{/js/sign_up.js}"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!-- 메시지를 처리하는 스크립트 -->
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            // 메시지를 Thymeleaf로부터 안전하게 읽어옴
+            const message = [[${message}]];
+
+            // 메시지가 있을 경우에만 alert 표시
+            if (message) {
+                alert(message);
+            }
+        });
+    </script>
     <script>
         function execDaumPostcode(event) {
             new daum.Postcode({
