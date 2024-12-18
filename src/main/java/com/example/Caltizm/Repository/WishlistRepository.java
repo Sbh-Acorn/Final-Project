@@ -34,9 +34,10 @@ public class WishlistRepository {
 
     }
 
-    public int isInWishlist(WishlistRequestDTO wishlistRequestDTO){
+    public boolean isInWishlist(WishlistRequestDTO wishlistRequestDTO){
 
-        return session.selectOne(namespace + "isInWishlist", wishlistRequestDTO);
+        int result = session.selectOne(namespace + "isInWishlist", wishlistRequestDTO);
+        return result > 0;
 
     }
 

@@ -2,10 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" th:href="@{/css/font.css}">
-    <link rel="stylesheet" th:href="@{/css/addr.css}">
+    <title>Title</title>
 
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
@@ -41,6 +38,8 @@
                         if(extraAddr !== ''){
                             extraAddr = ' (' + extraAddr + ')';
                         }
+                        // 조합된 참고항목을 해당 필드에 넣는다.
+                        document.getElementById("extraAddress").value = extraAddr;
 
                     } else {
                         document.getElementById("extraAddress").value = '';
@@ -48,11 +47,8 @@
 
                     // 우편번호와 주소 정보를 해당 필드에 넣는다.
                     document.getElementById("postcode").value = data.zonecode;
-                    document.getElementById("postcodeText").innerHTML = data.zonecode;
-                    document.getElementById("postcodeText").style.color = "black"
+                    document.getElementById("address").value = addr;
                     document.getElementById("addressEnglish").value = data.addressEnglish;
-                    document.getElementById("addressEnglishText").innerHTML = data.addressEnglish;
-                    document.getElementById("addressEnglishText").style.color = "black";
                     // 커서를 상세주소 필드로 이동한다.
                     document.getElementById("detailAddress").focus();
                 }
@@ -62,27 +58,17 @@
 
 </head>
 <body>
-<main>
-    <h1>CALTIZM</h1>
-    <div class="big_box">
-        <form th:action="@{/address/create}" method="post">
-            <p class="title">주소록 추가</p>
-            <div class="input_wrap">
-                <div class="box">
-                    <p class="input" id="addressEnglishText" onclick="execDaumPostcode()">영문주소</p>
-                    <input type="text" name="address" id="addressEnglish" style="display: none;" required>
-                </div>
-                <div class="box">
-                    <p class="input" id="postcodeText" onclick="execDaumPostcode()">우편번호</p>
-                    <input type="text" name="zipCode" id="postcode" style="display: none;" required>
-                </div>
-                <div class="box">
-                    <input type="text" name="detail" class="input" id="detailAddress" placeholder="상세주소를 입력해주세요" required>
-                </div>
-            </div>
-            <button class="btn" type="submit">주소록 추가</button>
-        </form>
-    </div>
-</main>
+
+<h2>주소록 추가</h2>
+<input type="button" onclick="execDaumPostcode()" value="주소 찾기"><br>
+<form th:action="@{/address/create}" method="post">
+    <input type="text" id="address" placeholder="주소" readonly><br>
+    <input type="text" id="extraAddress" placeholder="참고항목" readonly><br>
+    <input type="text" id="addressEnglish" name="address" placeholder="영어주소" readonly><br>
+    <input type="text" id="postcode" name="zipCode" placeholder="우편번호" readonly><br>
+    <input type="text" id="detailAddress" name="detail" placeholder="상세주소"><br>
+    <button>주소록 추가</button>
+</form>
+
 </body>
 </html>

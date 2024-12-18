@@ -28,9 +28,9 @@ public class UserRepository {
 
     }
 
-    public int updateUserInfo(UserUpdateRequestDTO userUpdateRequestDTO){
+    public int updateUserInfo(UserUpdateDTO userUpdateDTO){
 
-        return session.update(userNamespace + "updateUserInfo", userUpdateRequestDTO);
+        return session.update(userNamespace + "updateUserInfo", userUpdateDTO);
 
     }
 
