@@ -40,43 +40,9 @@ public class MyPageController {
         System.out.println(email);
         System.out.println(user);
 
-        return "myPage/mypage_ui";
+        return "myPage/mypage";
 
     }
-
-    @GetMapping("/myPage_ui")
-    public String myPage2() {
-        return "myPage/myPage_ui";
-    }
-
-//    @PostMapping("/updateUserInfo")
-//    public String update(@SessionAttribute(value="email", required=false) String email,
-//                         @ModelAttribute UserUpdateFormDTO userUpdateFormDTO){
-//
-//        if(email == null){
-//            return "redirect:/login";
-//        }
-//
-//        System.out.println(userUpdateFormDTO);
-//
-//        String[] name = userUpdateFormDTO.getName().split(" ");
-//        if(name.length != 2){
-//            return "redirect:/myPage";
-//        }
-//        String firstName = name[0];
-//        String lastName = name[1];
-//
-//        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(email, firstName, lastName,
-//                userUpdateFormDTO.getPhoneNumber(), userUpdateFormDTO.getBirthDate(),
-//                userUpdateFormDTO.getPccc() != null ? userUpdateFormDTO.getPccc() : null);
-//        System.out.println(userUpdateDTO);
-//
-//        int rRow = repository.updateUserInfo(userUpdateFormDTO);
-//        System.out.println(rRow);
-//
-//        return "redirect:/myPage";
-//
-//    }
 
     @ResponseBody
     @PostMapping("/updateUserInfo")
@@ -87,7 +53,7 @@ public class MyPageController {
 
         if(email == null){
             response.put("status", "session_invalid");
-            response.put("message", "로그인 해주세요.");
+            response.put("message", "세션이 유효하지 않습니다.");
             return response;
         }
 
@@ -95,7 +61,7 @@ public class MyPageController {
 
         String[] name = userUpdateFormDTO.getName().split(" ");
         if(name.length != 2){
-            response.put("status", "input_invalid");
+            response.put("status", "invalid_input");
             response.put("message", "유효하지 않은 입력입니다.");
             return response;
         }
@@ -129,7 +95,7 @@ public class MyPageController {
             return "redirect:/login";
         }
 
-        return "myPage/addAddress_ui";
+        return "myPage/addAddress";
 
     }
 
@@ -183,7 +149,7 @@ public class MyPageController {
 
         model.addAttribute("address", address);
 
-        return "myPage/updateAddress_ui";
+        return "myPage/updateAddress";
 
     }
 

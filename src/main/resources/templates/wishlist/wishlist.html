@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/mylist.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <header>
@@ -52,29 +53,51 @@
         <p class="title">위시리스트</p>
         <hr>
         <ul class="list_wrap">
-            <li class="list" th:each="item : ${wishlist}">
-                <div class="close_wrap">
-                    <a th:href="@{/wishlist/delete/{id}(id = ${item.productId})}">
-                        <img th:src="@{/img/close.svg}" alt="" class="close">
-                    </a>
+            <li class="list" th:each="item : ${wishlist}" th:data-product-id="${item.productId}">
+                <div class="close_wrap" th:onclick="deleteItem(this)">
+                    <img th:src="@{/img/close.svg}" alt="" class="close">
                 </div>
-                <p class="price" th:text="'€' + ${item.currentPrice}">₩75,000</p>
+                <p class="price" th:text="'€' + ${item.currentPrice}"></p>
                 <div class="img_wrap">
                     <img th:src="${item.imageUrl}" alt="" class="img">
                 </div>
                 <div class="info_box">
-                    <p th:text="${item.brandName}"></p>
-                    <p class="info_title" th:text="${item.name}">BOUCLE WOOL ZIP FLEECE JACKET</p>
+                    <a th:href="@{/brand/{brandName}(brandName = ${item.brandName})}">
+                        <p th:text="${item.brandName}"></p>
+                    </a>
+                    <a th:href="@{/product/{productId}(productId = ${item.productId})}">
+                        <p class="info_title" th:text="${item.name}"></p>
+                    </a>
                     <ul class="info_wrap">
-                        <li class="info"><span th:if="${item.originalPrice != null}" th:text="'€' + ${item.originalPrice}"></span><b class="small">원래가격</b></li>
-<!--                        <li class="info">19% 부가가치세</li>-->
-<!--                        <li class="info">25% 쿠폰적용</li>-->
-<!--                        <li class="info">FTA 미적용</li>-->
+                        <li class="info">
+                            <span th:if="${item.originalPrice != null}" th:text="'€' + ${item.originalPrice}"></span>
+                            <b class="small" th:if="${item.originalPrice != null}" th:text="정가"></b>
+                        </li>
                     </ul>
                 </div>
             </li>
         </ul>
     </div>
+    <script>
+        function deleteItem(element){
+            let item = element.closest(".list");
+            let productId = item.dataset.productId;
+
+            $.ajax({
+                url: "/wishlist/delete/" + productId,
+                type: "DELETE",
+                success: function(response){
+                    alert(response.message);
+                    if(item){
+                        item.remove();
+                    }
+                },
+                error: function(xhr, status, error){
+                    console.log("Error:", error);
+                }
+            });
+        }
+    </script>
 </main>
 </body>
 </html>
