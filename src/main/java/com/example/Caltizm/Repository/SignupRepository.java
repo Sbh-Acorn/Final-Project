@@ -16,6 +16,16 @@ public class SignupRepository {
     @Autowired
     SqlSession session;
 
+    //유저 존재 여부 체크
+    public String userCheck(String email) {
+        return session.selectOne(namespace + ".userCheck", email);
+    }
+
+    //전화번호 목록 조회
+    public List<String> selectTel() {
+        return session.selectList(namespace + ".selectTel");
+    }
+
     //모든 유저 정보
     public List<SignupRequestDTO> selectAllUser() {
         return session.selectList(namespace + ".selectAllUser");
