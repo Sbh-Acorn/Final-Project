@@ -54,6 +54,7 @@ public class MyPageController {
         if(email == null){
             response.put("status", "session_invalid");
             response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
             return response;
         }
 
@@ -63,6 +64,7 @@ public class MyPageController {
         if(name.length != 2){
             response.put("status", "invalid_input");
             response.put("message", "유효하지 않은 입력입니다.");
+            System.out.println(response);
             return response;
         }
         String firstName = name[0];
@@ -79,11 +81,13 @@ public class MyPageController {
         if(rRow != 1){
             response.put("status", "update_fail");
             response.put("message", "정보가 수정되지 않았습니다.");
+            System.out.println(response);
             return response;
         }
 
         response.put("status", "update_success");
         response.put("message", "정보가 수정되었습니다.");
+        System.out.println(response);
         return response;
 
     }

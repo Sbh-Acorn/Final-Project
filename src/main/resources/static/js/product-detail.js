@@ -48,13 +48,31 @@ function sendData(action) {
                 }
             });
         });
+
+        $("#wishlist_btn").click(function(){
+            let productId = $(this).data("product-id");
+
+            $.ajax({
+                url: "/wishlist/add",
+                type: "POST",
+                data: {
+                    productId: productId
+                },
+                success: function(response){
+                    alert(response.message);
+                },
+                error: function(xhr, status, error){
+                    console.log("Error:", error);
+                }
+            });
+        });
     });
 
 
 // 이벤트 핸들러 등록
-$wishlist.addEventListener("click", function() {
-    sendData("wishlist"); // 위시리스트에 추가
-});
+//$wishlist.addEventListener("click", function() {
+//    sendData("wishlist"); // 위시리스트에 추가
+//});
 
 //$bucket.addEventListener("click", function() {
 //    sendCartData("bucket"); // 장바구니에 추가
