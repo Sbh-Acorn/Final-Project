@@ -40,4 +40,16 @@ public class WishlistRepository {
 
     }
 
+    public int insertNotification(){
+
+        return session.insert(namespace + "insertNotification");
+
+    }
+
+    public int updateNotificationSent(){
+
+        return session.update(namespace + "updateNotificationSent");
+
+    }
+
 }
