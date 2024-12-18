@@ -53,21 +53,7 @@
         <div id="selected_wrap">
             <p id="selected_txt">선택한 항목</p>
             <ul id="selected_ul">
-                <li class="selected_li">
-                    <p class="selected_li_txt">Spring</p>
-                    <img th:src="@{/img/close.svg}" alt="" class="selected_li_close">
-                </li>
-                <li class="selected_li">
-                    <p class="selected_li_txt">Spring</p>
-                    <img th:src="@{/img/close.svg}" alt="" class="selected_li_close">
-                </li>
-                <li class="selected_li">
-                    <p class="selected_li_txt">Spring</p>
-                    <img th:src="@{/img/close.svg}" alt="" class="selected_li_close">
-                </li>
-                <li class="selected_li">
-                    <p class="selected_li_txt">Spring</p>
-                    <img th:src="@{/img/close.svg}" alt="" class="selected_li_close">
+
                 </li>
             </ul>
         </div>
@@ -147,7 +133,7 @@
                 <img th:src="${product.image_url}" alt="Image" class="item_img">
                 <p class="item_brand" th:text="${product.brand}" >Brand</p>
                 <p class="item_name" th:text="${product.name}" >Product Name</p>
-                    <p class="item_price" th:text="'€' + ${product.current_price} + ((${product.original_price != null}) ? ' (€' + ${product.original_price} + ')' : '')"></p>
+                    <p class="item_price" th:text="'￦' + ${product.viewCurrent_price} + ((${product.viewOriginal_price != null}) ? ' (￦' + ${product.viewOriginal_price} + ')' : '')"></p>
                 </a>
             </li>
         </ul>

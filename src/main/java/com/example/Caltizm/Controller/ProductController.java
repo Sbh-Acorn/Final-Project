@@ -3,6 +3,7 @@ package com.example.Caltizm.Controller;
 import com.example.Caltizm.DTO.CartDTO;
 import com.example.Caltizm.DTO.ProductDTO;
 import com.example.Caltizm.Repository.DataRepository;
+import com.example.Caltizm.Service.CalculatorService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,11 +22,20 @@ public class ProductController {
     @Autowired
     DataRepository repository;
 
+    @Autowired
+    CalculatorService calculatorService;
+
     // 모든 메서드에서 사용할 제품 리스트를 미리 로드
     @ModelAttribute("products")
     public List<ProductDTO> getAllProducts() {
         List<ProductDTO> products = repository.getProduct();
         products.sort(Comparator.comparing(ProductDTO::getBrand));
+        for (ProductDTO product : products){
+            product.setCurrent_price(calculatorService.calculator(product.getCurrent_price()));
+            if(product.getOriginal_price() != null){
+                product.setOriginal_price(calculatorService.calculator(product.getOriginal_price()));
+            }
+        }
         return products;
     }
 
