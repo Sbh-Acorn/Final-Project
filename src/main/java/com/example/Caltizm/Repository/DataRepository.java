@@ -17,6 +17,9 @@ public class DataRepository {
     @Autowired
     SqlSession session;
 
+    @Autowired
+    WishlistRepository wishlistRepository;
+
     public void collectAndInsertData(){
         collectAndInsertBrandData();
         collectAndInsertProductData();
@@ -208,6 +211,12 @@ public class DataRepository {
         }
         // 안전 업데이트 모드 다시 켜기
         session.update("brand.setSafeUpdateOn");
+
+        // 알림 테이블 데이터 추가
+        wishlistRepository.insertNotification();
+        wishlistRepository.setSafeUpdateOff();
+        wishlistRepository.updateNotificationSent();
+        wishlistRepository.setSafeUpdateOn();
 
         //FTA 가능 여부
         Set<String> FTA = service.collectFTAItemCode();
