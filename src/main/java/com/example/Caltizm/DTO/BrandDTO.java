@@ -22,4 +22,14 @@ public class BrandDTO implements Comparable<BrandDTO>{
     public int compareTo(BrandDTO other) {
         return this.name.compareTo(other.name);
     }
+
+    @Override
+    public String toString() {
+        return "BrandDTO{" +
+                "name='" + name + '\'' +
+                ", logo_url='" + logo_url + '\'' +
+                ", description='" + description + '\'' +
+                ", is_deleted=" + is_deleted +
+                '}';
+    }
 }

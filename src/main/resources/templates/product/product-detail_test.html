@@ -6,13 +6,112 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+
+        .banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .banner button {
+            background-color: #ffffff;
+            color: #2ecc71;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .banner button:hover {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            transition: right 0.3s ease;
+            z-index: 1000;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            background-color: #2ecc71;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cart-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-name {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .cart-item-price {
+            font-size: 14px;
+            color: #e74c3c;
+        }
+
+        .cart-item-quantity {
+            font-size: 14px;
+            color: #333;
+            margin-left: 10px;
+        }
+
+        .remove-item-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .remove-item-button:hover {
+            background-color: #c0392b;
         }
 
         .product-detail-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-top: 60px;
         }
 
         .product-image {
@@ -74,9 +173,64 @@
         .voucher-status.excluded {
             color: #e74c3c;
         }
+
+        .add-to-cart-form {
+            margin-top: 20px;
+        }
+
+        .add-to-cart-button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #27ae60;
+        }
+
+        .cart-button {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background-color: #2ecc71;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1001;
+        }
+
+        .cart-button:hover {
+            background-color: #27ae60;
+        }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
+<div class="banner">
+    <div>ShopEasy</div>
+    <button id="cart-toggle">장바구니 보기</button>
+</div>
+<div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-header">내 장바구니</div>
+    <!-- 장바구니 항목을 동적으로 출력 -->
+    <div th:each="item : ${cartList}" class="cart-item">
+        <span class="cart-item-name" th:text="${item.productName}">Sample Item</span>
+        <span class="cart-item-price" th:text="'€' + ${item.price}">€99.99</span>
+        <span class="cart-item-quantity" th:text="'수량: ' + ${item.quantity}">수량: 1</span>
+        <form th:action="@{/cart/remove}" method="post" style="display:inline;">
+            <input type="hidden" name="product_id" th:value="${item.product_id}">
+            <input type="hidden" name="current_product_id" th:value="${product.product_id}">
+            <button type="submit" class="remove-item-button">삭제</button>
+        </form>
+    </div>
+</div>
 <h1>Product Details</h1>
 <div class="product-detail-container">
     <!-- 상품 이미지 -->
@@ -85,7 +239,7 @@
     <!-- 상품 정보 -->
     <div class="product-detail">
         <div class="product-name" th:text="${product.name}">Product Name</div>
-        <div class="product-price" th:text="'€' + ${product.current_price}">$99.99</div>
+        <div class="product-price" th:text="'€' + ${product.current_price}">€99.99</div>
         <div class="product-original-price" th:if="${product.original_price != null}" th:text="'€' + ${product.original_price}">€109.00</div>
 
         <div class="product-description" th:text="${product.description}">Product Description</div>
@@ -102,7 +256,52 @@
              th:text="${product.is_excludedVoucher} ? '쿠폰 사용 불가' : '쿠폰 사용 가능'">
             쿠폰 상태
         </div>
+
+        <!-- 장바구니에 담기 -->
+        <form class="add-to-cart-form" th:action="@{/cart/add}" method="post">
+            <input type="hidden" name="product_id" th:value="${product.product_id}">
+            <button type="submit" class="add-to-cart-button">장바구니에 담기</button>
+        </form>
+
+        <button class="wishlist-btn">위시리스트 추가</button>
+        <input type="hidden" name="product_id" id="productId" th:value="${product.product_id}">
     </div>
 </div>
+
+<!-- 장바구니 보기 버튼 -->
+<a href="/cart/view" class="cart-button">장바구니</a>
+
+<script>
+    const sidebar = document.getElementById('cart-sidebar');
+
+    document.getElementById('cart-toggle').addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+    });
+
+    document.body.addEventListener('click', function(event) {
+        if (!sidebar.contains(event.target) && !event.target.closest('#cart-toggle')) {
+            sidebar.classList.remove('active');
+        }
+    });
+</script>
+
+<script>
+    $(".wishlist-btn").click(function(){
+        let productId = $("#productId").val();
+        $.ajax({
+            url: "/wishlist/add",
+            type: "POST",
+            data: {
+                productId: productId
+            },
+            success: function(response){
+                alert(response.message);
+            },
+            error: function(xhr, status, error){
+                console.log("Error:", error);
+            }
+        });
+    });
+</script>
 </body>
 </html>

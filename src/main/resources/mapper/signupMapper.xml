@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="singup">
+
+    <!-- 유저 존재 여부 체크 -->
+    <select id="userCheck" parameterType="String" resultType="String">
+        SELECT email FROM User where email=#{email}
+    </select>
+
+    <!-- 전화번호 조회 -->
+    <select id="selectTel" resultType="String">
+        SELECT phone_number FROM User
+    </select>
+
+    <!-- 회원가입한 유저 DB에 추가 (pccc가 있는 경우) -->
+    <insert id="registerUser1" parameterType="SignupRequestDTO">
+        INSERT INTO User (last_name, first_name, email, phone_number, birth_date, password, join_date, pccc)
+        VALUES
+        (#{last_name},#{first_name},#{email},#{phone_number},#{birth_date},#{password},SYSDATE(),#{pccc})
+    </insert>
+    <!-- 회원가입한 유저 DB에 추가 (pccc가 없는 경우) -->
+    <insert id="registerUser2" parameterType="SignupRequestDTO">
+        INSERT INTO User (last_name, first_name, email, phone_number, birth_date, password, join_date)
+        VALUES
+        (#{last_name},#{first_name},#{email},#{phone_number},#{birth_date},#{password},SYSDATE())
+    </insert>
+
+
+    <!-- 유저리스트 가져오기 -->
+    <select id="selectAllUser" resultType="SignupRequestDTO">
+        SELECT last_name, first_name, email, phone_number, birth_date, password, pccc
+        FROM User
+    </select>
+
+    <!-- 유저 한명 검색 -->
+    <select id="selectUser" parameterType="String" resultType="SignupRequestDTO">
+        select last_name, first_name, email, phone_number, birth_date, password, pccc
+        from User where email = #{email}
+    </select>
+
+    <!-- 회원가입에서 입력한 주소 DB에 추가 -->
+    <insert id="registerUserAddr" parameterType="AddressResponseDTO">
+        INSERT INTO Address (user_id, address, detail, zip_code)
+        VALUES
+        (#{user_id}, #{address},#{detail},#{zip_code})
+    </insert>
+
+    <!-- 유저의 유저ID 검색 -->
+    <select id="searchUserID" parameterType="String" resultType="Integer">
+        select user_id
+        from User where email = #{email}
+    </select>
+
+</mapper>

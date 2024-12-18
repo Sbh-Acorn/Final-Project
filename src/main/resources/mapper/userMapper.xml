@@ -17,11 +17,19 @@
         where email = #{email}
     </select>
 
-    <update id="updateUserInfo" parameterType="UserUpdateRequestDTO">
-        update user
-        set first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
-        birth_date = concat(#{birthYear}, '-', #{birthMonth}, '-', #{birthDay}), pccc = #{pccc}
-        where email = #{email}
+    <update id="updateUserInfo" parameterType="UserUpdateDTO">
+        <if test="pccc != null">
+            update user
+            set first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
+            birth_date = #{birthDate}, pccc = #{pccc}
+            where email = #{email}
+        </if>
+        <if test="pccc == null">
+            update user
+            set first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
+            birth_date = #{birthDate}
+            where email = #{email}
+        </if>
     </update>
 
     <update id="updatePassword" parameterType="PasswordUpdateDTO">
@@ -30,5 +38,11 @@
         where email = #{email}
     </update>
 
+
+    <select id="selectUserIdByEmail" parameterType="String" resultType="Integer">
+        SELECT user_id
+        FROM user
+        WHERE email = #{email};
+    </select>
 
 </mapper>

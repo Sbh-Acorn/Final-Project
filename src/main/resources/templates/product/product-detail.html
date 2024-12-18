@@ -1,10 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/product-detail.css}">
+    <script defer th:src="@{/js/product-detail.js}"></script>
+    <script defer th:src="@{/js/header.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
+<header>
+    <div id="logo_wrap">
+        <h1 id="logo">CALTIZM</h1>
+    </div>
+    <div id="wrap_wrap">
+        <div id="wrap1">
+            <div id="header_input_wrap">
+                <input type="text" id="header_input">
+                <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
+            </div>
+            <div id="header_icon_wrap">
+                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
+                <div id="header_alarm_dropdown">
+                    현재 내용이 없습니다.
+                </div>
+                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
+                <ul id="header_profile_dropdown">
+                    <li class="header_profile_dropdown_list">
+                        <a th:if="${session.email == null}" th:href="@{/login}">로그인</a>
+                    </li>
+                    <li class="header_profile_dropdown_list">회원가입</li>
+                </ul>
+                <ul id="header_profile_dropdown2">
+                    <li class="header_profile_dropdown_list">
+                        <a th:if="${session.email != null}" th:href="@{/logout}">로그아웃</a>
+                    </li>
+                    <li class="header_profile_dropdown_list">
+                        <a th:href="@{/myPage}">마이페이지</a>
+                    </li>
+                </ul>
+                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+            </div>
+        </div>
+        <div id="wrap2">
+            <ul id="header_nav">
+                <li class="header_list">ALL</li>
+                <li class="header_list">BRAND</li>
+                <li class="header_list">FTA</li>
+                <li class="header_list">TAX</li>
+                <li class="header_list">COMMUNITY</li>
+            </ul>
+        </div>
+    </div>
+</header>
+<main>
+    <div id="product_img_wrap">
+        <img th:src="${product.image_url}" alt="Product Image" id="product_img">
+    </div>
+    <div id="product_info_wrap">
+        <p id="product_brand" th:text="${product.brand}">Brand</p>
+        <p id="product_name" th:text="${product.name}">Product Name</p>
+        <p id="product_price" th:text="'€' + ${product.current_price}">Current Price</p>
+        <p id="product_sales" th:if="${product.original_price != null}">
+            <b th:text="'(€' + ${product.original_price} + ')'">Original Price</b>
+            <span th:text="'(' + ${discountRate} + '% 할인)'">Discount Rate</span>
+        </p>
 
+
+        <ul id="product_category">
+            <li class="category_list" th:text="${product.category1}">category1</li>
+            <li class="category_list" th:text="${product.category2}">category2</li>
+            <li class="category_list"  th:if="${product.category3 != null}" th:text="${product.category3}">category3</li>
+        </ul>
+        <ul id="product_point">
+            <li class="point_list" th:text="${product.description}">Product Description>Style: 6211 Wild Leather Belt</li>
+
+        </ul>
+
+
+<!--       ajax 구현부 -->
+        <div id="product-info" data-code="${product.code}" data-userid="${userid}"></div>
+
+        <div id="wishlist_btn" class="btn" th:data-product-id="${product.product_id}">
+            <p id="wishlist_txt">위시리스트에 추가</p>
+            <img th:src="@{/img/product_wishlist.svg}" alt="" id="wishlist_img">
+        </div>
+        <div id="bucket_btn" class="btn" th:data-product-id="${product.product_id}">
+            <p id="bucket_txt">장바구니에 담기</p>
+            <img src="/img/product_bucket.svg" alt="" id="bucket_img">
+        </div>
+    </div>
+</main>
 </body>
 </html>
