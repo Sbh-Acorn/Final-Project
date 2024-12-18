@@ -3,7 +3,53 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="a">
+<mapper namespace="cart">
+
+
+    <select id="countCartListByUserId" parameterType="Integer" resultType="Integer">
+        SELECT count(1)
+        FROM Cart
+        WHERE user_id = #{user_id}
+    </select>
+
+    <delete id="deleteCartByUserId" parameterType="Integer">
+        DELETE FROM Cart
+        WHERE user_id = #{user_id}
+    </delete>
+
+    <insert id="insertSessionCartList" parameterType="Map">
+        INSERT INTO Cart (user_id, product_id, quantity, price)
+        VALUES
+        <foreach collection="cartList" item="item" separator=",">
+            (#{user_id}, #{item.product_id}, #{item.quantity}, #{item.price})
+        </foreach>
+    </insert>
+
+    <select id="selectCartListByUserId" parameterType="Integer" resultType="CartDTO">
+        SELECT
+        c.product_id AS product_id,    -- DTO 필드와 매칭
+        p.name AS productName, -- DTO 필드와 매칭
+        p.current_price AS price,              -- 가격 정보
+        c.quantity AS quantity         -- 수량
+        FROM Cart c
+        JOIN Product p ON c.product_id = p.product_id
+        WHERE c.user_id = #{user_id}
+    </select>
+
+    <update id="updateAddQuantity" parameterType="Map">
+        UPDATE Cart
+        SET quantity = quantity + 1
+        WHERE user_id = #{user_id} AND product_id = #{product_id}
+    </update>
+
+    <insert id="insertCartList" parameterType="Map">
+        INSERT INTO Cart (user_id, product_id, quantity, price)
+        VALUES
+            (#{user_id}, #{addCartItem.product_id}, #{addCartItem.quantity}, #{addCartItem.price})
+    </insert>
+
+
+
 
 
 

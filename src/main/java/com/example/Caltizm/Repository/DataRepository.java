@@ -233,4 +233,12 @@ public class DataRepository {
         CartDTO cartItemInfo = session.selectOne("product.selectCartItemInfo", product_id);
         return cartItemInfo;
     }
+
+    public List<String> getAllBrandName(){
+        return session.selectList("product.selectAllBrandName");
+    }
+
+    public List<String> getAllCategoryName(){
+        return session.selectList("product.selectAllCategoryName");
+    }
 }

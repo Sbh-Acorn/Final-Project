@@ -62,7 +62,7 @@
         </select>
 
 
-    <insert id="insert" parameterType="java.util.Map">
+    <insert id="insert" parameterType="Map">
         INSERT INTO Product (product_id, brand_id, image_url, name,original_price,current_price,description,
                             category1_id,category2_id,category3_id,is_excludedVoucher)
         VALUES (#{product_id}, #{brand_id}, #{image_url}, #{name},#{original_price},#{current_price},#{description},
@@ -170,5 +170,21 @@
         values(#{productId}, #{previousPrice}, #{currentPrice}, now())
     </insert>
 
+
+    <select id="selectAllBrandName" resultType="String">
+        SELECT DISTINCT b.name
+        FROM Product p
+        LEFT JOIN brand b ON p.brand_id = b.brand_id
+        ORDER BY b.name;
+    </select>
+
+    <select id="selectAllCategoryName" resultType="String">
+        SELECT name FROM category1
+        UNION
+        SELECT name FROM category2
+        UNION
+        SELECT name FROM category3
+        ORDER BY name;
+    </select>
 
 </mapper>

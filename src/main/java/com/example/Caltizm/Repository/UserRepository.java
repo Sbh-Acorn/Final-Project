@@ -70,4 +70,10 @@ public class UserRepository {
 
     }
 
+
+    //카트 관련
+
+    public Integer selectUserIdByEmail(String email){
+        return session.selectOne("user.selectUserIdByEmail", email);
+    }
 }

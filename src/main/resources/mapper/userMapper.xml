@@ -31,4 +31,10 @@
     </update>
 
 
+    <select id="selectUserIdByEmail" parameterType="String" resultType="Integer">
+        SELECT user_id
+        FROM user
+        WHERE email = #{email};
+    </select>
+
 </mapper>

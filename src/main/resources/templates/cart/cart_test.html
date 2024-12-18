@@ -1,203 +1,124 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Cart View</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-
-        .cart-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding: 10px 0;
-        }
-
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-
-        .item-details {
-            flex: 3;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .item-image {
-            width: 80px;   /* .item-image의 너비 */
-            height: 80px;  /* .item-image의 높이 */
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            overflow: hidden; /* 이미지가 부모 영역을 벗어나지 않도록 숨김 처리 */
-        }
-
-        .product-image {
-            width: 100%;  /* 부모 요소에 맞춰 너비를 100%로 설정 */
-            height: 100%; /* 부모 요소에 맞춰 높이를 100%로 설정 */
-            object-fit: cover; /* 이미지 비율 유지하면서 부모 요소를 채우기 */
-        }
-
-
-        .item-info {
-            flex: 1;
-        }
-
-        .item-name {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .item-price {
-            font-size: 14px;
-            color: #e74c3c;
-        }
-
-        .item-quantity {
-            display: flex;
-            align-items: center;
-        }
-
-        .quantity-button {
-            background-color: #2ecc71;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-
-        .quantity-button:hover {
-            background-color: #27ae60;
-        }
-
-        .quantity-input {
-            width: 40px;
-            text-align: center;
-            margin: 0 5px;
-        }
-
-        .remove-button {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .remove-button:hover {
-            background-color: #c0392b;
-        }
-
-        .footer {
-            margin-top: 20px;
-        }
-
-        .footer div {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .apply-coupon {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .coupon-input {
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .apply-button {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .apply-button:hover {
-            background-color: #27ae60;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/mylist.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
 </head>
 <body>
-<div class="cart-container">
-    <h1>장바구니</h1>
-
-    <!-- Product Details -->
-    <div>
-        <h2>상품 정보</h2>
-        <div th:each="item : ${cartProducts}" class="cart-item">
-            <div class="item-details">
-                <div class="item-image"><img class="product-image" th:src="${item.image_url}" alt="Product Image"/>
+<header>
+    <div id="logo_wrap">
+        <h1 id="logo">CALTIZM</h1>
+    </div>
+    <div id="wrap_wrap">
+        <div id="wrap1">
+            <div id="header_input_wrap">
+                <input type="text" id="header_input">
+                <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
+            </div>
+            <div id="header_icon_wrap">
+                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
+                <div id="header_alarm_dropdown">
+                    현재 내용이 없습니다.
                 </div>
-                <div class="item-info">
-                    <div class="item-name" th:text="${item.name}">상품 이름</div>
-                    <div class="product-original-price" th:if="${item.original_price != null}"
-                         th:text="'€' + ${item.original_price}">€109.00
+                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
+                <ul id="header_profile_dropdown">
+                    <li class="header_profile_dropdown_list">로그인</li>
+                    <li class="header_profile_dropdown_list">회원가입</li>
+                </ul>
+                <ul id="header_profile_dropdown2">
+                    <li class="header_profile_dropdown_list">로그아웃</li>
+                    <li class="header_profile_dropdown_list">마이페이지</li>
+                </ul>
+                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+            </div>
+        </div>
+        <div id="wrap2">
+            <ul id="header_nav">
+                <li class="header_list">ALL</li>
+                <li class="header_list">BRAND</li>
+                <li class="header_list">FTA</li>
+                <li class="header_list">TAX</li>
+                <li class="header_list">COMMUNITY</li>
+            </ul>
+        </div>
+    </div>
+</header>
+<main>
+    <div id="wrap_wrap2">
+        <p class="title">장바구니</p>
+        <hr>
+        <ul class="list_wrap">
+            <form th:action="@{/}">
+                <li class="list" th:each="item : ${cartProducts}">
+                    <div class="close_wrap">
+                        <img th:src="@{/img/close.svg}" alt="" class="close">
                     </div>
-                    <div class="item-price" th:text="'€' + ${item.current_price}">₩0</div>
-                    <div th:unless="${item.is_excludedVoucher}" style="color: green;">* 쿠폰 적용 가능</div>
-                    <div th:if="${item.is_excludedVoucher}"  style="color: red;">* 쿠폰 적용 불가능</div>
-                    <div th:if="${item.is_fta}" style="color: green;">* FTA 적용</div>
-                    <div th:unless="${item.is_fta}" style="color: red;">* FTA 미적용</div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <p class="price" th:text="'€' + ${item.current_price}">Current Price</p>
+                    <div class="img_wrap">
+                        <img th:src="${item.image_url}" alt="Product Image" class="img">
+                    </div>
+                    <div class="info_box">
+                        <p class="info_title" th:text="${item.name}">Product Name</p>
+                        <ul class="info_wrap">
+                            <li class="info" th:if="${item.original_price != null}">
+                                <span th:text="'€' + ${item.original_price}">₩105,000</span>
+                                <b class="small" th:text="'원래가격'">원래가격</b>
+                            </li>
+                            <li class="info">19% 부가가치세</li>
+                            <div th:unless="${item.is_excludedVoucher}" style="color: green;">* 쿠폰 적용 가능</div>
+                            <div th:if="${item.is_excludedVoucher}"  style="color: red;">* 쿠폰 적용 불가능</div>
+                            <div th:if="${item.is_fta}" style="color: green;">* FTA 적용</div>
+                            <div th:unless="${item.is_fta}" style="color: red;">* FTA 미적용</div>
+                        </ul>
 
-    <!-- Cart List -->
-    <div>
-        <h2>수량 및 삭제</h2>
-        <div th:each="item : ${cartList}" class="cart-list">
-            <div class="item-quantity">
-                <form th:action="@{/cart/view/updateQuantity}" method="post">
-                    <input type="hidden" name="product_id" th:value="${item.product_id}">
-                    <button type="submit" name="action" value="decrease" class="quantity-button">-</button>
-                    <input type="text" name="quantity" class="quantity-input" th:value="${item.quantity}" readonly>
-                    <button type="submit" name="action" value="increase" class="quantity-button">+</button>
-                </form>
-            </div>
-            <form th:action="@{/cart/view/remove}" method="post">
-                <input type="hidden" name="product_id" th:value="${item.product_id}">
-                <button type="submit" class="remove-button">삭제</button>
+                        <!-- 수량 조절 영역 추가 -->
+                        <div class="quantity_box">
+                            <button type="button" class="quantity_button" onclick="changeQuantity('minus', ${item.id})">-</button>
+                            <input type="number" id="quantity_${item.id}" class="quantity_input" value="${item.quantity}" min="1" onchange="updateQuantity(${item.id})">
+                            <button type="button" class="quantity_button" onclick="changeQuantity('plus', ${item.id})">+</button>
+                        </div>
+                    </div>
+                </li>
             </form>
-        </div>
+        </ul>
+        <ul class="final_wrap">
+            <li class="final"><p>총 상품 금액 </p><span>519,000</span></li>
+            <li class="final"><p>총 할인 금액 </p><span>135,000</span></li>
+            <li class="final"><p>예상 배송비 </p><span>37,000</span></li>
+            <li class="final"><p>예상 관부가세 </p><span>12,000</span></li>
+            <li class="final"><p id="final_p">최종 금액 </p><span id="final_span">222,220</span></li>
+        </ul>
     </div>
+</main>
 
-    <!-- Coupon Section -->
-    <div class="apply-coupon">
-        <input type="number" name="couponRate" class="coupon-input" placeholder="쿠폰율 입력">
-        <button class="apply-button">적용</button>
-    </div>
+<script>
+    // 수량 증가 / 감소 버튼 클릭 시 호출되는 함수
+    function changeQuantity(action, itemId) {
+        var quantityInput = document.getElementById('quantity_' + itemId);
+        var currentQuantity = parseInt(quantityInput.value);
 
-    <!-- Footer Section -->
-    <div class="footer">
-        <div>총 상품 금액 : ₩0</div>
-        <div>총 할인 금액 : ₩0</div>
-        <div>배송비 : ₩0 (25€)</div>
-        <div>예상 관부가세 : ₩0</div>
-        <div>총 합계 : ₩0</div>
-    </div>
-</div>
+        if (action === 'minus' && currentQuantity > 1) {
+            quantityInput.value = currentQuantity - 1;
+        } else if (action === 'plus') {
+            quantityInput.value = currentQuantity + 1;
+        }
+
+        updateQuantity(itemId); // 수량 변경 시 서버로 전송 (필요한 로직에 맞게 추가)
+    }
+
+    // 수량이 변경된 후 서버로 업데이트 요청
+    function updateQuantity(itemId) {
+        var quantityInput = document.getElementById('quantity_' + itemId);
+        var newQuantity = quantityInput.value;
+
+        // 서버로 수량 업데이트 요청 보내는 코드 작성
+        console.log("Updated quantity for item " + itemId + ": " + newQuantity);
+    }
+</script>
+
 </body>
 </html>
