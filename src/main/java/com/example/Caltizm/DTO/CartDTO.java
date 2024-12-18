@@ -15,7 +15,10 @@ public class CartDTO {
     private int quantity = 1;  // 기본값을 1로 설정
 
     public CartDTO(String product_id, String productName, double price) {
+        this.product_id = product_id;
         this.productName = productName;
         this.price = price;
     }
+
+
 }

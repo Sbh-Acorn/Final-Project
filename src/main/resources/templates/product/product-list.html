@@ -184,41 +184,13 @@
     </div>
     <div id="right_box">
         <ul id="item_box_wrap">
-            <li class="item_box">
-                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
-                <p class="item_brand">Houston</p>
-                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
-                <p class="item_price">￦100,000 (￦140,000)</p>
-            </li>
-            <li class="item_box">
-                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
-                <p class="item_brand">Houston</p>
-                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
-                <p class="item_price">￦100,000 (￦140,000)</p>
-            </li>
-            <li class="item_box">
-                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
-                <p class="item_brand">Houston</p>
-                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
-                <p class="item_price">￦100,000 (￦140,000)</p>
-            </li>
-            <li class="item_box">
-                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
-                <p class="item_brand">Houston</p>
-                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
-                <p class="item_price">￦100,000 (￦140,000)</p>
-            </li>
-            <li class="item_box">
-                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
-                <p class="item_brand">Houston</p>
-                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
-                <p class="item_price">￦100,000 (￦140,000)</p>
-            </li>
-            <li class="item_box">
-                <img th:src="@{/img/item_img.jpg}" alt="" class="item_img">
-                <p class="item_brand">Houston</p>
-                <p class="item_name">US M65 Fishtail Parka Hooded Olive Drab</p>
-                <p class="item_price">￦100,000 (￦140,000)</p>
+            <li class="item_box" th:each="product : ${products}">
+                <a th:href="@{/product/{product_id}(product_id=${product.product_id})}">
+                <img th:src="${product.image_url}" alt="Image" class="item_img">
+                <p class="item_brand" th:text="${product.brand}" >Brand</p>
+                <p class="item_name" th:text="${product.name}" >Product Name</p>
+                    <p class="item_price" th:text="'€' + ${product.current_price} + ((${product.original_price != null}) ? ' (€' + ${product.original_price} + ')' : '')"></p>
+                </a>
             </li>
         </ul>
     </div>

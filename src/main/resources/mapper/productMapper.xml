@@ -62,7 +62,7 @@
         </select>
 
 
-    <insert id="insert" parameterType="java.util.Map">
+    <insert id="insert" parameterType="Map">
         INSERT INTO Product (product_id, brand_id, image_url, name,original_price,current_price,description,
                             category1_id,category2_id,category3_id,is_excludedVoucher)
         VALUES (#{product_id}, #{brand_id}, #{image_url}, #{name},#{original_price},#{current_price},#{description},
