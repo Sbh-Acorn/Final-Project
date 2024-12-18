@@ -52,4 +52,12 @@ public class WishlistRepository {
 
     }
 
+    public void setSafeUpdateOff(){
+        session.update(namespace + "setSafeUpdateOff");
+    }
+
+    public void setSafeUpdateOn(){
+        session.update(namespace + "setSafeUpdateOn");
+    }
+
 }

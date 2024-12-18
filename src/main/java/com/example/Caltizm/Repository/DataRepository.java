@@ -214,9 +214,9 @@ public class DataRepository {
 
         // 알림 테이블 데이터 추가
         wishlistRepository.insertNotification();
-        session.update("wishlist.setSafeUpdateOff");
+        wishlistRepository.setSafeUpdateOff();
         wishlistRepository.updateNotificationSent();
-        session.update("wishlist.setSafeUpdateOn");
+        wishlistRepository.setSafeUpdateOn();
 
         //FTA 가능 여부
         Set<String> FTA = service.collectFTAItemCode();
