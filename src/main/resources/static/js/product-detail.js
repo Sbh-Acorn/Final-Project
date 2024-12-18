@@ -25,7 +25,7 @@ function sendData(action) {
     });
 }
 
-    $(document).ready(function() {
+
         $("#bucket_btn").click(function() {
             // 상품 ID를 버튼의 data-product-id 속성에서 가져오기
             var productId = $(this).data("product-id");
@@ -49,6 +49,7 @@ function sendData(action) {
             });
         });
 
+
         $("#wishlist_btn").click(function(){
             let productId = $(this).data("product-id");
 
@@ -67,7 +68,6 @@ function sendData(action) {
             });
         });
     });
-
 
 // 이벤트 핸들러 등록
 //$wishlist.addEventListener("click", function() {

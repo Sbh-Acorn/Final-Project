@@ -475,8 +475,6 @@ public class GetDataService {
 //        List<String> bannerImages = service.collectBannerImage();
 //        System.out.println(bannerImages);
 
-        List<String> list = collectBannerImage();
-        System.out.println(list);
-
+//      ㄹ
     }
 }
