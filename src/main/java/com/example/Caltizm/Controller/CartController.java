@@ -68,7 +68,7 @@ public class CartController {
                 System.out.println("수량 추가");
                 System.out.println("현재 장바구니 : " + cartList);
                 session.setAttribute("cartList", cartList);
-                return "수량을 증가하였습니다. (비로그인 상태)"; // 이미 존재하면 수량만 증가하고 메서드 종료
+                return "수량을 증가하였습니다."; // 이미 존재하면 수량만 증가하고 메서드 종료
             }
         }
 
@@ -77,7 +77,7 @@ public class CartController {
         System.out.println("장바구니 추가");
         System.out.println("현재 장바구니 : " + cartList);
         session.setAttribute("cartList", cartList);
-        return "상품이 정상적으로 추가되었습니다. (비로그인 상태)";
+        return "상품이 정상적으로 추가되었습니다.";
     }
 
 
@@ -155,6 +155,7 @@ public class CartController {
     }
 
     // 장바구니 수량을 업데이트하는 메서드
+    @ResponseBody
     @PostMapping("/view/updateQuantity")
     public String updateQuantity(@RequestParam(name = "product_id") String product_id,
                                  @RequestParam(name = "action") String action,
@@ -167,14 +168,13 @@ public class CartController {
             // 해당 상품에 대해 수량을 증가 또는 감소
             for (CartDTO cartItem : cartList) {
                 if (cartItem.getProduct_id().equals(product_id)) {
-                    if ("increase".equals(action)) {
+                    if ("plus".equals(action)) {
                         cartItem.setQuantity(cartItem.getQuantity() + 1); // 수량 증가
-                    } else if ("decrease".equals(action)) {
+                    } else if ("minus".equals(action)) {
                         if (cartItem.getQuantity() > 1) {
                             cartItem.setQuantity(cartItem.getQuantity() - 1); // 수량 감소
                         } else {
-                            // 수량이 1일 때 감소 요청 -> 장바구니에서 제거
-                            cartList.remove(cartItem);
+                            cartItem.setQuantity(1);
                         }
                     }
                     break; // 해당 상품을 처리했으므로 루프 종료
@@ -205,7 +205,7 @@ public class CartController {
         model.addAttribute("cartProducts", finalCartList);
 
         // 장바구니 페이지로 리다이렉트
-        return "redirect:/cart/view";
+        return "장바구니 수량이 변경되었습니다";
     }
 
 

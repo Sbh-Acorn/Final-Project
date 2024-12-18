@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/mylist.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <header>
@@ -76,17 +77,15 @@
                         </ul>
 
                         <div class="quantity_box">
+
                             <button type="button" class="quantity_button"
-                                    th:data-product-id="${item.product_id}" th:onclick="'changeQuantity('minus', ' + ${item.product_id} + ')'" >-</button>
+                                    th:data-product-id="${item.product_id}">-</button>
                             <input type="number" th:id="'quantity_' + ${item.product_id}"
                                    class="quantity_input" th:value="${item.quantity}"
                                    min="1" readonly>
                             <button type="button" class="quantity_button"
-                                    th:data-product-id="${item.product_id}" th:onclick="'changeQuantity('plus', ' + ${item.product_id} + ')'" >+</button>
+                                    th:data-product-id="${item.product_id}">+</button>
                         </div>
-
-
-
                     </div>
                 </li>
             </form>
@@ -102,48 +101,49 @@
 </main>
 
 <script>
-    // 수량 증가 / 감소 버튼 클릭 시 호출되는 함수
-    function changeQuantity(action, productId) {
-        var quantityInput = $('#quantity_' + productId);
-        var currentQuantity = parseInt(quantityInput.val());
-
-        // 수량 증가 / 감소 처리
-        if (action === 'minus' && currentQuantity > 1) {
-            quantityInput.val(currentQuantity - 1);
-        } else if (action === 'plus') {
-            quantityInput.val(currentQuantity + 1);
-        }
-
-        // 서버에 수량 업데이트 요청 보내기
-        updateQuantity(productId, action);
-    }
-
-    // 수량 업데이트 요청을 AJAX로 처리
-    function updateQuantity(productId, action) {
-        $.ajax({
-            url: '/view/updateQuantity',
-            type: 'POST',
-            data: {
-                product_id: productId,
-                action: action
-            },
-            success: function(response) {
-                alert("장바구니 수량이 업데이트되었습니다!");
-                console.log(response);  // 서버 응답 처리 (예: 최신 장바구니 상태)
-            },
-            error: function(error) {
-                console.log("AJAX 요청 실패:", error);
-                alert("장바구니 수량을 업데이트하는데 실패했습니다.");
-            }
-        });
-    }
-
-    // 수량 변경 버튼 이벤트 바인딩
+    $(document).ready(function() {
     $(".quantity_button").click(function() {
         var action = $(this).text().trim() === '+' ? 'plus' : 'minus';
         var productId = $(this).data("product-id");
         changeQuantity(action, productId);
     });
+});
+
+    function changeQuantity(action, productId) {
+    var quantityInput = $('#quantity_' + productId);
+    var currentQuantity = parseInt(quantityInput.val());
+
+    if (action === 'minus' && currentQuantity > 1) {
+        quantityInput.val(currentQuantity - 1);
+    } else if (action === 'plus') {
+        quantityInput.val(currentQuantity + 1);
+    }
+
+    console.log(`Action: ${action}, Product ID: ${productId}, New Quantity: ${quantityInput.val()}`);
+
+    updateQuantity(productId, action);
+}
+
+function updateQuantity(productId, action) {
+    console.log("Updating quantity: ", { productId, action });
+
+    $.ajax({
+        url: 'view/updateQuantity',
+        type: 'POST',
+        data: {
+            product_id: productId,
+            action: action
+        },
+        success: function(response) {
+            console.log("Response:", response);
+            alert(response);
+        },
+        error: function(error) {
+            console.error("AJAX 요청 실패:", error);
+            alert("장바구니 수량 업데이트 실패.");
+        }
+    });
+}
 </script>
 
 </body>

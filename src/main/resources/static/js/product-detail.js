@@ -39,7 +39,7 @@ function sendData(action) {
                     product_id: productId  // 상품 ID만 전달
                 },
                 success: function(response) {
-                    alert("장바구니에 상품이 추가되었습니다!");
+                    alert(response);
                     // 필요에 따라 UI를 업데이트하거나 리다이렉트 할 수 있음
                 },
                 error: function(error) {
@@ -67,7 +67,6 @@ function sendData(action) {
                 }
             });
         });
-    });
 
 // 이벤트 핸들러 등록
 //$wishlist.addEventListener("click", function() {
