@@ -1,8 +1,6 @@
 package com.example.Caltizm;
 
-import com.example.Caltizm.Repository.BrandRepository;
-import com.example.Caltizm.Repository.ProductRepository;
-import jakarta.annotation.PostConstruct;
+import com.example.Caltizm.Repository.DataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,10 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CaltizmApplication {
 
 	@Autowired
-	private BrandRepository brandRepo;
-
-	@Autowired
-	private ProductRepository productRepo;
+	private DataRepository repository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CaltizmApplication.class, args);
@@ -28,8 +23,7 @@ public class CaltizmApplication {
 //	@PostConstruct
 //	public void init() {
 //		try {
-//			brandRepo.collectAndInsertBrandData();
-//			productRepo.collectAndInsertProductData();
+//			repository.collectAndInsertData();
 //		} catch (Exception e) {
 //			e.printStackTrace(); // 예외 처리
 //		}

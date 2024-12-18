@@ -19,7 +19,7 @@
 
     <!--   모든 상품의 FTA 여부를 false로 -->
     <update id="setFTAFalse">
-        UPDATE Product SET is_deleted = false;
+        UPDATE Product SET is_fta = false;
     </update>
 
     <!-- 동일한 id 존재 여부 -->
@@ -62,7 +62,7 @@
         </select>
 
 
-    <insert id="insert" parameterType="java.util.Map">
+    <insert id="insert" parameterType="Map">
         INSERT INTO Product (product_id, brand_id, image_url, name,original_price,current_price,description,
                             category1_id,category2_id,category3_id,is_excludedVoucher)
         VALUES (#{product_id}, #{brand_id}, #{image_url}, #{name},#{original_price},#{current_price},#{description},
@@ -73,6 +73,14 @@
     <update id="setFTA" parameterType="String">
         UPDATE Product SET is_fta = true WHERE product_id = #{product_id};
     </update>
+
+    <select id="noMatchFTA" parameterType="String" resultType="String">
+        SELECT name
+        FROM Product
+        WHERE product_id != #{product_id};
+    </select>
+
+
 
 
     <!--    전체조회-->
@@ -88,7 +96,8 @@
         c1.name AS category1,                     -- 카테고리1 이름
         c2.name AS category2,                     -- 카테고리2 이름
         c3.name AS category3,                     -- 카테고리3 이름
-        p.is_excludedVoucher
+        p.is_excludedVoucher,
+        p.is_fta
         FROM Product p
         LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
         LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인
@@ -110,7 +119,8 @@
         c1.name AS category1,                     -- 카테고리1 이름
         c2.name AS category2,                     -- 카테고리2 이름
         c3.name AS category3,                     -- 카테고리3 이름
-        p.is_excludedVoucher
+        p.is_excludedVoucher,
+        p.is_fta
         FROM Product p
         LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
         LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인
@@ -119,5 +129,62 @@
         WHERE p.name = #{name} AND p.is_deleted = false;     -- 제품 이름으로 검색, 삭제되지 않은 제품만 조회
     </select>
 
+    <select id="selectProductInBrand" resultType="ProductDTO" parameterType="String">
+        SELECT
+        p.product_id,
+        b.name AS brand,                          -- 브랜드 이름
+        p.image_url,
+        p.name,
+        p.original_price,
+        p.current_price,
+        p.description,
+        c1.name AS category1,                     -- 카테고리1 이름
+        c2.name AS category2,                     -- 카테고리2 이름
+        c3.name AS category3,                     -- 카테고리3 이름
+        p.is_excludedVoucher,
+        p.is_fta
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id          -- 브랜드 테이블과 조인
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id  -- 카테고리1 테이블과 조인
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id  -- 카테고리2 테이블과 조인
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id  -- 카테고리3 테이블과 조인
+        WHERE p.is_deleted = false AND b.name = #{name};            -- 삭제되지 않은 제품만 조회
+    </select>
+
+    <select id="selectCartItemInfo" resultType="CartDTO" parameterType="String">
+        SELECT product_id, name AS productName, current_price AS price
+        FROM Product
+        WHERE product_id = #{product_id};
+    </select>
+
+    <select id="selectPreviousPrice" resultType="double">
+        select current_price from product where product_id = #{product_id}
+    </select>
+
+    <update id="updateCurrentPrice" parameterType="ProductPriceDTO">
+        update product set current_price = #{currentPrice} where product_id = #{productId}
+    </update>
+
+    <insert id="insertPriceDrop" parameterType="PriceDropDTO">
+        insert into pricedrop(product_id, previous_price, current_price, created_at)
+        values(#{productId}, #{previousPrice}, #{currentPrice}, now())
+    </insert>
+
+
+    <select id="selectAllBrandName" resultType="String">
+        SELECT DISTINCT b.name
+        FROM Product p
+        LEFT JOIN brand b ON p.brand_id = b.brand_id
+        ORDER BY b.name;
+    </select>
+
+    <select id="selectAllCategoryName" resultType="String">
+        SELECT name FROM category1
+        UNION
+        SELECT name FROM category2
+        UNION
+        SELECT name FROM category3
+        ORDER BY name;
+    </select>
 
 </mapper>

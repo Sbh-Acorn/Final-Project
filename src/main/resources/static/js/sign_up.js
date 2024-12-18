@@ -14,16 +14,16 @@ document.getElementById('plus_btn').addEventListener('click', function () {
 
     // 2. 새로운 .bigbox 내부 콘텐츠 추가
     newBigBox.innerHTML = `
-        <div id="address_box" class="box">
-            <p class="input">영문주소</p>
-            <input type="text" style="display: none;">
+        <div id="address_box" class="box" onclick="execDaumPostcode(event)">
+            <p class="input addressEnglishText">영문주소</p>
+            <input type="text" name="address" class="addressEnglish" style="display: none;" required>
         </div>
-        <div id="postcode_box" class="box">
-            <p class="input">우편번호</p>
-            <input type="text" style="display: none;">
+        <div id="postcode_box" class="box" onclick="execDaumPostcode(event)">
+            <p class="input postcodeText">우편번호</p>
+            <input type="text" name="zip_code" class="postcode" style="display: none;" required>
         </div>
         <div id="detailed_address_box" class="box">
-            <input type="text" class="input" placeholder="상세주소를 입력해주세요">
+            <input type="text" name="detail" class="input detailAddress" placeholder="상세주소를 입력해주세요" required>
         </div>
         <div class="close_wrap">
             <img src="/img/close.svg" alt="닫기 버튼" class="close">

@@ -6,21 +6,34 @@
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/login.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
+    <!-- 메시지를 처리하는 스크립트 -->
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            // 메시지를 Thymeleaf로부터 안전하게 읽어옴
+            const message = [[${message}]];
+
+            // 메시지가 있을 경우에만 alert 표시
+            if (message) {
+                alert(message);
+            }
+        });
+    </script>
 </head>
 <body>
 <main>
     <h1>CALTIZM</h1>
     <p id="title">로그인</p>
     <form th:action="@{/login}" method="post">
-    <div id="login_box">
+
+        <div id="login_box">
             <input type="text" id="email" name="email" placeholder="이메일주소를 입력해주세요">
             <input type="password" id="passwd" name="password" placeholder="비밀번호를 입력해주세요">
             <button id="login_btn">로그인</button>
         </div>
     </form>
     <div id="anchor_box">
-        <a th:href="@{/}" id="sign_up">회원가입</a>
-        <a th:href="@{/}" id="find_passwd">비밀번호를 잊으셨나요?</a>
+        <a th:href="@{/signup}" id="sign_up">회원가입</a>
+        <a th:href="@{/find-password}" id="find_passwd">비밀번호를 잊으셨나요?</a>
     </div>
 </main>
 </body>

@@ -16,7 +16,7 @@
 
     <insert id="insertAddress" parameterType="AddressRequestDTO">
         insert into address(user_id, address, detail, zip_code)
-        values((select user_id from user where email = #{email}), #{address}, #{detail}, #{zipCode});
+        values((select user_id from user where email = #{email}), #{address}, #{detail}, #{zipCode})
     </insert>
 
     <delete id="deleteAddress">

@@ -59,12 +59,12 @@ h1 {
     border-top: 2px solid rgba(172, 172, 172, 1);
 }
 
-#first_name {
+#last_name {
     margin-left: 30px;
     margin-right: 0;
 }
 
-#last_name {
+#first_name {
     border-left: 2px solid rgba(172, 172, 172, 1);
     margin-right: 20px;
     margin-left: 0;

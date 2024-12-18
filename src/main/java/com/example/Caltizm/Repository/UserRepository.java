@@ -28,9 +28,9 @@ public class UserRepository {
 
     }
 
-    public int updateUserInfo(UserUpdateRequestDTO userUpdateRequestDTO){
+    public int updateUserInfo(UserUpdateDTO userUpdateDTO){
 
-        return session.update(userNamespace + "updateUserInfo", userUpdateRequestDTO);
+        return session.update(userNamespace + "updateUserInfo", userUpdateDTO);
 
     }
 
@@ -70,4 +70,10 @@ public class UserRepository {
 
     }
 
+
+    //카트 관련
+
+    public Integer selectUserIdByEmail(String email){
+        return session.selectOne("user.selectUserIdByEmail", email);
+    }
 }

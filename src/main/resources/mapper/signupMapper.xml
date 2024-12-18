@@ -5,6 +5,16 @@
 
 <mapper namespace="singup">
 
+    <!-- 유저 존재 여부 체크 -->
+    <select id="userCheck" parameterType="String" resultType="String">
+        SELECT email FROM User where email=#{email}
+    </select>
+
+    <!-- 전화번호 조회 -->
+    <select id="selectTel" resultType="String">
+        SELECT phone_number FROM User
+    </select>
+
     <!-- 회원가입한 유저 DB에 추가 (pccc가 있는 경우) -->
     <insert id="registerUser1" parameterType="SignupRequestDTO">
         INSERT INTO User (last_name, first_name, email, phone_number, birth_date, password, join_date, pccc)

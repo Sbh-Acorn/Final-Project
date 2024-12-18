@@ -5,24 +5,42 @@
 
 <mapper namespace="board">
 
-    <select id="all"  resultType="postDTO">
+    <!-- 게시글 조회 -->
+
+    <select id="all"  resultType="PostDTO">
         select * from post
     </select>
 
-    <select id="notice" resultType="postDTO">
+    <select id="notice" resultType="PostDTO">
         select * from post where subject = 'notice'
     </select>
 
-    <select id="free" resultType="postDTO">
+    <select id="free" resultType="PostDTO">
         select * from post where subject = 'free'
     </select>
 
-    <select id="review" resultType="postDTO">
+    <select id="review" resultType="PostDTO">
         select * from post where subject = 'review'
     </select>
 
-    <select id="qna" resultType="postDTO">
+    <select id="qna" resultType="PostDTO">
         select * from post where subject = 'qna'
     </select>
+
+    <!-- 게시글 하나 조회 -->
+    <select id="postOne" resultType="PostDTO">
+        select * from where post_id = #{post_id}
+    </select>
+
+    <!--게시글 등록-->
+    <insert id="insert-post" parameterType="PostDTO">
+        insert into Post(subject, title, content, user_id, created_at, updated_at) values (#{subject},#{title},#{content},#{user_id},now(),now())
+    </insert>
+
+    <select id="user_id" parameterType="String" resultType="Integer">
+        select user_id from user where email = #{email}
+    </select>
+
+
 
 </mapper>

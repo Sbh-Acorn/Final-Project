@@ -2,10 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/sign_up.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <script defer th:src="@{/js/sign_up.js}"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <!-- 메시지를 처리하는 스크립트 -->
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            // 메시지를 Thymeleaf로부터 안전하게 읽어옴
+            const message = [[${message}]];
+
+            // 메시지가 있을 경우에만 alert 표시
+            if (message) {
+                alert(message);
+            }
+        });
+    </script>
     <script>
-        function execDaumPostcode() {
+        function execDaumPostcode(event) {
             new daum.Postcode({
                 oncomplete: function(data) {
                     // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -43,35 +59,77 @@
 
                     }
 
-                    // 우편번호와 주소 정보를 해당 필드에 넣는다.
-                    document.getElementById("postcode").value = data.zonecode;
-                    document.getElementById("addressEnglish").value = data.addressEnglish;
-                    // 커서를 상세주소 필드로 이동한다.
-                    document.getElementById("detailAddress").focus();
+                    let clickedElement = event.target;
+                    let addressBigBox = clickedElement.closest(".address_bigbox");
+
+                    addressBigBox.querySelector(".addressEnglishText").innerHTML = data.addressEnglish;
+                    addressBigBox.querySelector(".addressEnglishText").style.color = "black";
+                    addressBigBox.querySelector(".addressEnglish").value = data.addressEnglish;
+
+                    addressBigBox.querySelector(".postcodeText").innerHTML = data.zonecode;
+                    addressBigBox.querySelector(".postcodeText").style.color = "black";
+                    addressBigBox.querySelector(".postcode").value = data.zonecode;
+
+                    addressBigBox.querySelector(".detailAddress").focus();
+
                 }
             }).open();
         }
     </script>
 </head>
 <body>
+<main>
+    <h1>CALTIZM</h1>
     <form th:action="@{/signup}" method="post">
-        <input type="text" name="last_name" placeholder="성">
-        <input type="text" name="first_name" placeholder="이름">
-        <input type="text" name="email" placeholder="이메일">
-        <input type="text" name="phone_number" placeholder="전화번호">
-        <input type="text" name="birth_date" placeholder="생년월일">
-        <input type="password" name="password" placeholder="비밀번호">
-        <input type="password" name="checkPw" placeholder="비밀번호확인">
-        <input type="text" name="pccc" placeholder="개인통관번호">
-
-
-        <input type="button" onclick="execDaumPostcode()" value="주소 찾기"><br>
-        <input type="text" id="addressEnglish" name="address" placeholder="영어주소" readonly><br>
-        <input type="text" id="postcode" name="zip_code" placeholder="우편번호" readonly><br>
-        <input type="text" id="detailAddress" name="detail" placeholder="상세주소"><br>
-
-        <button>제출</button>
-
+        <div id="margin_box"></div>
+        <span class="title">필수입력</span><br>
+        <div id="signUp_box">
+            <div class="bigbox">
+                <div id="name_box" class="box">
+                    <input type="text" name="last_name" id="last_name" class="input" placeholder="성" required>
+                    <input type="text" name="first_name" id="first_name" class="input" placeholder="이름" required>
+                </div>
+                <div id="email_box" class="box">
+                    <input type="text" name="email" id="email" class="input" placeholder="이메일을 입력해주세요" required>
+                </div>
+                <div id="phone_box" class="box">
+                    <input type="text" name="phone_number" id="phone" class="input" placeholder="- 없이 전화번호를 입력해주세요" required>
+                </div>
+                <div id="birth_box" class="box">
+                    <input type="text" name="birth_date" id="birth" class="input" placeholder="생년월일을 8자로 적어주세요" required>
+                </div>
+            </div>
+            <div class="bigbox address_bigbox" id="address_box_box">
+                <div id="address_box" class="box" onclick="execDaumPostcode(event)">
+                    <p class="input addressEnglishText">영문주소</p>
+                    <input type="text" name="address" class="addressEnglish" style="display: none;" required>
+                </div>
+                <div id="postcode_box" class="box" onclick="execDaumPostcode(event)">
+                    <p class="input postcodeText">우편번호</p>
+                    <input type="text" name="zip_code" class="postcode" style="display: none;" required>
+                </div>
+                <div id="detailed_address_box" class="box">
+                    <input type="text" name="detail" class="input detailAddress" placeholder="상세주소를 입력해주세요" required>
+                </div>
+            </div>
+            <div id="plus_btn">
+                <img th:src="@{/img/plus.svg}" alt="">
+            </div>
+            <div class="bigbox">
+                <div id="passwd_box" class="box">
+                    <input type="password" name="password" id="passwd" class="input" placeholder="비밀번호를 입력해주세요" required>
+                    <input type="password" name="checkPw" id="passwd_check" class="input" placeholder="비밀번호 확인" required>
+                </div>
+            </div>
+        </div>
+        <p class="title" id="title2">선택입력</p>
+        <div class="bigbox" id="boxbox">
+            <div id="pcc_box" class="box">
+                <input type="text" name="pccc" id="pcc" class="input" placeholder="개인통관고유번호">
+            </div>
+        </div>
+        <button id="btn">가입</button>
     </form>
+</main>
 </body>
 </html>
