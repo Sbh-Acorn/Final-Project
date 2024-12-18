@@ -81,21 +81,25 @@ public class AuthController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         String email = (String) session.getAttribute("email");
-        Integer userID = userRepository.selectUserIdByEmail(email);
-        if (userID != null) {
-            List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
-
-            if (cartList != null) {
-                Map<String, Object> input = new HashMap<>();
-                input.put("user_id", userID);
-                input.put("cartList", cartList);
-                cartRepository.insertSessionCartList(input);
+        if(email != null){
+            Integer userID = userRepository.selectUserIdByEmail(email);
+            System.out.println("로그아웃 : " + userID);
+            if (userID != null) {
+                List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
+                System.out.println("세션 장바구니 : " + cartList);
+                if (cartList != null && !cartList.isEmpty()) {
+                    Map<String, Object> input = new HashMap<>();
+                    input.put("user_id", userID);
+                    input.put("cartList", cartList);
+                    cartRepository.deleteCartListByUserId(userID);
+                    cartRepository.insertSessionCartList(input);
+                }
+                else{
+                    cartRepository.deleteCartListByUserId(userID);
+                }
+                session.invalidate();
             }
-            session.invalidate();
-            return "redirect:/main";
         }
-
-
         return "redirect:/main";
 
     }

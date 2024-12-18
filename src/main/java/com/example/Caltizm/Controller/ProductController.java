@@ -29,6 +29,19 @@ public class ProductController {
         return products;
     }
 
+    @ModelAttribute("brandNames")
+    public List<String> getAllBrandName(){
+        return repository.getAllBrandName();
+    }
+
+    @ModelAttribute("categoryNames")
+    public List<String> getAllCategoryName(){
+        return repository.getAllCategoryName();
+    }
+
+
+
+
     @GetMapping("/product")
     public String product(Model model) {
         return "product/product-list";  // products는 이미 Model에 추가됨

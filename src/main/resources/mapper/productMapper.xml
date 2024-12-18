@@ -171,4 +171,20 @@
     </insert>
 
 
+    <select id="selectAllBrandName" resultType="String">
+        SELECT DISTINCT b.name
+        FROM Product p
+        LEFT JOIN brand b ON p.brand_id = b.brand_id
+        ORDER BY b.name;
+    </select>
+
+    <select id="selectAllCategoryName" resultType="String">
+        SELECT name FROM category1
+        UNION
+        SELECT name FROM category2
+        UNION
+        SELECT name FROM category3
+        ORDER BY name;
+    </select>
+
 </mapper>

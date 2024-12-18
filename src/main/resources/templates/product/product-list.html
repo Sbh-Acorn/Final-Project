@@ -74,53 +74,11 @@
         <p class="filter_txt">BRAND</p>
         <form th:action="@{/}">
             <div class="filter_wrap">
-                <ul class="filter_checkbox">
+                <ul class="filter_checkbox" th:each ="brandName : ${brandNames}">
                     <li class="filter_check">
-                        <label for="brand1">
-                            <input type="checkbox" id="brand1" class="check">
-                            <p>123</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="brand2">
-                            <input type="checkbox" id="brand2" class="check">
-                            <p>123</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="brand3">
-                            <input type="checkbox" id="brand3" class="check">
-                            <p>123</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="brand4">
-                            <input type="checkbox" id="brand4" class="check">
-                            <p>123</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="brand5">
-                            <input type="checkbox" id="brand5" class="check">
-                            <p>123</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="brand6">
-                            <input type="checkbox" id="brand6" class="check">
-                            <p>123</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="brand7">
-                            <input type="checkbox" id="brand7" class="check">
-                            <p>123</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="brand8">
-                            <input type="checkbox" id="brand8" class="check">
-                            <p>123</p>
+                        <label th:for="${brandName}">
+                            <input type="checkbox" th:id="${brandName}" class="check">
+                            <p th:text="${brandName}">Brand Name</p>
                         </label>
                     </li>
                 </ul>
@@ -128,10 +86,10 @@
             <p class="filter_txt">CATEGORY</p>
             <div class="filter_wrap">
                 <ul class="filter_checkbox">
-                    <li class="filter_check">
-                        <label for="category1">
-                            <input type="checkbox" id="category1" class="check">
-                            <p>123</p>
+                    <li class="filter_check" th:each="categoryName : ${categoryNames}">
+                        <label th:for="${categoryName}">
+                            <input type="checkbox" th:id="${categoryName}" class="check">
+                            <p th:text="${categoryName}">Category Name</p>
                         </label>
                     </li>
                 </ul>

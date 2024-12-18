@@ -1,6 +1,7 @@
 package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.CartDTO;
+import com.example.Caltizm.DTO.CartListDTO;
 import com.example.Caltizm.DTO.ProductDTO;
 import com.example.Caltizm.Repository.CartRepository;
 import com.example.Caltizm.Repository.DataRepository;
@@ -11,8 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 
 @Controller
@@ -79,20 +81,31 @@ public class CartController {
         if (cartList == null) {
             cartList = new ArrayList<>();
             session.setAttribute("cartList", cartList);
-            return "cart/cart";
+            return "cart/cart_test";
         }
 
         List<ProductDTO> products = (List<ProductDTO>) model.getAttribute("products");
 
-        List<CartDTO> finalCartList = cartList;
-        List<ProductDTO> cartProducts = products.stream()
-                .filter(product -> finalCartList.stream()
-                        .anyMatch(cart -> cart.getProduct_id().equals(product.getProduct_id())))
-                .collect(Collectors.toList());
+        List<CartListDTO> finalCartList = new ArrayList<>();
 
-        model.addAttribute("cartProducts", cartProducts);
+        // cartList의 각 항목에 대해
+        for (CartDTO cartDTO : cartList) {
+            // cartDTO의 product_id와 일치하는 productDTO 찾기
+            for (ProductDTO productDTO : products) {
+                if (cartDTO.getProduct_id().equals(productDTO.getProduct_id())) {
+                    // 일치하는 제품을 찾으면 CartListDTO로 변환하여 리스트에 추가
+                    CartListDTO cartListDTO = new CartListDTO(cartDTO, productDTO);
+                    finalCartList.add(cartListDTO);
+                    break; // 일치하는 첫 번째 객체만 처리 후 종료
+                }
+            }
+        }
 
-        return "cart/cart";
+
+
+        model.addAttribute("cartProducts", finalCartList);
+
+        return "cart/cart_test";
     }
 
 
