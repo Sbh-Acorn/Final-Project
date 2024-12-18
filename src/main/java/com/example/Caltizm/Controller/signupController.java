@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -30,7 +31,33 @@ public class signupController {
     @PostMapping("/signup")
     public  String register(@ModelAttribute SignupRequestDTO user,
                             @RequestParam("zip_code") List<String> zipCodes,
+                            @RequestParam("checkPw") String checkPw,
+                            RedirectAttributes redirectAttributes,
                             HttpServletRequest request) {
+
+        // 이메일 중복 검사
+        if(service.userCheck(user.getEmail())) {
+            redirectAttributes.addFlashAttribute("message", "중복된 이메일이 존재합니다.");
+            return "redirect:/signup";
+        }
+
+        // 전화번호 중복 검사
+        if(!service.telDupCheck(user.getPhone_number())) {
+            redirectAttributes.addFlashAttribute("message", "중복된 전화번호가 존재합니다.");
+            return "redirect:/signup";
+        }
+
+        // 전화번호 형식 검사
+        if(!service.telEffCheck(user.getPhone_number())) {
+            redirectAttributes.addFlashAttribute("message", "전화번호 형식이 올바르지 않습니다.");
+            return "redirect:/signup";
+        }
+
+        // 비밀번호가 비밀번호 확인과 동일한지 확인
+        if(!(user.getPassword().equals(checkPw))) {
+            redirectAttributes.addFlashAttribute("message", "비밀번호가 일치하지 않습니다.");
+            return "redirect:/signup";
+        }
 
         System.out.println(user);
 
@@ -54,6 +81,7 @@ public class signupController {
             }
         }
 
+        redirectAttributes.addFlashAttribute("message", "회원가입이 완료되었습니다.");
         return "redirect:/login";
     }
 }
