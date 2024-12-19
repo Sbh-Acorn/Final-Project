@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" th:href="@{/css/mylist.css}">
+    <link rel="stylesheet" th:href="@{/css/mylist_test.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -56,7 +56,8 @@
             <form th:action="@{/}">
                 <li class="list" th:each="item : ${cartProducts}">
                     <div class="close_wrap">
-                        <img th:src="@{/img/close.svg}" alt="" class="close">
+                        <a class="close" th:data-product-id="${item.product_id}"><img th:src="@{/img/close.svg}" alt="">
+                        </a>
                     </div>
                     <p class="price" th:text="'￦' + ${item.viewCurrent_price}">Current Price</p>
                     <div class="img_wrap">
@@ -65,13 +66,13 @@
                     <div class="info_box">
                         <p class="info_title" th:text="${item.name}">Product Name</p>
                         <ul class="info_wrap">
-                            <li class="info" th:if="${item.viewOriginal_price != null}">
-                                <span th:text="'￦' + ${item.viewOriginal_price}">₩105,000</span>
-                                <b class="small" th:text="'원래가격'">원래가격</b>
+                            <li class="info">
+                                <span th:text="${item.viewOriginal_price != null ? '￦' + item.viewOriginal_price : ''}">₩105,000</span>
+                                <b class="small" th:text="${item.viewOriginal_price != null ? '* 원래가격' : ''}">원래가격</b>
                             </li>
-                            <li class="info">19% 부가가치세</li>
+                            <li class="info">19% 부가가치세 제외</li>
                             <div th:unless="${item.is_excludedVoucher}" style="color: green;">* 쿠폰 적용 가능</div>
-                            <div th:if="${item.is_excludedVoucher}"  style="color: red;">* 쿠폰 적용 불가능</div>
+                            <div th:if="${item.is_excludedVoucher}" style="color: red;">* 쿠폰 적용 불가능</div>
                             <div th:if="${item.is_fta}" style="color: green;">* FTA 적용</div>
                             <div th:unless="${item.is_fta}" style="color: red;">* FTA 미적용</div>
                         </ul>
@@ -79,18 +80,24 @@
                         <div class="quantity_box">
 
                             <button type="button" class="quantity_button"
-                                    th:data-product-id="${item.product_id}">-</button>
+                                    th:data-product-id="${item.product_id}">-
+                            </button>
                             <input type="number" th:id="'quantity_' + ${item.product_id}"
                                    class="quantity_input" th:value="${item.quantity}"
                                    min="1" readonly>
                             <button type="button" class="quantity_button"
-                                    th:data-product-id="${item.product_id}">+</button>
+                                    th:data-product-id="${item.product_id}">+
+                            </button>
                         </div>
                     </div>
                 </li>
             </form>
         </ul>
         <ul class="final_wrap">
+            <div class="coupon_wrap">
+                <input type="text" id="coupon_input" placeholder="쿠폰 할인율을 입력하세요" class="coupon_input">
+                <button type="button" id="apply_coupon_button" class="apply_coupon_button">쿠폰 적용</button>
+            </div>
             <li class="final"><p>총 상품 금액 </p><span>519,000</span></li>
             <li class="final"><p>총 할인 금액 </p><span>135,000</span></li>
             <li class="final"><p>예상 배송비 </p><span>37,000</span></li>
@@ -144,6 +151,35 @@ function updateQuantity(productId, action) {
         }
     });
 }
+
+    $(document).ready(function() {
+    $(".close").click(function() {
+        var productId = $(this).data("product-id");
+<!--        alert(productId);-->
+        removeCartItem(productId);
+    });
+});
+    function removeCartItem(productId){
+        alert("removeCartItem: " + productId);
+
+        $.ajax({
+            url: 'view/remove',
+            type: 'POST',
+            data: {
+                product_id: productId
+            },
+            success: function(response) {
+                console.log("Response:", response);
+                $('.close[data-product-id="' + productId + '"]').closest('.list').remove();
+                alert(response);
+            },
+            error: function(error) {
+                console.error("장바구니 AJAX 요청 실패:", error);
+                alert("장바구니 아이템 삭제 실패.");
+            }
+        });
+    }
+
 </script>
 
 </body>

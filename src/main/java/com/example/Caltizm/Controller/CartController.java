@@ -116,6 +116,7 @@ public class CartController {
     }
 
     // 장바구니에서 상품을 제거하는 메서드
+    @ResponseBody
     @PostMapping("/view/remove")
     public String viewRemoveCart(@RequestParam(name = "product_id") String product_id,
                                  HttpSession session, Model model) {
@@ -151,7 +152,7 @@ public class CartController {
         model.addAttribute("cartProducts", finalCartList);
 
         // 장바구니 페이지로 리다이렉트
-        return "redirect:/cart/view";
+        return "상품이 삭제되었습니다";
     }
 
     // 장바구니 수량을 업데이트하는 메서드
