@@ -63,9 +63,9 @@
     <div id="product_info_wrap">
         <p id="product_brand" th:text="${product.brand}">Brand</p>
         <p id="product_name" th:text="${product.name}">Product Name</p>
-        <p id="product_price" th:text="'￦' + ${product.viewCurrent_price}">Current Price</p>
-        <p id="product_sales" th:if="${product.viewOriginal_price != null}">
-            <b th:text="'(￦' + ${product.viewOriginal_price} + ')'">Original Price</b>
+        <p id="product_price" th:text="${product.current_price}">Current Price</p>
+        <p id="product_sales" th:if="${product.original_price != null}">
+            <b th:text="${product.original_price}">Original Price</b>
             <span th:text="'(' + ${discountRate} + '% 할인)'">Discount Rate</span>
         </p>
 

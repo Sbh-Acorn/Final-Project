@@ -29,8 +29,6 @@ public class CartListDTO {
         this.name = productDTO.getName();
         this.original_price = productDTO.getOriginal_price();
         this.current_price = productDTO.getCurrent_price();
-        this.viewOriginal_price = productDTO.getViewOriginal_price();
-        this.viewCurrent_price = productDTO.getViewCurrent_price();
         this.is_excludedVoucher = productDTO.is_excludedVoucher();
         this.is_fta = productDTO.is_fta();
         this.quantity = cartDTO.getQuantity();

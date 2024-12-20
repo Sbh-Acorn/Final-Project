@@ -9,6 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/product.css}">
     <script defer th:src="@{/js/header.js}"></script>
     <script defer th:src="@{/js/product.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <header>
@@ -133,7 +134,10 @@
                 <img th:src="${product.image_url}" alt="Image" class="item_img">
                 <p class="item_brand" th:text="${product.brand}" >Brand</p>
                 <p class="item_name" th:text="${product.name}" >Product Name</p>
-                    <p class="item_price" th:text="'￦' + ${product.viewCurrent_price} + ((${product.viewOriginal_price != null}) ? ' (￦' + ${product.viewOriginal_price} + ')' : '')"></p>
+                    <p class="item_price">
+                        <span class="current_price" th:text="${product.current_price}"></span>
+                        <span class="original_price" th:if="${product.original_price != null}" th:text="${product.original_price}"></span>
+                    </p>
                 </a>
             </li>
         </ul>
