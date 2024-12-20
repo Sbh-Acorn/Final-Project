@@ -101,7 +101,7 @@
             </div>
             <li class="final"><p>총 상품 금액 </p><span id="total_original_p">519,000</span></li>
             <li class="final"><p>총 할인 금액 </p><span id="total-sale_p"></span></li>
-            <li class="final"><p>예상 배송비 </p><span id="shipping_p">25 유로</span></li>
+            <li class="final"><p>예상 배송비 </p><span id="shipping_p">30000</span></li>
             <li class="final"><p>예상 부가세 </p><span id="total_VAT"></span></li>
             <li class="final"><p>예상 관세 </p><span id="total_Tax"></span></li>
             <li class="final"><p id="final_p">최종 금액 </p><span id="final_span">222,220</span></li>
@@ -113,6 +113,7 @@
 
         totalItemPrice();
         updateOriginalTotalPrice();
+        saleTotalPrice();
         calculateTotalPrice();
         formatPrices();
 
@@ -120,6 +121,30 @@
 $(".apply_coupon_button").click(function () {
     coupon();
 });
+
+function saleTotalPrice(){
+    const saleTotalPriceElement = $('#total-sale_p');
+
+    const originalTotalPriceText = $('#total_original_p').text().trim();
+    const originalTotalPriceValue = parseFloat(originalTotalPriceText.replace(/[^0-9.]/g, ""));
+    const originalTotalPrice = Math.round(originalTotalPriceValue);
+
+
+    let currentTotalPrice = 0;
+    $(".list").each(function() {
+            const currentPriceText = $(this).find(".price").text().trim();
+            const priceValue = parseFloat(currentPriceText.replace(/[^0-9.]/g, ''));
+            const price = Math.round(priceValue);
+
+            if (!isNaN(price)) {
+                currentTotalPrice += price;
+            }
+        });
+        const saleTotalPrice = originalTotalPrice - currentTotalPrice;
+
+        saleTotalPriceElement.text(saleTotalPrice.toLocaleString());
+
+}
 
 function coupon() {
     const discountPercent = parseFloat($(".coupon_input").val());
@@ -136,7 +161,7 @@ function coupon() {
             const currentPriceText = $(this).find(".price").data("current-price");
 
             if (currentPriceText) {
-                const currentPrice = parseFloat(currentPriceText.toString().replace(/[^0-9.]/g, ""));
+                const currentPrice = parseFloat(currentPriceText.replace(/[^0-9.]/g, ""));
 
                 if (!isNaN(currentPrice)) {
                     const quantity = parseInt($(this).find('.quantity_input').val());
@@ -146,7 +171,9 @@ function coupon() {
                     // 할인된 가격을 표시
                     $(this).find(".price").text(`￦${formattedPrice.toLocaleString()}`);
                     // 총 가격 업데이트
+                    saleTotalPrice();
                     calculateTotalPrice();
+
                 }
             }
         }
@@ -275,6 +302,7 @@ function totalItemPrice() {
                 totalItemPrice();
                 coupon();
                 updateOriginalTotalPrice();
+                saleTotalPrice();
                 calculateTotalPrice();
                 formatPrices();
                 alert(response);
@@ -301,8 +329,9 @@ function totalItemPrice() {
             success: function(response) {
                 $(`.close[data-product-id='${productId}']`).closest('.list').remove();
                 totalItemPrice();
-                updateOriginalTotalPrice();
                 coupon();
+                updateOriginalTotalPrice();
+                saleTotalPrice();
                 calculateTotalPrice();
                 formatPrices();
                 alert(response);
