@@ -59,7 +59,8 @@
                         <a class="close" th:data-product-id="${item.product_id}"><img th:src="@{/img/close.svg}" alt="">
                         </a>
                     </div>
-                    <p class="price" th:text="'￦' + ${item.viewCurrent_price}">Current Price</p>
+                    <p class="price" th:data-current-price="${item.current_price}">
+                        Current Price</p>
                     <div class="img_wrap">
                         <img th:src="${item.image_url}" alt="Product Image" class="img">
                     </div>
@@ -67,14 +68,14 @@
                         <p class="info_title" th:text="${item.name}">Product Name</p>
                         <ul class="info_wrap">
                             <li class="info">
-                                <span th:text="${item.viewOriginal_price != null ? '￦' + item.viewOriginal_price : ''}">₩105,000</span>
-                                <b class="small" th:text="${item.viewOriginal_price != null ? '* 원래가격' : ''}">원래가격</b>
+                                <span class="original_price" th:data-original-price="${item.original_price}">Original Price</span>
+                                <b class="small"></b>
                             </li>
                             <li class="info">19% 부가가치세 제외</li>
-                            <div th:unless="${item.is_excludedVoucher}" style="color: green;">* 쿠폰 적용 가능</div>
-                            <div th:if="${item.is_excludedVoucher}" style="color: red;">* 쿠폰 적용 불가능</div>
-                            <div th:if="${item.is_fta}" style="color: green;">* FTA 적용</div>
-                            <div th:unless="${item.is_fta}" style="color: red;">* FTA 미적용</div>
+                            <div th:unless="${item.is_excludedVoucher}" class ="coupon" style="color: green;">* 쿠폰 적용 가능</div>
+                            <div th:if="${item.is_excludedVoucher}" class ="coupon" style="color: red;">* 쿠폰 적용 불가능</div>
+                            <div th:if="${item.is_fta}" class="fta" style="color: green;">* FTA 적용</div>
+                            <div th:unless="${item.is_fta}" class="fta" style="color: red;">* FTA 미적용</div>
                         </ul>
 
                         <div class="quantity_box">
@@ -98,79 +99,212 @@
                 <input type="text" id="coupon_input" placeholder="쿠폰 할인율을 입력하세요" class="coupon_input">
                 <button type="button" id="apply_coupon_button" class="apply_coupon_button">쿠폰 적용</button>
             </div>
-            <li class="final"><p>총 상품 금액 </p><span>519,000</span></li>
-            <li class="final"><p>총 할인 금액 </p><span>135,000</span></li>
-            <li class="final"><p>예상 배송비 </p><span>37,000</span></li>
-            <li class="final"><p>예상 관부가세 </p><span>12,000</span></li>
+            <li class="final"><p>총 상품 금액 </p><span id="total_original_p">519,000</span></li>
+            <li class="final"><p>총 할인 금액 </p><span id="total-sale_p"></span></li>
+            <li class="final"><p>예상 배송비 </p><span id="shipping_p">25 유로</span></li>
+            <li class="final"><p>예상 부가세 </p><span id="total_VAT"></span></li>
+            <li class="final"><p>예상 관세 </p><span id="total_Tax"></span></li>
             <li class="final"><p id="final_p">최종 금액 </p><span id="final_span">222,220</span></li>
         </ul>
     </div>
 </main>
 
 <script>
-    $(document).ready(function() {
-    $(".quantity_button").click(function() {
-        var action = $(this).text().trim() === '+' ? 'plus' : 'minus';
-        var productId = $(this).data("product-id");
-        changeQuantity(action, productId);
-    });
+
+        totalItemPrice();
+        updateOriginalTotalPrice();
+        calculateTotalPrice();
+        formatPrices();
+
+    // 쿠폰 적용 버튼 클릭 이벤트
+$(".apply_coupon_button").click(function () {
+    coupon();
 });
 
-    function changeQuantity(action, productId) {
-    var quantityInput = $('#quantity_' + productId);
-    var currentQuantity = parseInt(quantityInput.val());
+function coupon() {
+    const discountPercent = parseFloat($(".coupon_input").val());
 
-    if (action === 'minus' && currentQuantity > 1) {
-        quantityInput.val(currentQuantity - 1);
-    } else if (action === 'plus') {
-        quantityInput.val(currentQuantity + 1);
+    if (isNaN(discountPercent) || discountPercent <= 0 || discountPercent > 100) {
+        alert("유효한 할인율을 입력하세요 (1 ~ 100).");
+        return;
     }
 
-    console.log(`Action: ${action}, Product ID: ${productId}, New Quantity: ${quantityInput.val()}`);
+    $(".list").each(function () {
+        const isExcludedVoucher = $(this).find('.coupon');
 
-    updateQuantity(productId, action);
+        if (isExcludedVoucher.text() === "* 쿠폰 적용 가능") {
+            const currentPriceText = $(this).find(".price").data("current-price");
+
+            if (currentPriceText) {
+                const currentPrice = parseFloat(currentPriceText.toString().replace(/[^0-9.]/g, ""));
+
+                if (!isNaN(currentPrice)) {
+                    const quantity = parseInt($(this).find('.quantity_input').val());
+                    const discountedPrice = currentPrice * quantity * (1 - discountPercent / 100) ;
+                    const formattedPrice = Math.round(discountedPrice);
+
+                    // 할인된 가격을 표시
+                    $(this).find(".price").text(`￦${formattedPrice.toLocaleString()}`);
+                    // 총 가격 업데이트
+                    calculateTotalPrice();
+                }
+            }
+        }
+    });
+
+    alert(`${discountPercent}% 할인 적용이 완료되었습니다.`);
 }
 
-function updateQuantity(productId, action) {
-    console.log("Updating quantity: ", { productId, action });
 
-    $.ajax({
-        url: 'view/updateQuantity',
-        type: 'POST',
-        data: {
-            product_id: productId,
-            action: action
-        },
-        success: function(response) {
-            console.log("Response:", response);
-            alert(response);
-        },
-        error: function(error) {
-            console.error("AJAX 요청 실패:", error);
-            alert("장바구니 수량 업데이트 실패.");
+    function updateOriginalTotalPrice() {
+        let originalTotal = 0;
+
+        $(".list").each(function() {
+            const originalPriceText = $(this).find(".original_price").text().trim();
+            const priceText = $(this).find(".price").text().trim();
+            const priceToUse = originalPriceText || priceText;
+            const priceValue = parseFloat(priceToUse.replace(/[^0-9.]/g, ''));
+            const price = Math.round(priceValue);
+
+            if (!isNaN(price)) {
+                const quantity = parseInt($(this).find(".quantity_input").val());
+                originalTotal += price;
+            }
+        });
+
+        $("#total_original_p").text(originalTotal.toLocaleString());
+    }
+
+    function calculateTotalPrice() {
+        let totalPrice = 0;
+
+        $(".list").each(function() {
+            const priceText = $(this).find(".price").text().trim();
+            const priceValue = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+            const price = Math.round(priceValue);
+            const quantity = parseInt($(this).find(".quantity_input").val());
+
+            totalPrice += price;
+        });
+
+        $("#final_span").text(totalPrice.toLocaleString());
+    }
+
+
+
+    function formatPrices() {
+        formatPriceElements(".price");
+        formatPriceElements(".original_price");
+    }
+
+    function formatPriceElements(selector) {
+        $(selector).each(function() {
+            const priceText = $(this).text().trim();
+            const priceValue = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+
+            if (!isNaN(priceValue)) {
+                const formattedPrice = Math.round(priceValue).toLocaleString();
+                $(this).text(`￦${formattedPrice}`);
+            }
+        });
+    }
+
+    // 수량 변경 버튼 클릭 이벤트
+    $(".quantity_button").click(function() {
+            const action = $(this).text().trim() === '+' ? 'plus' : 'minus';
+            const productId = $(this).data("product-id");
+            changeQuantity(action, productId);
+        });
+
+    function changeQuantity(action, productId) {
+        const quantityInput = $(`#quantity_${productId}`);
+        let currentQuantity = parseInt(quantityInput.val());
+
+        if (action === 'minus' && currentQuantity > 1) {
+            quantityInput.val(currentQuantity - 1);
+        } else if (action === 'plus') {
+            quantityInput.val(currentQuantity + 1);
+        }
+        updateQuantity(productId, action);
+    }
+
+// 수량에 따라 원래가격, 현재가격 계산하기
+function totalItemPrice() {
+    $('.list').each(function() {
+        // 현재 가격 처리
+        const currentPriceText = $(this).find('.price').data('current-price');
+        if (currentPriceText) {
+            const currentPrice = parseFloat(currentPriceText.toString().replace(/[^0-9.]/g, ''));
+
+            if (!isNaN(currentPrice)) {
+                // 수량 가져오기
+                const quantity = parseInt($(this).find('.quantity_input').val());
+                const totalValue = currentPrice * quantity;
+
+                // 총 가격을 포맷팅하여 표시
+                $(this).find('.price').text(`￦${totalValue.toLocaleString('ko-KR')}`);
+            }
+        }
+
+        // 원래 가격 처리
+        const originalPriceText = $(this).find('.original_price').data('original-price');
+        if (originalPriceText) {
+            const originalPrice = parseFloat(originalPriceText.toString().replace(/[^0-9.]/g, ''));
+
+            if (!isNaN(originalPrice)) {
+                // 수량 가져오기
+                const quantity = parseInt($(this).find('.quantity_input').val());
+                const totalValue = originalPrice * quantity;
+
+                // 총 가격을 포맷팅하여 표시
+                $(this).find('.original_price').text(`￦${totalValue.toLocaleString()}`);
+            }
+        }else{
+        $(this).find('.original_price').text("");
         }
     });
 }
 
-    $(document).ready(function() {
-    $(".close").click(function() {
-        var productId = $(this).data("product-id");
-<!--        alert(productId);-->
-        removeCartItem(productId);
-    });
-});
-    function removeCartItem(productId){
-        alert("removeCartItem: " + productId);
 
+    function updateQuantity(productId, action) {
+        $.ajax({
+            url: 'view/updateQuantity',
+            type: 'POST',
+            data: { product_id: productId, action: action },
+            success: function(response) {
+                totalItemPrice();
+                coupon();
+                updateOriginalTotalPrice();
+                calculateTotalPrice();
+                formatPrices();
+                alert(response);
+            },
+            error: function(error) {
+                console.error("AJAX 요청 실패:", error);
+                alert("장바구니 수량 업데이트 실패.");
+            }
+        });
+    }
+
+
+        // 장바구니 항목 삭제 버튼 클릭 이벤트
+        $(".close").click(function() {
+            const productId = $(this).data("product-id");
+            removeCartItem(productId);
+        });
+
+    function removeCartItem(productId) {
         $.ajax({
             url: 'view/remove',
             type: 'POST',
-            data: {
-                product_id: productId
-            },
+            data: { product_id: productId },
             success: function(response) {
-                console.log("Response:", response);
-                $('.close[data-product-id="' + productId + '"]').closest('.list').remove();
+                $(`.close[data-product-id='${productId}']`).closest('.list').remove();
+                totalItemPrice();
+                updateOriginalTotalPrice();
+                coupon();
+                calculateTotalPrice();
+                formatPrices();
                 alert(response);
             },
             error: function(error) {
@@ -179,8 +313,8 @@ function updateQuantity(productId, action) {
             }
         });
     }
-
 </script>
+
 
 </body>
 </html>

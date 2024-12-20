@@ -56,7 +56,10 @@ updateUI();
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
+
+        formatPrices();
+
         const selectedUl = document.getElementById("selected_ul");
 
         // 필터 체크박스를 모두 가져옵니다.
@@ -97,3 +100,29 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    function formatPrices() {
+        // 현재 가격 포맷
+        $(".current_price").each(function() {
+            var priceText = $(this).text().trim(); // 가격 텍스트 가져오기
+            var priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, '')); // 숫자와 소수점만 추출 후 변환
+
+            if (!isNaN(priceNumber)) { // 유효한 숫자인 경우
+                var formattedPrice = Math.round(priceNumber).toLocaleString('ko-KR'); // 소수점 반올림 후 포맷
+                $(this).text("￦" + formattedPrice); // "￦"와 함께 다시 설정
+            }
+        });
+
+        // 원래 가격 포맷
+        $(".original_price").each(function() {
+            var priceText = $(this).text().trim(); // 원래 가격 텍스트 가져오기
+            var priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, '')); // 숫자와 소수점만 추출 후 변환
+
+            if (!isNaN(priceNumber)) { // 유효한 숫자인 경우
+                var formattedPrice = Math.round(priceNumber).toLocaleString('ko-KR'); // 소수점 반올림 후 포맷
+                $(this).text(" (￦" + formattedPrice + ")"); // 괄호 포함하여 다시 설정
+            }
+        });
+    }
+
+

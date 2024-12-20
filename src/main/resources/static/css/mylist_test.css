@@ -64,6 +64,10 @@ main hr {
     font-weight: bold;
 }
 
+.price ::before{
+    content: "₩ ";
+}
+
 .img_wrap {
     width: 160px;
     height: 160px;
@@ -155,10 +159,6 @@ main hr {
 #final_p, #final_span {
     font-weight: bold;
     font-size: 22px;
-}
-
-#final_span::before {
-    content: "₩ ";
 }
 
 #final_p {
