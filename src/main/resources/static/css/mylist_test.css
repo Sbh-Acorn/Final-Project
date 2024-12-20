@@ -155,6 +155,9 @@ main hr {
 .final span::before {
     content: "₩ ";
 }
+#shipping_p::after {
+    content: " (25€)";
+}
 
 #final_p, #final_span {
     font-weight: bold;
