@@ -64,7 +64,7 @@
         <p id="product_brand" th:text="${product.brand}">Brand</p>
         <p id="product_name" th:text="${product.name}">Product Name</p>
         <p id="product_price" th:text="${product.current_price}">Current Price</p>
-        <p id="product_sales" th:if="${product.original_price != null}">
+        <p id="product_sales" th:if="${product.original_price > product.current_price}">
             <b th:text="${product.original_price}">Original Price</b>
             <span th:text="'(' + ${discountRate} + '% 할인)'">Discount Rate</span>
         </p>

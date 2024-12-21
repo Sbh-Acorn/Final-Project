@@ -256,6 +256,8 @@ public class GetDataService {
             original_price = original_price.replaceAll("[^0-9.,]", ""); // 숫자와 ',' 또는 '.'만 남김
             original_price = original_price.replace(",", ""); // 쉼표 제거
             originalPriceValue = Double.parseDouble(original_price); // String -> Double 변환
+        } else{
+            originalPriceValue = currentPriceValue;
         }
         //상세 내용 추출
         Element detailElement = productDoc.selectFirst("div.product--description");

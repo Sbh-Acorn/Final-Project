@@ -64,7 +64,7 @@
                     <div class="info_box">
                         <p class="info_title"  th:text="${item.name}">Product Name</p>
                         <ul class="info_wrap">
-                            <li class="info" th:if="${item.original_price != null}">
+                            <li class="info" th:if="${item.original_price > item.current_price}">
                                 <span th:text="'€' + ${item.original_price}">₩105,000</span>
                                 <b class="small" th:text="'원래가격'">원래가격</b>
                             </li>
