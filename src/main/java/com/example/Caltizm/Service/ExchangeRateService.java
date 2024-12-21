@@ -1,6 +1,5 @@
 package com.example.Caltizm.Service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,37 +8,60 @@ import java.util.Map;
 @Service
 public class ExchangeRateService {
 
-//    @Value("${exchange.rate.api.url}")
-//    private String apiUrl;
-    private String apiUrl = "https://v6.exchangerate-api.com/v6/4c53144b44d5d039c08eaaba/latest/EUR"; // API URL
     private final RestTemplate restTemplate;
 
-//    public ExchangeRateService(RestTemplate restTemplate) {
-//        this.restTemplate = restTemplate;
-//
-//    }
-    public ExchangeRateService() {
-        this.restTemplate = new RestTemplate(); // RestTemplate 직접 생성
-    }
-    // 환율 데이터 가져오기
-    public Double getEuroToKrwRate() {
-        // API 호출
-        Map<String, Object> response = restTemplate.getForObject(apiUrl, Map.class);
+    // API URLs
+    private static final String EUR_TO_USD_API = "https://v6.exchangerate-api.com/v6/4c53144b44d5d039c08eaaba/latest/EUR"; // EUR to USD API
+    private static final String USD_TO_KRW_API = "https://v6.exchangerate-api.com/v6/4c53144b44d5d039c08eaaba/latest/USD"; // USD to KRW API
 
-        // "conversion_rates"에서 KRW 환율 가져오기
+    public ExchangeRateService() {
+        this.restTemplate = new RestTemplate(); // RestTemplate 생성
+    }
+
+    // 유로 → 달러 환율 가져오기
+    public Double getEuroToUsdRate() {
+        Map<String, Object> response = restTemplate.getForObject(EUR_TO_USD_API, Map.class);
+
+        if (response != null && response.containsKey("conversion_rates")) {
+            Map<String, Double> conversionRates = (Map<String, Double>) response.get("conversion_rates");
+            return conversionRates.get("USD");
+        }
+
+        throw new RuntimeException("Failed to fetch EUR to USD exchange rate data");
+    }
+
+    // 달러 → 원화 환율 가져오기
+    public Double getUsdToKrwRate() {
+        Map<String, Object> response = restTemplate.getForObject(USD_TO_KRW_API, Map.class);
+
         if (response != null && response.containsKey("conversion_rates")) {
             Map<String, Double> conversionRates = (Map<String, Double>) response.get("conversion_rates");
             return conversionRates.get("KRW");
         }
 
-        throw new RuntimeException("Failed to fetch exchange rate data");
+        throw new RuntimeException("Failed to fetch USD to KRW exchange rate data");
     }
+
+    // 유로 → 원화 계산
+    public Double convertEuroToKrw(Double euroAmount) {
+        Double euroToUsdRate = getEuroToUsdRate();
+        Double usdToKrwRate = getUsdToKrwRate();
+
+        // 유로 → 달러 → 원화 변환
+        return euroAmount * euroToUsdRate * usdToKrwRate;
+    }
+
     // 단독 실행을 위한 main 메서드
     public static void main(String[] args) {
         ExchangeRateService service = new ExchangeRateService();
         try {
-            Double rate = service.getEuroToKrwRate();
-            System.out.println("Current EUR to KRW Exchange Rate: " + rate);
+            Double euroToUsd = service.getEuroToUsdRate();
+            Double usdToKrw = service.getUsdToKrwRate();
+            Double euroToKrw = service.convertEuroToKrw(100.0); // 예: 100유로 변환
+
+            System.out.println("EUR to USD Rate: " + euroToUsd);
+            System.out.println("USD to KRW Rate: " + usdToKrw);
+            System.out.println("100 EUR to KRW: " + euroToKrw);
         } catch (Exception e) {
             System.err.println("Failed to fetch exchange rate: " + e.getMessage());
         }

@@ -11,7 +11,7 @@ public class CalculatorService {
 
     ExchangeRateService service = new ExchangeRateService();
 
-    Double EXCHANGE = service.getEuroToKrwRate();
+    Double EXCHANGE = service.getUsdToKrwRate();
 
     public double calculator(double price) {
         // 세금 제외 가격 계산
@@ -35,8 +35,8 @@ public class CalculatorService {
     }
 
 
-    public static void main(String[] args) {
-        CalculatorService service = new CalculatorService();
-        service.calculator(990);
-    }
+//    public static void main(String[] args) {
+//        CalculatorService service = new CalculatorService();
+//        service.calculator(990);
+//    }
 }
