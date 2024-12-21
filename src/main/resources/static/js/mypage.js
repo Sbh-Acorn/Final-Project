@@ -116,11 +116,13 @@ function sendRequest(){
 
     if(name.split(" ").length !== 2){
         alert("이름은 2개의 단어로 이루어져야 합니다.");
+        window.location.reload();
         return;
     }
 
     if(!/^010\d{8}$/.test(phone)){
         alert("전화번호가 유효하지 않습니다.");
+        window.location.reload();
         return;
     }
 
@@ -128,6 +130,7 @@ function sendRequest(){
         // 개인통관고유부호 검사
         if(!/^P\d{12}$/.test(pcc)){
             alert("개인통관고유번호가 유효하지 않습니다.");
+            window.location.reload();
             return;
         }
     }
@@ -141,7 +144,6 @@ function sendRequest(){
     if(pcc !== ""){
         data.pccc = pcc;
     }
-    console.log(data);
 
     $.ajax({
         type: "PATCH",
