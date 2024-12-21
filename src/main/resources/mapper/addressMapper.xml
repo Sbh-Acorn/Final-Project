@@ -36,5 +36,11 @@
         where address_id = #{addressId}
     </update>
 
+    <select id="checkMaxAddressLimit" resultType="int">
+        select count(*)
+        from address
+        where user_id = (select user_id from user where email = #{email})
+    </select>
+
 
 </mapper>

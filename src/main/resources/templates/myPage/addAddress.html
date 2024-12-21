@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/addr.css}">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script>
         function execDaumPostcode() {
@@ -58,6 +59,42 @@
                 }
             }).open();
         }
+
+        $(document).ready(function(){
+            $("#add-btn").click(function(){
+                let address = $("#addressEnglish").val();
+                let zipCode = $("#postcode").val();
+                let detail = $("#detailAddress").val();
+                console.log(address, zipCode, detail);
+
+                if(address === "" || zipCode === "" || detail == ""){
+                    alert("모든 필드를 채워주세요.");
+                    return;
+                }
+
+                let data = {
+                        address: address,
+                        zipCode: zipCode,
+                        detail: detail
+                };
+
+                $.ajax({
+                    url: "/address/create",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(data),
+                    success: function(response){
+                        alert(response.message);
+                        if(response.status === "add_success"){
+                            window.location.href = "/myPage";
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        console.log("Error:", error);
+                    }
+                });
+            });
+        });
     </script>
 
 </head>
@@ -65,23 +102,21 @@
 <main>
     <h1>CALTIZM</h1>
     <div class="big_box">
-        <form th:action="@{/address/create}" method="post">
-            <p class="title">주소록 추가</p>
-            <div class="input_wrap">
-                <div class="box">
-                    <p class="input" id="addressEnglishText" onclick="execDaumPostcode()">영문주소</p>
-                    <input type="text" name="address" id="addressEnglish" style="display: none;" required>
-                </div>
-                <div class="box">
-                    <p class="input" id="postcodeText" onclick="execDaumPostcode()">우편번호</p>
-                    <input type="text" name="zipCode" id="postcode" style="display: none;" required>
-                </div>
-                <div class="box">
-                    <input type="text" name="detail" class="input" id="detailAddress" placeholder="상세주소를 입력해주세요" required>
-                </div>
+        <p class="title">주소록 추가</p>
+        <div class="input_wrap">
+            <div class="box">
+                <p class="input" id="addressEnglishText" onclick="execDaumPostcode()">영문주소</p>
+                <input type="text" name="address" id="addressEnglish" style="display: none;" required>
             </div>
-            <button class="btn" type="submit">주소록 추가</button>
-        </form>
+            <div class="box">
+                <p class="input" id="postcodeText" onclick="execDaumPostcode()">우편번호</p>
+                <input type="text" name="zipCode" id="postcode" style="display: none;" required>
+            </div>
+            <div class="box">
+                <input type="text" name="detail" class="input" id="detailAddress" placeholder="상세주소를 입력해주세요" required>
+            </div>
+        </div>
+        <button class="btn" id="add-btn">주소록 추가</button>
     </div>
 </main>
 </body>

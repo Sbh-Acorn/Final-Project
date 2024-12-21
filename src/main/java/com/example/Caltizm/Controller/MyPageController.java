@@ -45,7 +45,7 @@ public class MyPageController {
     }
 
     @ResponseBody
-    @PostMapping("/updateUserInfo")
+    @PatchMapping("/updateUserInfo")
     public Map<String, String> update(@SessionAttribute(value="email", required=false) String email,
                          @RequestBody UserUpdateFormDTO userUpdateFormDTO){
 
@@ -103,36 +103,76 @@ public class MyPageController {
 
     }
 
+    @ResponseBody
     @PostMapping("/address/create")
-    public String createAddress(@SessionAttribute(value="email", required=false) String email,
-                                @ModelAttribute AddressRequestDTO addressRequestDTO){
+    public Map<String, String> createAddress(@SessionAttribute(value="email", required=false) String email,
+                                @RequestBody AddressRequestDTO addressRequestDTO){
+
+        Map<String, String> response = new HashMap<>();
 
         if(email == null){
-            return "redirect:/login";
+            response.put("status", "session_invalid");
+            response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
+            return response;
         }
 
+        if(repository.checkMaxAddressLimit(email)){
+            response.put("status", "max_limit");
+            response.put("message", "최대 주소 개수 제한을 초과했습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        System.out.println("addressRequestDTO: " + addressRequestDTO);
         addressRequestDTO.setEmail(email);
         System.out.println("addressRequestDTO: " + addressRequestDTO);
 
         int rRow = repository.insertAddress(addressRequestDTO);
         System.out.println(rRow);
 
-        return "redirect:/myPage";
+        if(rRow != 1){
+            response.put("status", "add_fail");
+            response.put("message", "주소록 추가에 실패했습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        response.put("status", "add_success");
+        response.put("message", "새로운 주소를 추가했습니다.");
+        System.out.println(response);
+        return response;
 
     }
 
-    @GetMapping("/address/delete/{id}")
-    public String deleteAddress(@SessionAttribute(value="email", required=false) String email,
+    @ResponseBody
+    @DeleteMapping("/address/delete/{id}")
+    public Map<String, String> deleteAddress(@SessionAttribute(value="email", required=false) String email,
                                 @PathVariable("id") String id){
 
+        Map<String, String> response = new HashMap<>();
+
         if(email == null){
-            return "redirect:/login";
+            response.put("status", "session_invalid");
+            response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
+            return response;
         }
 
         int rRow = repository.deleteAddress(id);
         System.out.println(rRow);
 
-        return "redirect:/myPage";
+        if(rRow != 1){
+            response.put("status", "delete_fail");
+            response.put("message", "주소록 삭제에 실패했습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        response.put("status", "delete_success");
+        response.put("message", "주소를 삭제했습니다.");
+        System.out.println(response);
+        return response;
 
     }
 
@@ -157,59 +197,98 @@ public class MyPageController {
 
     }
 
-    @PostMapping("/address/update/{id}")
-    public String updateAddress(@PathVariable("id") String id,
-                                @SessionAttribute(name="email", required=false) String email,
-                                @ModelAttribute AddressResponseDTO addressResponseDTO){
+    @ResponseBody
+    @PatchMapping("/address/update")
+    public Map<String, String> updateAddress(@SessionAttribute(name="email", required=false) String email,
+                                @RequestBody AddressResponseDTO addressResponseDTO){
+
+        Map<String, String> response = new HashMap<>();
+
+        if(email == null){
+            response.put("status", "session_invalid");
+            response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
+            return response;
+        }
 
         System.out.println(addressResponseDTO);
-
-        addressResponseDTO.setAddressId(id);
         addressResponseDTO.setEmail(email);
-
         System.out.println(addressResponseDTO);
 
         int rRow = repository.updateAddress(addressResponseDTO);
         System.out.println(rRow);
 
-        return "redirect:/myPage";
+        if(rRow != 1){
+            response.put("status", "update_fail");
+            response.put("message", "주소록 수정에 실패했습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        response.put("status", "update_success");
+        response.put("message", "주소를 수정했습니다.");
+        System.out.println(response);
+        return response;
 
     }
 
-    @PostMapping("/changePassword")
-    public String changePassword(@SessionAttribute(value="email", required=false) String email,
-                                 @ModelAttribute PasswordFormDTO passwordFormDTO){
+    @ResponseBody
+    @PatchMapping("/changePassword")
+    public Map<String, String> changePassword(@SessionAttribute(value="email", required=false) String email,
+                                 @RequestBody PasswordFormDTO passwordFormDTO){
+
+        Map<String, String> response = new HashMap<>();
 
         if(email == null){
-            return "redirect:/login";
+            response.put("status", "session_invalid");
+            response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
+            return response;
         }
 
         LoginRequestDTO user = repository.selectUserLogin(email);
         if(user == null){
-            return "redirect:/login";
+            response.put("status", "user_invalid");
+            response.put("message", "사용자를 찾을 수 없습니다.");
+            System.out.println(response);
+            return response;
         }
 
         String newPassword1 = passwordFormDTO.getNewPassword1();
         String newPassword2 = passwordFormDTO.getNewPassword2();
 
         if(!newPassword1.equals(newPassword2)){
-            System.out.println("새 비밀번호 불일치");
-            return "redirect:/myPage";
+            response.put("status", "password_mismatch");
+            response.put("message", "비밀번호 입력이 일치하지 않습니다.");
+            System.out.println(response);
+            return response;
         }
 
         if(newPassword1.equals(user.getPassword())){
-            System.out.println("비밀번호가 변경 전과 동일");
-            return "redirect:/myPage";
+            response.put("status", "password_same");
+            response.put("message", "기존 비밀번호와 동일합니다.");
+            System.out.println(response);
+            return response;
         }
 
         PasswordUpdateDTO passwordUpdateDTO = new PasswordUpdateDTO();
         passwordUpdateDTO.setEmail(email);
         passwordUpdateDTO.setNewPassword(newPassword1);
 
-        repository.updatePassword(passwordUpdateDTO);
-        System.out.println("비밀번호 변경 완료");
+        int rRow = repository.updatePassword(passwordUpdateDTO);
+        System.out.println(rRow);
 
-        return "redirect:/myPage";
+        if(rRow != 1){
+            response.put("status", "update_fail");
+            response.put("message", "비밀번호 변경에 실패했습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        response.put("status", "update_success");
+        response.put("message", "비밀번호가 변경되었습니다.");
+        System.out.println(response);
+        return response;
 
     }
 

@@ -44,7 +44,8 @@ $searchInput.addEventListener("input", () => {
                         listItem.className = "search-result-item";
 
                         let link = document.createElement("a");
-                        link.href = `/productDetail?name=${encodeURIComponent(product.name)}`;
+                        // link.href = `/productDetail?name=${encodeURIComponent(product.name)}`;
+                        link.href = `/product/${encodeURIComponent(product.product_id)}`;
                         link.textContent = product.name;
 
                         // 클릭 이벤트 추가

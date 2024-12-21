@@ -76,4 +76,12 @@ public class UserRepository {
     public Integer selectUserIdByEmail(String email){
         return session.selectOne("user.selectUserIdByEmail", email);
     }
+
+    public boolean checkMaxAddressLimit(String email){
+
+        int result = session.selectOne(addressNamespace + "checkMaxAddressLimit", email);
+        return result >= 3;
+
+    }
+
 }
