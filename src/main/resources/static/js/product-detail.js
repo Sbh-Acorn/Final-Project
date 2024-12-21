@@ -26,28 +26,7 @@ function sendData(action) {
 }
 
 
-        $("#bucket_btn").click(function() {
-            // 상품 ID를 버튼의 data-product-id 속성에서 가져오기
-            var productId = $(this).data("product-id");
 
-            console.log("상품 ID:", productId);  // 디버깅을 위한 로그 추가
-
-            $.ajax({
-                url: '/cart/add',
-                type: 'POST',
-                data: {
-                    product_id: productId  // 상품 ID만 전달
-                },
-                success: function(response) {
-                    alert(response);
-                    // 필요에 따라 UI를 업데이트하거나 리다이렉트 할 수 있음
-                },
-                error: function(error) {
-                    console.log("AJAX 요청 실패:", error);  // 에러 메시지 로그 출력
-                    alert("장바구니에 상품을 추가하는데 실패했습니다.");
-                }
-            });
-        });
 
 
         $("#wishlist_btn").click(function(){
@@ -73,30 +52,50 @@ $(document).ready(function() {
 
         formatPrices();
 
+        $("#bucket_btn").click(function() {
+                    var productId = $(this).data("product-id");
+
+                    console.log("상품 ID:", productId);
+
+                    $.ajax({
+                        url: '/cart/add',
+                        type: 'POST',
+                        data: {
+                            product_id: productId
+                        },
+                        success: function(response) {
+                            alert(response);
+                        },
+                        error: function(error) {
+                            console.log("AJAX 요청 실패:", error);
+                            alert("장바구니에 상품을 추가하는데 실패했습니다.");
+                        }
+                    });
+                });
         });
 
     function formatPrices() {
         // 현재 가격 포맷
         $("#product_price").each(function() {
-            var priceText = $(this).text().trim(); // 가격 텍스트 가져오기
-            var priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, '')); // 숫자와 소수점만 추출 후 변환
+            var priceText = $(this).text().trim();
+            var priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, ''));
 
-            if (!isNaN(priceNumber)) { // 유효한 숫자인 경우
-                var formattedPrice = Math.round(priceNumber).toLocaleString('ko-KR'); // 소수점 반올림 후 포맷
-                $(this).text("￦" + formattedPrice); // "￦"와 함께 다시 설정
+            if (!isNaN(priceNumber)) {
+                var formattedPrice = Math.round(priceNumber).toLocaleString();
+                $(this).text("￦" + formattedPrice);
             }
         });
 
-        // 원래 가격 포맷
-        $("#product_sales").each(function() {
-            var priceText = $(this).text().trim(); // 원래 가격 텍스트 가져오기
-            var priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, '')); // 숫자와 소수점만 추출 후 변환
+      $("#product_sales").each(function() {
+          var priceText = $(this).find('b').text().trim();  // b 태그 내의 텍스트 가져오기
+          var priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, ''));
 
-            if (!isNaN(priceNumber)) { // 유효한 숫자인 경우
-                var formattedPrice = Math.round(priceNumber).toLocaleString('ko-KR'); // 소수점 반올림 후 포맷
-                $(this).text(" (￦" + formattedPrice + ")"); // 괄호 포함하여 다시 설정
-            }
-        });
+          if (!isNaN(priceNumber)) {
+              var formattedPrice = Math.round(priceNumber).toLocaleString();
+              $(this).find('b').text("￦" + formattedPrice); // b 태그 내의 가격만 포맷팅하여 수정
+          }
+      });
+
     }
 // 이벤트 핸들러 등록
 //$wishlist.addEventListener("click", function() {

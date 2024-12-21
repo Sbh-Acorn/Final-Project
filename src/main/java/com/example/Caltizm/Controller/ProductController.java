@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ProductController {
@@ -25,7 +27,6 @@ public class ProductController {
     @Autowired
     CalculatorService calculatorService;
 
-    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
     @ModelAttribute("products")
     public List<ProductDTO> getAllProducts() {
         List<ProductDTO> products = repository.getProduct();
@@ -49,42 +50,108 @@ public class ProductController {
         return repository.getAllCategoryName();
     }
 
+    @ModelAttribute("maxPrice")
+    public Map<String, Object> getMinAndMaxPrice() {
+        Map<String, Object> priceData = repository.getMaxPrice();
 
+        BigDecimal maxPrice = (BigDecimal) priceData.get("max_price");
+
+        Double maxPriceAsDouble = maxPrice.doubleValue();
+
+        Double maxPriceInWon = calculatorService.calculator(maxPriceAsDouble);
+
+        priceData.put("max_price_in_won", maxPriceInWon);
+
+        return priceData;
+    }
 
 
     @GetMapping("/product")
     public String product(Model model) {
-        return "product/product-list";  // products는 이미 Model에 추가됨
+        return "product/product-list";
     }
-
 
     @GetMapping("/product/{product_id}")
     public String productDetail(@PathVariable(name = "product_id") String product_id, Model model , HttpSession session) {
-        // Model에서 products를 가져오고 List로 캐스팅
         List<ProductDTO> products = (List<ProductDTO>) model.getAttribute("products");
 
-        // itemCode에 해당하는 Product 찾기
         ProductDTO product = products.stream()
                 .filter(p -> p.getProduct_id().equals(product_id))
                 .findFirst()
                 .orElse(null);
 
-        model.addAttribute("product", product); // product를 모델에 추가
+        model.addAttribute("product", product);
 
         if (product.getOriginal_price() != null) {
             int discountRate = (int) Math.round((1 - ((double) product.getCurrent_price() / product.getOriginal_price())) * 100);
             model.addAttribute("discountRate", discountRate);
         }
-        // 세션에서 cartList 가져오기
+
         List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
 
-        // cartList가 null이면 빈 리스트로 초기화
         if (cartList == null) {
             cartList = new ArrayList<>();
         }
 
-        // Model에 cartList 추가
         model.addAttribute("cartList", cartList);
         return "product/product-detail";
     }
+
+
+
+    /*
+
+    @PostMapping("/product/filter")
+    public List<ProductDTO> filter(@RequestBody FilterDTO filterData) {
+    // 필터링 로직을 처리
+    List<ProductDTO> allProducts = repository.getProduct();
+
+    // 가격 필터링
+    allProducts = allProducts.stream()
+            .filter(p -> p.getCurrent_price() >= filterData.getPrice().getMin()
+                    && p.getCurrent_price() <= filterData.getPrice().getMax())
+            .collect(Collectors.toList());
+
+    // 브랜드 필터링
+    if (filterData.getBrands() != null && !filterData.getBrands().isEmpty()) {
+        allProducts = allProducts.stream()
+                .filter(p -> filterData.getBrands().contains(p.getBrand()))
+                .collect(Collectors.toList());
+    }
+
+    // 카테고리 필터링
+    if (filterData.getCategories() != null && !filterData.getCategories().isEmpty()) {
+        allProducts = allProducts.stream()
+                .filter(p -> filterData.getCategories().contains(p.getCategory1()) ||
+                        filterData.getCategories().contains(p.getCategory2()) ||
+                        filterData.getCategories().contains(p.getCategory3()))
+                .collect(Collectors.toList());
+    }
+
+    // 세금 필터링: 가격이 150 이상인 제품만 필터링
+    if (filterData.getTax() != null && filterData.getTax().equals("TAX")) {
+        allProducts = allProducts.stream()
+                .filter(p -> p.getCurrent_price() >= 150 && p.isTax())
+                .collect(Collectors.toList());
+    } else if (filterData.getTax() != null && filterData.getTax().equals("NOT TAX")) {
+        allProducts = allProducts.stream()
+                .filter(p -> p.getCurrent_price() >= 150 && !p.isTax())
+                .collect(Collectors.toList());
+    }
+
+    // FTA 필터링
+    if (filterData.getFta() != null) {
+        allProducts = allProducts.stream()
+                .filter(p -> (filterData.getFta().equals("FTA") && p.is_fta())
+                        || (filterData.getFta().equals("NOT FTA") && !p.is_fta()))
+                .collect(Collectors.toList());
+    }
+
+    // 가격 계산
+    allProducts.forEach(product -> product.setCurrent_price(calculatorService.calculator(product.getCurrent_price())));
+
+    return allProducts;
+    }
+
+    */
 }

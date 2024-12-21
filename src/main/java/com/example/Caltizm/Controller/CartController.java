@@ -72,7 +72,6 @@ public class CartController {
             }
         }
 
-
         cartList.add(addCartItem);
         System.out.println("장바구니 추가");
         System.out.println("현재 장바구니 : " + cartList);
@@ -208,29 +207,4 @@ public class CartController {
         // 장바구니 페이지로 리다이렉트
         return "장바구니 수량이 변경되었습니다";
     }
-
-
-
-    //    @PostMapping("/remove")
-    //    public String removeCart(@RequestParam(name = "product_id") String product_id,
-    //                             @RequestParam(name = "current_product_id") String current_product_id,
-    //                             HttpSession session) {
-    //        // 세션에서 장바구니 가져오기
-    //        List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
-    //
-    //        if (cartList != null) {
-    //            // 조건에 맞는 상품 제거
-    //            cartList.removeIf(item -> item.getProduct_id().equals(product_id));
-    //        }
-    //
-    //        // 갱신된 장바구니 세션에 저장
-    //        session.setAttribute("cartList", cartList);
-    //
-    //        // 상품 상세 페이지로 리다이렉트
-    //        return "redirect:/product/" + current_product_id;
-    //    }
-
-
-
-
 }

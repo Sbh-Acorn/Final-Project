@@ -55,11 +55,9 @@
             <p id="selected_txt">선택한 항목</p>
             <ul id="selected_ul">
 
-                </li>
             </ul>
         </div>
         <p class="filter_txt">BRAND</p>
-        <form th:action="@{/}">
             <div class="filter_wrap">
                 <ul class="filter_checkbox" th:each ="brandName : ${brandNames}">
                     <li class="filter_check">
@@ -83,12 +81,16 @@
             </div>
             <p class="filter_txt">PRICE</p>
             <div class="custom-range">
-                <input type="range" id="range" min="0" max="100" value="50">
+                <input type="range" id="range" min="0" th:max="${maxPrice['max_price_in_won']}">
                 <div class="thumb thumb-left"></div>
                 <div class="thumb thumb-right"></div>
                 <div class="range-track"></div>
             </div>
-            <p class="range_value">From $<b id="value1">25</b> to $<b id="value2">75</b></p>
+            <p class="range_value">From ￦
+                <b id="value1">0</b>
+                to ￦
+                <b id="value2" th:text="${maxPrice['max_price_in_won']}">Max Price</b>
+            </p>
             <hr class="hr1">
             <p class="filter_txt">TAX</p>
             <div id="tax_wrap" class="filter_wrap">
@@ -125,7 +127,6 @@
                 </ul>
             </div>
             <button id="filter_btn" type="submit">item found</button>
-        </form>
     </div>
     <div id="right_box">
         <ul id="item_box_wrap">
@@ -136,7 +137,7 @@
                 <p class="item_name" th:text="${product.name}" >Product Name</p>
                     <p class="item_price">
                         <span class="current_price" th:text="${product.current_price}"></span>
-                        <span class="original_price" th:if="${product.original_price != null}" th:text="${product.original_price}"></span>
+                        <span class="original_price" th:if="${product.original_price > product.current_price}" th:text="${product.original_price}"></span>
                     </p>
                 </a>
             </li>
