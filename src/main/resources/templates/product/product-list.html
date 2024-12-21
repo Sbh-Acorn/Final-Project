@@ -136,7 +136,7 @@
                 <p class="item_name" th:text="${product.name}" >Product Name</p>
                     <p class="item_price">
                         <span class="current_price" th:text="${product.current_price}"></span>
-                        <span class="original_price" th:if="${product.original_price > product.current_price}" th:text="${product.original_price}"></span>
+                        <span class="original_price" th:if="${product.original_price != null}" th:text="${product.original_price}"></span>
                     </p>
                 </a>
             </li>
