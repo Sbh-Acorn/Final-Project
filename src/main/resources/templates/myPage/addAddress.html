@@ -67,7 +67,7 @@
                 let detail = $("#detailAddress").val();
                 console.log(address, zipCode, detail);
 
-                if(address === "" || zipCode === "" || detail == ""){
+                if(address.trim() === "" || zipCode.trim() === "" || detail.trim() == ""){
                     alert("모든 필드를 채워주세요.");
                     return;
                 }

@@ -60,7 +60,7 @@ public class signupController {
         }
 
         // PCCC가 빈 문자열일 경우 null로 설정
-        if(user.getPccc().isEmpty()){
+        if(user.getPccc().trim().isEmpty()){
             user.setPccc(null);
         }
 

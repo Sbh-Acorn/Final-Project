@@ -96,7 +96,7 @@ $(document).ready(function(){
         let detail = $("#detailed_p").val();
         console.log(addressId, address, zipCode, detail);
 
-        if(addressId === "" || address === "" || zipCode === "" || detail == ""){
+        if(addressId.trim() === "" || address.trim() === "" || zipCode.trim() === "" || detail.trim() == ""){
             alert("모든 필드를 채워주세요.");
             return;
         }

@@ -126,7 +126,14 @@ function sendRequest(){
         return;
     }
 
-    if(pcc !== ""){
+    if(!checkValidDate(birth)){
+        alert("생년월일이 유효하지 않습니다.");
+        console.log("dd");
+        window.location.reload();
+        return;
+    }
+
+    if(pcc.trim() !== ""){
         // 개인통관고유부호 검사
         if(!/^P\d{12}$/.test(pcc)){
             alert("개인통관고유번호가 유효하지 않습니다.");
@@ -141,7 +148,7 @@ function sendRequest(){
         phoneNumber: phone,
         birthDate: birth,
     };
-    if(pcc !== ""){
+    if(pcc.trim() !== ""){
         data.pccc = pcc;
     }
 
@@ -166,7 +173,7 @@ document.querySelector("#pwd_btn").addEventListener("click", function(){
     let pwd = document.querySelector("#pwd").value;
     let pwdCheck = document.querySelector("#pwd_check").value;
 
-    if(pwd === "" || pwdCheck === ""){
+    if(pwd.trim() === "" || pwdCheck.trim() === ""){
         alert("모든 필드를 채워주세요.");
         return;
     }
@@ -192,3 +199,19 @@ document.querySelector("#pwd_btn").addEventListener("click", function(){
         }
     });
 });
+
+function checkValidDate(value) {
+	var result = true;
+	try {
+	    var date = value.split("-");
+	    var y = parseInt(date[0], 10),
+	        m = parseInt(date[1], 10),
+	        d = parseInt(date[2], 10);
+
+	    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+	    result = dateRegex.test(d+'-'+m+'-'+y);
+	} catch (err) {
+		result = false;
+	}
+    return result;
+}
