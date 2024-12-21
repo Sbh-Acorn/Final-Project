@@ -59,6 +59,11 @@ public class signupController {
             return "redirect:/signup";
         }
 
+        // PCCC가 빈 문자열일 경우 null로 설정
+        if(user.getPccc().isEmpty()){
+            user.setPccc(null);
+        }
+
         System.out.println(user);
 
         service.registUser(user);

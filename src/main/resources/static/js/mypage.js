@@ -114,24 +114,79 @@ function sendRequest(){
     let birth = document.querySelector("#birth").value;
     let pcc = document.querySelector("#pcc").value;
 
+    if(name.split(" ").length !== 2){
+        alert("이름은 2개의 단어로 이루어져야 합니다.");
+        return;
+    }
+
+    if(!/^010\d{8}$/.test(phone)){
+        alert("전화번호가 유효하지 않습니다.");
+        return;
+    }
+
+    if(pcc !== ""){
+        // 개인통관고유부호 검사
+        if(!/^P\d{12}$/.test(pcc)){
+            alert("개인통관고유번호가 유효하지 않습니다.");
+            return;
+        }
+    }
+
     let data = {
         email: email,
         name: name,
         phoneNumber: phone,
         birthDate: birth,
-        pccc: pcc
     };
+    if(pcc !== ""){
+        data.pccc = pcc;
+    }
+    console.log(data);
 
     $.ajax({
-        type: "POST",
+        type: "PATCH",
         url: "/updateUserInfo",
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function(response){
             alert(response.message);
+            if(response.status !== "update_success"){
+                window.location.href = "/myPage";
+            }
         },
         error: function(xhr, status, error){
             console.error("Error:", error);
         }
     });
 }
+
+document.querySelector("#pwd_btn").addEventListener("click", function(){
+    let pwd = document.querySelector("#pwd").value;
+    let pwdCheck = document.querySelector("#pwd_check").value;
+
+    if(pwd === "" || pwdCheck === ""){
+        alert("모든 필드를 채워주세요.");
+        return;
+    }
+
+    let data = {
+        newPassword1: pwd,
+        newPassword2: pwdCheck
+    };
+
+    $.ajax({
+        url: "/changePassword",
+        type: "PATCH",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function(response){
+            alert(response.message);
+            if(response.status === "update_success"){
+                window.location.href = "/myPage";
+            }
+        },
+        error: function(xhr, status, error){
+            console.log("Error:", error);
+        }
+    });
+});
