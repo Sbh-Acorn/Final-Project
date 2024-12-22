@@ -11,7 +11,7 @@ public class CalculatorService {
 
     ExchangeRateService service = new ExchangeRateService();
 
-    Double EXCHANGE = service.getUsdToKrwRate();
+    Double EXCHANGE = service.getEuroToKrwRate();
 
     public double calculator(double price) {
         // 세금 제외 가격 계산
