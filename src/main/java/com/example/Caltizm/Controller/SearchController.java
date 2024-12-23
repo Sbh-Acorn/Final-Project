@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SearchController {
@@ -16,9 +17,14 @@ public class SearchController {
     @Autowired
     private SearchProductRepository searchProductRepository;
 
+//    @GetMapping("/search")
+//    @ResponseBody
+//    public List<ProductDTO> searchProducts(@RequestParam("query") String query) {
+//        return searchProductRepository.findProductsByName(query);
+//    }
     @GetMapping("/search")
     @ResponseBody
-    public List<ProductDTO> searchProducts(@RequestParam("query") String query) {
+    public List<Map<String, Object>> searchProducts(@RequestParam("query") String query) {
         return searchProductRepository.findProductsByName(query);
     }
 }

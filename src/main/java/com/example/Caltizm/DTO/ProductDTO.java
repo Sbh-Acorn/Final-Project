@@ -22,7 +22,11 @@ public class ProductDTO {
         public boolean is_excludedVoucher;
         public boolean is_fta;
 
-        public ProductDTO(String brand, String product_id, String image_url, String name, Double original_price, double current_price, String description, String category1, String category2, String category3, boolean is_excludedVoucher) {
+
+        public ProductDTO(String brand, String product_id, String image_url, String name,
+                          Double original_price, double current_price, String description,
+                          String category1, String category2, String category3,
+                          boolean is_excludedVoucher) {
                 this.brand = brand;
                 this.product_id = product_id;
                 this.image_url = image_url;
@@ -36,4 +40,15 @@ public class ProductDTO {
                 this.is_excludedVoucher = is_excludedVoucher;
                 this.is_fta = false;
         }
+
+        // Optional: 세터 또는 메서드를 통해 가격을 포맷팅하여 추가할 수 있음
+        public void setOriginal_price(Double original_price) {
+                this.original_price = original_price;
+        }
+
+        public void setCurrent_price(double current_price) {
+                this.current_price = current_price;
+        }
 }
+
+
