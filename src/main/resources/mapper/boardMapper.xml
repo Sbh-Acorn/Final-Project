@@ -61,7 +61,33 @@
         update post set views = views + 1 where post_id = #{post_id}
     </update>
 
+    <!-- 좋아요 -->
+    <update id="incLikes">
+        update post set likes = likes +1 where post_id = #{post_id}
+    </update>
+    <update id="decLikes">
+        update post set likes = likes -1 where post_id = #{post_id}
+    </update>
 
+
+    <!-- 좋아요 테이블 추가 -->
+    <insert id="insert-likes" parameterType="map">
+        insert into postlike (post_id, user_id) values (#{post_id}, #{user_id})
+    </insert>
+
+    <delete id="delete-likes" parameterType="map">
+        delete from postlike where post_id = #{post_id} and user_id = #{user_id}
+    </delete>
+
+    <!-- 좋아요 테이블 검색 -->
+    <select id="check-likes" parameterType="map" resultType="int">
+        select count(*) from postlike where post_id = #{post_id} and user_id = #{user_id}
+    </select>
+
+    <!--좋아요 수-->
+    <select id="count-likes" resultType="int">
+        select likes from post where post_id = #{post_id}
+    </select>
 
 
 

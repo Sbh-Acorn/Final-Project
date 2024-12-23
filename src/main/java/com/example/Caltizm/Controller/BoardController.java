@@ -25,6 +25,11 @@ public class BoardController {
     @Autowired
     BoardRepository repository;
 
+    @GetMapping("/testBoard")
+    public String tb() {
+        return "board/board_main_ui";
+    }
+
     // 전체 게시판 조회
     @GetMapping("/boardAll")
     public String boardAll(Model model){
@@ -183,6 +188,30 @@ public class BoardController {
         repository.editPost(postDTO);
 
         return "redirect:/postone/" + post_id; // 수정 후 상세 페이지로 리다이렉트
+    }
+
+    // 게시글 추천
+    @ResponseBody
+    @PostMapping("/likePost")
+    public int likePost(@RequestParam(value="post_id") String post_id,
+                        @SessionAttribute(value = "email") String email) {
+
+        System.out.println(post_id);
+        System.out.println(email);
+
+        int user_id = repository.getUser(email);
+        int count = repository.checkLikes(Integer.parseInt(post_id), user_id);
+
+        if(count == 0){
+            repository.incLikes(Integer.parseInt(post_id));
+            repository.insertLikes(Integer.parseInt(post_id), user_id);
+        } else {
+            repository.decLikes(Integer.parseInt(post_id));
+            repository.deleteLikes(Integer.parseInt(post_id), user_id);
+        }
+        return repository.countLikes(Integer.parseInt(post_id));
+
+
     }
 
 
