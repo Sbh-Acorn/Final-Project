@@ -157,3 +157,7 @@ header {
         display: none;
     }
 }
+
+#header_icon_wrap img {
+    margin: 0 4px;
+}
