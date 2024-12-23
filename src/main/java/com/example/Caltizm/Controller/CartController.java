@@ -34,15 +34,20 @@ public class CartController {
     @Autowired
     CalculatorService calculatorService;
 
+    @ModelAttribute("taxBaseAmount")
+    public Double getconvert150UsdToEur(){
+        return calculatorService.convertUsdToKrw(150);
+    }
+
     // 모든 메서드에서 사용할 제품 리스트를 미리 로드
     @ModelAttribute("products")
     public List<ProductDTO> getAllProducts() {
         List<ProductDTO> products = repository.getProduct();
         products.sort(Comparator.comparing(ProductDTO::getBrand));
         for (ProductDTO product : products){
-            product.setCurrent_price(calculatorService.calculator(product.getCurrent_price()));
+            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
             if(product.getOriginal_price() != null){
-                product.setOriginal_price(calculatorService.calculator(product.getOriginal_price()));
+                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
             }
         }
         return products;

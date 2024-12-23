@@ -59,74 +59,77 @@
         </div>
         <p class="filter_txt">BRAND</p>
             <div class="filter_wrap">
-                <ul class="filter_checkbox" th:each ="brandName : ${brandNames}">
+                <ul class="filter_checkbox" th:each="brandName : ${brandNames}">
                     <li class="filter_check">
                         <label th:for="${brandName}">
-                            <input type="checkbox" th:id="${brandName}" class="check">
+                            <input type="checkbox" th:id="${brandName}" th:name="brands" th:value="${brandName}" class="check">
                             <p th:text="${brandName}">Brand Name</p>
                         </label>
                     </li>
                 </ul>
             </div>
             <p class="filter_txt">CATEGORY</p>
-            <div class="filter_wrap">
-                <ul class="filter_checkbox">
-                    <li class="filter_check" th:each="categoryName : ${categoryNames}">
-                        <label th:for="${categoryName}">
-                            <input type="checkbox" th:id="${categoryName}" class="check">
-                            <p th:text="${categoryName}">Category Name</p>
-                        </label>
-                    </li>
-                </ul>
-            </div>
-            <p class="filter_txt">PRICE</p>
-            <div class="custom-range">
-                <input type="range" id="range" min="0" th:max="${maxPrice['max_price_in_won']}">
-                <div class="thumb thumb-left"></div>
-                <div class="thumb thumb-right"></div>
-                <div class="range-track"></div>
-            </div>
-            <p class="range_value">From ￦
-                <b id="value1">0</b>
-                to ￦
-                <b id="value2" th:text="${maxPrice['max_price_in_won']}">Max Price</b>
-            </p>
-            <hr class="hr1">
-            <p class="filter_txt">TAX</p>
-            <div id="tax_wrap" class="filter_wrap">
-                <ul class="filter_checkbox">
-                    <li class="filter_check">
-                        <label for="tax">
-                            <input type="checkbox" id="tax" class="check">
-                            <p>TAX</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="not_tax">
-                            <input type="checkbox" id="not_tax" class="check">
-                            <p>NOT TAX</p>
-                        </label>
-                    </li>
-                </ul>
-            </div>
-            <p class="filter_txt">FTA</p>
-            <div id="fta_wrap" class="filter_wrap">
-                <ul class="filter_checkbox">
-                    <li class="filter_check">
-                        <label for="fta">
-                            <input type="checkbox" id="fta" class="check">
-                            <p>FTA</p>
-                        </label>
-                    </li>
-                    <li class="filter_check">
-                        <label for="not_fta">
-                            <input type="checkbox" id="not_fta" class="check">
-                            <p>NOT FTA</p>
-                        </label>
-                    </li>
-                </ul>
-            </div>
-            <button id="filter_btn" type="submit">item found</button>
+        <div class="filter_wrap">
+            <ul class="filter_checkbox">
+                <li class="filter_check" th:each="categoryName : ${categoryNames}">
+                    <label th:for="${categoryName}">
+                        <input type="checkbox" th:id="${categoryName}" class="check" name="categories" th:value="${categoryName}">
+                        <p th:text="${categoryName}">Category Name</p>
+                    </label>
+                </li>
+            </ul>
+        </div>
+
+        <p class="filter_txt">PRICE</p>
+        <div class="custom-range">
+            <input type="range" id="range" min="0" th:max="${maxPrice['max_price_in_won']}">
+            <div class="thumb thumb-left"></div>
+            <div class="thumb thumb-right"></div>
+            <div class="range-track"></div>
+        </div>
+        <p class="range_value">From ￦
+            <b id="value1">0</b>
+            to ￦
+            <b id="value2" th:text="${maxPrice['max_price_in_won']}">Max Price</b>
+        </p>
+        <hr class="hr1">
+
+        <p class="filter_txt">TAX</p>
+        <div id="tax_wrap" class="filter_wrap">
+            <ul class="filter_checkbox">
+                <li class="filter_check">
+                    <label for="tax">
+                        <input type="checkbox" id="tax" class="check" name="tax" value="TAX">
+                        <p>TAX</p>
+                    </label>
+                </li>
+                <li class="filter_check">
+                    <label for="not_tax">
+                        <input type="checkbox" id="not_tax" class="check" name="tax" value="NOT TAX">
+                        <p>NOT TAX</p>
+                    </label>
+                </li>
+            </ul>
+        </div>
+
+        <p class="filter_txt">FTA</p>
+        <div id="fta_wrap" class="filter_wrap">
+            <ul class="filter_checkbox">
+                <li class="filter_check">
+                    <label for="fta">
+                        <input type="checkbox" id="fta" class="check" name="fta" value="FTA">
+                        <p>FTA</p>
+                    </label>
+                </li>
+                <li class="filter_check">
+                    <label for="not_fta">
+                        <input type="checkbox" id="not_fta" class="check" name="fta" value="NOT FTA">
+                        <p>NOT FTA</p>
+                    </label>
+                </li>
+            </ul>
+        </div>
+        <button id="filter_btn" type="submit">item found</button>
     </div>
     <div id="right_box">
         <ul id="item_box_wrap">
