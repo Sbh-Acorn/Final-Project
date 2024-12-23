@@ -79,9 +79,6 @@ public class AuthController {
         session.setAttribute("cartList", cartList);
         //모델에 테이블 값 심기
 
-        List<NotificationDTO> notificationList = wishlistRepository.selectNotification(email);
-        session.setAttribute("notificationList", notificationList);
-
         return "redirect:/main";
 
     }

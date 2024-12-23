@@ -9,6 +9,61 @@
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <script defer th:src="@{/js/header.js}"></script>
     <script defer th:src="@{/js/main.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function loadNotification(){
+            $.ajax({
+                url: "/notification",
+                type: "GET",
+                success: function(response){
+                    if(response.status === "fetch_success"){
+                        console.log(response);
+                        if(!response.notificationList || response.notificationList.length === 0){
+                            $("#header_alarm_dropdown").html("<div><p>알림이 없습니다.</p></div>");
+                            return;
+                        }
+                        let notificationHtml = "";
+                        response.notificationList.forEach((notification) => {
+                            notificationHtml +=`
+                                <div onclick="readNotification(this)"
+                                data-notification-id="${notification.notificationId}"
+                                data-product-id="${notification.productId}">
+                                    <p>
+                                        ${notification.productName}의 가격이 €${notification.previousPrice}에서
+                                        €${notification.currentPrice}으로 하락했습니다.
+                                        ${notification.read} ${notification.notificationId}
+                                    </p>
+                                </div>
+                            `;
+                        });
+                        $("#header_alarm_dropdown").html(notificationHtml);
+                    }
+                },
+                error: function(){}
+            });
+        }
+
+        function readNotification(element){
+            let notificationId = element.dataset.notificationId;
+            let productId = element.dataset.productId;
+            console.log(element);
+            console.log(notificationId);
+            console.log(productId);
+            $.ajax({
+                url: "/notification/read",
+                type: "POST",
+                data: {
+                    notificationId: notificationId
+                },
+                success: function(response){
+                    if(response.status === "update_success"){
+                        window.location.href = "/product/" + productId;
+                    }
+                },
+                error: function(xhr, status, error){}
+            });
+        }
+    </script>
 </head>
 <body>
 
@@ -31,9 +86,15 @@
             </div>
             <div id="header_icon_wrap">
                 <!-- 알림 아이콘 -->
-                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
+                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon"
+                     onclick="loadNotification()">
                 <div id="header_alarm_dropdown">
-                    현재 내용이 없습니다.
+<!--                    <div class="notification" th:each="item : ${notificationList}"-->
+<!--                         onclick="readNotification(this)" th:data-notification-id="${item.notificationId}">-->
+<!--                        <p th:text="|${item.productName}의 가격이 €${item.previousPrice}에서-->
+<!--                        €${item.currentPrice}으로 하락했습니다. ${item.isRead} ${item.notificationId}|">-->
+<!--                        </p>-->
+<!--                    </div>-->
                 </div>
 
                 <!-- 프로필 아이콘 -->
