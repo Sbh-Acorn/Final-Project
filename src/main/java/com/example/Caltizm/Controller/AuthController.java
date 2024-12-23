@@ -2,8 +2,10 @@ package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.CartDTO;
 import com.example.Caltizm.DTO.LoginRequestDTO;
+import com.example.Caltizm.DTO.NotificationDTO;
 import com.example.Caltizm.Repository.CartRepository;
 import com.example.Caltizm.Repository.UserRepository;
+import com.example.Caltizm.Repository.WishlistRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,9 @@ public class AuthController {
 
     @Autowired
     CartRepository cartRepository;
+
+    @Autowired
+    WishlistRepository wishlistRepository;
 
     @GetMapping("/login")
     public String login1() {
@@ -73,6 +78,9 @@ public class AuthController {
 
         session.setAttribute("cartList", cartList);
         //모델에 테이블 값 심기
+
+        List<NotificationDTO> notificationList = wishlistRepository.selectNotification(email);
+        session.setAttribute("notificationList", notificationList);
 
         return "redirect:/main";
 

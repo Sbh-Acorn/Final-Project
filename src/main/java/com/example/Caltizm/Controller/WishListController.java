@@ -126,4 +126,36 @@ public class WishListController {
 
     }
 
+    @ResponseBody
+    @PostMapping("/notification/read")
+    public Map<String, String> readNotification(@SessionAttribute(value="email", required=false) String email,
+                                                @RequestParam(name="notificationId") String notificationId){
+
+        Map<String, String> response = new HashMap<>();
+
+        if(email == null){
+            response.put("status", "session_invalid");
+            response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        System.out.println("notificationId: " + notificationId);
+
+        int rRow = repository.readNotification(notificationId);
+        System.out.println("rRow: " + rRow);
+        if(rRow != 1){
+            response.put("status", "update_fail");
+            response.put("message", "알림 수정에 실패했습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        response.put("status", "update_success");
+        response.put("message", "알림을 수정했습니다.");
+        System.out.println(response);
+        return response;
+
+    }
+
 }

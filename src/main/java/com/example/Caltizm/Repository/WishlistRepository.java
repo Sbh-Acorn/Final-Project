@@ -1,5 +1,6 @@
 package com.example.Caltizm.Repository;
 
+import com.example.Caltizm.DTO.NotificationDTO;
 import com.example.Caltizm.DTO.WishlistRequestDTO;
 import com.example.Caltizm.DTO.WishlistDTO;
 import org.apache.ibatis.session.SqlSession;
@@ -59,6 +60,18 @@ public class WishlistRepository {
 
     public void setSafeUpdateOn(){
         session.update(namespace + "setSafeUpdateOn");
+    }
+
+    public List<NotificationDTO> selectNotification(String email){
+
+        return session.selectList(namespace + "selectNotification", email);
+
+    }
+
+    public int readNotification(String notificationId){
+
+        return session.update(namespace + "readNotification", notificationId);
+
     }
 
 }
