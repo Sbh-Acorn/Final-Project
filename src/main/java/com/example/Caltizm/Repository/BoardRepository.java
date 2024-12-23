@@ -46,4 +46,22 @@ public class BoardRepository {
     // 유저 아이디 가져오기
     public int getUser(String email){
         return session.selectOne("board.user_id",email);}
+
+    // 게시글 한개 조회
+    public PostDTO selectPostOne(int post_id){return session.selectOne("board.postOne",post_id);}
+
+    // 게시글 삭제
+    public int deletePost(int post_id){
+        return session.update("board.delete-post",post_id);
+    }
+
+    // 게시글 수정
+    public int editPost(PostDTO postDTO){
+        return session.update("board.edit-post",postDTO);
+    }
+
+    //조회수 증가
+    public int incViews(int post_id) {
+        return session.update("board.incViews", post_id);
+    }
 }
