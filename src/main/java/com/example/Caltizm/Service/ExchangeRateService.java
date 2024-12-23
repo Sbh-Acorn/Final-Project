@@ -11,7 +11,7 @@ public class ExchangeRateService {
 
 //    @Value("${exchange.rate.api.url}")
 //    private String apiUrl;
-    private String apiUrl = "https://v6.exchangerate-api.com/v6/4c53144b44d5d039c08eaaba/latest/EUR"; // API URL
+    private String apiUrl = "https://v6.exchangerate-api.com/v6/436f5972e58a155b9464f0e2/latest/EUR"; // API URL
     private final RestTemplate restTemplate;
 
 //    public ExchangeRateService(RestTemplate restTemplate) {
