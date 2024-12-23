@@ -52,13 +52,19 @@ public class CalculatorService {
         return roundedPriceInEuro.doubleValue();
     }
 
+    public double convertEurToKrwWithTax(double price) {
+        BigDecimal priceInWon = new BigDecimal(price).multiply(new BigDecimal(eurToKrwRate));
+        BigDecimal roundedPriceInWon = priceInWon.setScale(0, RoundingMode.HALF_UP);
+        return roundedPriceInWon.doubleValue();
+    }
+
     // USD -> EUR 환전 후, EUR -> KRW 환전하는 메서드
     public double convertUsdToKrw(int usdAmount) {
         // USD를 EUR로 변환
         double eurAmount = convertUsdToEur(usdAmount);
 
         // EUR를 KRW로 변환
-        return convertEurToKrw(eurAmount);
+        return convertEurToKrwWithTax(eurAmount);
     }
 
     // USD -> EUR 150달러 환전금액
@@ -68,8 +74,11 @@ public class CalculatorService {
 
     public static void main(String[] args) {
 //        CalculatorService service = new CalculatorService();
-//        System.out.println(service.convertEurToKrw(100));
-//        System.out.println(service.convertKrwToEur(10000));
-        System.out.println();
+//
+//
+//        System.out.println("KRW -> EUR 10000원 환전금액 : " + service.convertKrwToEur(10000));
+//        System.out.println("USD -> KRW 150달러 환전금액 : " + service.convertUsdToKrw(150));
+//        System.out.println("USD -> EUR 150달러 환전금액 : " + service.convertUsdToEur(150));
+//        System.out.println();
     }
 }
