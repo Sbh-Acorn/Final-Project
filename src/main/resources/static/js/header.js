@@ -1,7 +1,6 @@
 // 요소 선택
 let $alarm = document.querySelector("#header_alarm");
 let $profile = document.querySelector("#header_profile");
-let $bucket = document.querySelector("#header_bucket");
 
 let $alarm_drop = document.querySelector("#header_alarm_dropdown");
 let $profile_drop = document.querySelector("#header_profile_dropdown");

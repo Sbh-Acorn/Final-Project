@@ -2,6 +2,7 @@ package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.PostDTO;
 import com.example.Caltizm.Repository.BoardRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,15 @@ public class BoardController {
 
     @Autowired
     BoardRepository repository;
+
+    @GetMapping("/board_ui")
+    public String boardUi(Model model, HttpSession session) {
+
+        String email = (String) session.getAttribute("email");
+        model.addAttribute("sessionEmail", email);
+
+        return "board/board_main_ui";
+    }
 
     // 전체 게시판 조회
     @GetMapping("/boardAll")

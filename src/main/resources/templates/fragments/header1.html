@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header>
+    <div id="logo_wrap">
+        <h1 id="logo">CALTIZM</h1>
+    </div>
+    <div id="wrap_wrap">
+        <div id="wrap1">
+            <div id="header_input_wrap">
+                <input type="text" id="header_input" placeholder="상품명을 입력하세요" autocomplete="off">
+                <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
+            </div>
+            <div id="header_icon_wrap">
+                <img th:src="@{/img/header_wishlist.svg}" alt="" id="header_wishlist" class="header_icon">
+                <!-- 알림 아이콘 -->
+                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
+                <ul id="header_alarm_dropdown">
+                    <li class="header_alarm_dropdown_list">현재1165156165ㄴ165ㅇㅁㄴ651ㅇ65ㅁㄴ165ㅁㄴ1ㅇ6ㅁ</li>
+                    <li class="header_alarm_dropdown_list">내용</li>
+                    <li class="header_alarm_dropdown_list">없음</li>
+                </ul>
+
+                <!-- 프로필 아이콘 -->
+                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
+
+                <!-- 로그인/회원가입 메뉴 -->
+                <ul id="header_profile_dropdown" class="dropdown" th:if="${sessionEmail == null}">
+                    <li class="header_profile_dropdown_list">
+                        <a th:href="@{/login}">로그인</a>
+                    </li>
+                    <li class="header_profile_dropdown_list">
+                        <a th:href="@{/signup}">회원가입</a>
+                    </li>
+                </ul>
+
+                <!-- 로그아웃/마이페이지 메뉴 -->
+                <ul id="header_profile_dropdown2" class="dropdown" th:if="${sessionEmail != null}">
+                    <li class="header_profile_dropdown_list">
+                        <a th:href="@{/logout}">로그아웃</a>
+                    </li>
+                    <li class="header_profile_dropdown_list">
+                        <a th:href="@{/myPage}">마이페이지</a>
+                    </li>
+                </ul>
+
+                <!-- 장바구니 아이콘 -->
+                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+            </div>
+        </div>
+        <div id="wrap2">
+            <ul id="header_nav">
+                <li class="header_list">ALL</li>
+                <li class="header_list">BRAND</li>
+                <li class="header_list">FTA</li>
+                <li class="header_list">TAX</li>
+                <li class="header_list">COMMUNITY</li>
+            </ul>
+        </div>
+    </div>
+</header>
+</body>
+</html>
