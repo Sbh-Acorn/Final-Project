@@ -1,6 +1,6 @@
 main {
     display: flex;
-    padding: 0 120px;
+    padding: 0 0 0 120px;
     width: 100%;
 }
 
@@ -52,8 +52,10 @@ main {
     width: 260px;
     height: 170px;
     background-color: white;
-    overflow-y: scroll;
+    overflow-y: auto;
     border-bottom: 2px solid #EFE1E1;
+    border-top: 1px solid rgba(195, 185, 185, 0.4);
+    padding: 5px 0 0 3px;
 }
 
 .filter_txt {
@@ -185,6 +187,8 @@ b {
     margin: 0 10px 30px 0;
     cursor: pointer;
     transition: transform 0.4s ease-in-out;
+    width: 270px;
+    height: 560px;
 }
 
 .item_box:hover {
@@ -192,9 +196,10 @@ b {
 }
 
 .item_img {
-    width: 260px;
-    height: 400px;
+    width: 270px;
+    height: 420px;
     margin-bottom: 10px;
+    border: 1px solid rgba(195, 185, 185, 0.4);
 }
 
 .item_brand {

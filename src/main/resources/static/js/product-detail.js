@@ -1,5 +1,10 @@
 let $wishlist = document.querySelector("#wishlist_btn");
 let $bucket = document.querySelector("#bucket_btn");
+let $count = document.querySelector("#count_wrap");
+
+let $minus = document.querySelector("#count_minus");
+let $plus = document.querySelector("#count_plus");
+let $countNum = document.querySelector("#count_num");
 
 const $productInfo = document.querySelector("#product-info");
 const $dataCode = $productInfo.getAttribute("data-code");
@@ -106,3 +111,26 @@ $(document).ready(function() {
 //$bucket.addEventListener("click", function() {
 //    sendCartData("bucket"); // 장바구니에 추가
 //});
+
+$bucket.addEventListener('click', () => {
+    if ($count.style.display = 'none') {
+        $count.style.display = 'flex';
+        return;
+    } else if ($count.style.display = 'flex') {
+        // AJAX 코드 넣어주시면 됩니다.
+        // 종료하면서 반드시 $count.style.display = 'none' 처리를 해주셔야 합니다.
+    } else {
+        return;
+    }
+});
+
+$minus.addEventListener("click", () => {
+    if (parseInt($countNum.textContent) === 1) return;
+    else {
+        $countNum.textContent = parseInt($countNum.textContent) - 1;
+    }
+});
+
+$plus.addEventListener("click", () => {
+    $countNum.textContent = parseInt($countNum.textContent) + 1;
+});

@@ -12,34 +12,7 @@
     <script defer th:src="@{/js/board_common.js}"></script>
 </head>
 <body>
-<header>
-    <div id="logo_wrap" style="padding: 16px 36px;">
-        <h1 id="logo" style="padding: 0; font-size: 36px;">CALTIZM</h1>
-    </div>
-    <div id="wrap_wrap">
-        <div id="wrap1">
-            <div id="header_input_wrap">
-                <form th:action="@{/}" id="header_form">
-                    <input type="text" id="header_input">
-                    <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
-                </form>
-            </div>
-            <div id="header_icon_wrap">
-                <img th:src="@{/img/header_wishlist.svg}" alt="" id="header_wishlist" class="header_icon">
-                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
-                <div id="header_alarm_dropdown">
-                    현재 내용이 없습니다.
-                </div>
-                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
-                <ul id="header_profile_dropdown">
-                    <li class="header_profile_dropdown_list">로그인</li>
-                    <li class="header_profile_dropdown_list">회원가입</li>
-                </ul>
-                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
-            </div>
-        </div>
-    </div>
-</header>
+<th:block th:replace="fragments/header2 :: header"></th:block>
 <main>
     <div class="left_box">
         <nav class="left_box_nav">

@@ -7,6 +7,7 @@ header {
     background-color: rgb(0, 0, 0);
     display: flex;
     position: sticky;
+    width: 100%;
     top: 0;
     z-index: 100;
 }
@@ -37,6 +38,7 @@ header {
 #header_input_wrap {
     width: 64%;
     position: relative;
+    left: 60px;
 }
 
 #header_input {
@@ -57,7 +59,7 @@ header {
 #header_icon_wrap {
     display: flex;
     flex-wrap: wrap;
-    width: 160px;
+    width: 200px;
     position: absolute;
     right: 36px;
 }
@@ -92,16 +94,15 @@ header {
 }
 
 #header_alarm_dropdown {
-    width: 120px;
-    height: 160px;
-    right: 30px;
+    width: 330px;
+    right: 110px;
     padding: 5px;
 }
 
 #header_profile_dropdown {
     width: 120px;
     text-align: center;
-    right: 0;
+    right: -30px;
 }
 
 .header_profile_dropdown_list {
@@ -160,4 +161,43 @@ header {
 
 #header_icon_wrap img {
     margin: 0 4px;
+}
+
+
+#search_results {
+    position: absolute;
+    background-color: white;
+    width: 100%;
+}
+
+.search-result-item {
+    padding: 12px 16px;
+    border-top: 1px solid black;
+    cursor: pointer;
+}
+
+.search-result-item:hover {
+    background-color: rgba(172, 170, 170, 0.1);
+}
+
+
+#header_alarm_dropdown {
+    padding: 16px 20px;
+    overflow-y: auto;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(0, 0, 255, 0.6);
+}
+
+.header_alarm_dropdown_list {
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.header_alarm_dropdown_list:hover {
+    text-decoration: underline;
+}
+
+.header_alarm_dropdown_list:nth-last-child(1) {
+    margin-bottom: 0;
 }
