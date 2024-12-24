@@ -38,9 +38,31 @@ function deleteBox() {
     document.body.addEventListener("click", (event) => {
         if (event.target.classList.contains("close")) {
             const $box = event.target.closest(".modal_box");
-            if ($box) {
-                $box.remove();
+            event.preventDefault();
+
+            if(confirm("삭제하시겠습니까?")){
+                let addressId = $box.dataset.addressId;
+
+                $.ajax({
+                    url: "/address/delete/" + addressId,
+                    type: "DELETE",
+                    success: function(response){
+                        alert(response.message);
+                        if(response.status === "delete_success"){
+                            if($box){
+                                $box.remove();
+                                document.querySelector(`.info_wrap[data-address-id="${addressId}"]`).remove();
+                                checkBox();
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error){}
+                });
             }
+
+//            if ($box) {
+//                $box.remove();
+//            }
         }
         checkBox();
     });

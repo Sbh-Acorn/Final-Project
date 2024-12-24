@@ -6,30 +6,35 @@
 <mapper namespace="board">
 
     <!-- 게시글 조회 -->
-
-    <select id="all"  resultType="PostDTO">
+    <select id="all" resultType="PostDTO">
         select * from post
+        where is_deleted = false
     </select>
 
     <select id="notice" resultType="PostDTO">
-        select * from post where subject = 'notice'
+        select * from post
+        where subject = '공지사항' and is_deleted = false
     </select>
 
     <select id="free" resultType="PostDTO">
-        select * from post where subject = 'free'
+        select * from post
+        where subject = '자유게시판' and is_deleted = false
     </select>
 
     <select id="review" resultType="PostDTO">
-        select * from post where subject = 'review'
+        select * from post
+        where subject = '후기' and is_deleted = false
     </select>
 
     <select id="qna" resultType="PostDTO">
-        select * from post where subject = 'qna'
+        select * from post
+        where subject = 'Q&amp;A' and is_deleted = false
     </select>
 
+
     <!-- 게시글 하나 조회 -->
-    <select id="postOne" resultType="PostDTO">
-        select * from where post_id = #{post_id}
+    <select id="postOne" parameterType="Integer" resultType="PostDTO">
+        select * from post where post_id = #{post_id}
     </select>
 
     <!--게시글 등록-->
@@ -40,6 +45,56 @@
     <select id="user_id" parameterType="String" resultType="Integer">
         select user_id from user where email = #{email}
     </select>
+
+    <!-- 게시글 삭제 -->
+    <update id="delete-post" parameterType="Integer">
+        update post set is_deleted = true where post_id = #{post_id};
+    </update>
+
+    <!-- 게시글 수정 -->
+    <update id="edit-post" parameterType="PostDTO">
+        update post set subject = #{subject}, title = #{title}, content = #{content}, updated_at = NOW() where post_id = #{post_id}
+    </update>
+
+    <!-- 게시글 조회 시 조회수 증가 -->
+    <update id="incViews">
+        update post set views = views + 1 where post_id = #{post_id}
+    </update>
+
+    <!-- 좋아요 -->
+    <update id="incLikes">
+        update post set likes = likes +1 where post_id = #{post_id}
+    </update>
+    <update id="decLikes">
+        update post set likes = likes -1 where post_id = #{post_id}
+    </update>
+
+
+    <!-- 좋아요 테이블 추가 -->
+    <insert id="insert-likes" parameterType="map">
+        insert into postlike (post_id, user_id) values (#{post_id}, #{user_id})
+    </insert>
+
+    <delete id="delete-likes" parameterType="map">
+        delete from postlike where post_id = #{post_id} and user_id = #{user_id}
+    </delete>
+
+    <!-- 좋아요 테이블 검색 -->
+    <select id="check-likes" parameterType="map" resultType="int">
+        select count(*) from postlike where post_id = #{post_id} and user_id = #{user_id}
+    </select>
+
+    <!--좋아요 수-->
+    <select id="count-likes" resultType="int">
+        select likes from post where post_id = #{post_id}
+    </select>
+
+
+
+
+
+
+
 
 
 
