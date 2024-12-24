@@ -58,6 +58,24 @@
         SET SQL_SAFE_UPDATES = 1;
     </update>
 
+    <select id="selectNotification" resultType="NotificationDTO">
+        select n.notification_id as notificationId, u.email, p.product_id as productId,
+        p.name as productName, d.previous_price as previousPrice, d.current_price as currentPrice,
+        n.created_at as createdAt, n.is_read as isRead
+        from notification n
+        join pricedrop d
+        on n.product_id = d.product_id
+        join product p
+        on n.product_id = p.product_id
+        join user u
+        on n.user_id = u.user_id
+        where u.email = #{email} and n.is_read = FALSE
+    </select>
+
+    <update id="readNotification">
+        update notification set is_read = TRUE where notification_id = #{notificationId}
+    </update>
+
 
 
 </mapper>
