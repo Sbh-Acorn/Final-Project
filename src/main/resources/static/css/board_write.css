@@ -1,0 +1,73 @@
+.write_box {
+    width: 1080px;
+    margin-top: 30px;
+    position: relative;
+}
+
+.dropdown_img {
+    position: absolute;
+    width: 36px;
+    height: 36px;
+    right: 10px;
+    top: 5px;
+    cursor: pointer;
+}
+
+#select, .write_title, .textarea {
+    width: 1080px;
+    height: 50px;
+    border: 1px solid rgba(172, 170, 170, 1);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 0 20px;
+    font-size: 18px;
+    display: block;
+}
+
+#select::before, .write_title::before {
+    content: "\n";
+}
+
+#write_title {
+    margin-bottom: 30px;
+}
+
+#write_title:focus {
+    background-color: rgba(172, 170, 170, 0.1);
+}
+
+#select {
+    -webkit-appearance: none; /* 크롬, 사파리 */
+    -moz-appearance: none;    /* 파이어폭스 */
+    appearance: none;         /* 표준 */
+    cursor: pointer;
+}
+
+#select:focus {
+    outline: auto;
+}
+
+#textarea {
+    padding: 20px 30px;
+    height: 480px;
+    font-size: 16px;
+}
+
+.submit_wrap {
+    display: flex;
+    justify-content: right;
+}
+
+.submit {
+    width: 120px;
+    height: 35px;
+    border: 1px solid rgba(172, 170, 170, 1);
+    border-radius: 6px;
+    background-color: rgba(201, 200, 200, 0.1);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.submit:hover {
+    background-color: rgba(172, 170, 170, 0.1);
+}

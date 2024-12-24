@@ -25,11 +25,29 @@ public class BoardController {
     @Autowired
     BoardRepository repository;
 
+    @GetMapping("/testBoard")
+    public String tb() {
+        return "board/board_main_ui";
+    }
+
     // 전체 게시판 조회
     @GetMapping("/boardAll")
     public String boardAll(Model model){
         List<PostDTO> boardList = repository.selectAll();
         model.addAttribute("boardAll",boardList);
+
+        List<PostDTO> boardList2 = repository.selectNotice();
+        model.addAttribute("boardNotice",boardList2);
+
+        List<PostDTO> boardList3 = repository.selectFree();
+        model.addAttribute("boardFree", boardList3);
+
+        List<PostDTO> boardList4 = repository.selectReview();
+        model.addAttribute("boardReview", boardList4);
+
+        List<PostDTO> boardList5 = repository.selectQna();
+        model.addAttribute("boardQna",boardList5);
+
         return "board/boardtest";
     }
 
@@ -132,6 +150,69 @@ public class BoardController {
         }
     }
 
+    // 게시글 한 개 조회
+    @GetMapping("/postone/{post_id}")
+    public String postOne(@PathVariable("post_id") int post_id,
+                          Model model){
+        System.out.println("Received post_id: " + post_id);
+        PostDTO post = repository.selectPostOne(post_id);
+        repository.incViews(post_id);
+
+        model.addAttribute("postOne",post);
+        return "board/postone";
+    }
+
+    // 게시글 삭제
+    @GetMapping("/deletePost/{post_id}")
+    public String deletePost(@PathVariable("post_id") int post_id){
+        repository.deletePost(post_id);
+        return "redirect:/boardAll";
+    }
+
+    // 게시글 페이지 이동
+    @GetMapping("/editPost/{post_id}")
+    public String editPost(@PathVariable("post_id")int post_id,
+                           Model model){
+        PostDTO post = repository.selectPostOne(post_id);
+        model.addAttribute("postOne", post);
+        return "board/editpost";
+    }
+    
+    // 게시글 수정
+    @PostMapping("/updatePost/{post_id}")
+    public String updatePost(@PathVariable("post_id") int post_id,
+                             @ModelAttribute PostDTO postDTO,
+                             RedirectAttributes redirectAttributes) {
+
+        postDTO.setPost_id(post_id);
+        repository.editPost(postDTO);
+
+        return "redirect:/postone/" + post_id; // 수정 후 상세 페이지로 리다이렉트
+    }
+
+    // 게시글 추천
+    @ResponseBody
+    @PostMapping("/likePost")
+    public int likePost(@RequestParam(value="post_id") String post_id,
+                        @SessionAttribute(value = "email") String email) {
+
+        System.out.println(post_id);
+        System.out.println(email);
+
+        int user_id = repository.getUser(email);
+        int count = repository.checkLikes(Integer.parseInt(post_id), user_id);
+
+        if(count == 0){
+            repository.incLikes(Integer.parseInt(post_id));
+            repository.insertLikes(Integer.parseInt(post_id), user_id);
+        } else {
+            repository.decLikes(Integer.parseInt(post_id));
+            repository.deleteLikes(Integer.parseInt(post_id), user_id);
+        }
+        return repository.countLikes(Integer.parseInt(post_id));
+
+
+    }
 
 
 

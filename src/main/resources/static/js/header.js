@@ -30,29 +30,26 @@ $profile.addEventListener("click", () => {
 $searchInput.addEventListener("input", () => {
     let query = $searchInput.value.trim();
 
-    if (query.length >= 2) { // 2글자 이상일 때만 요청
-        fetch(`/search?query=${encodeURIComponent(query)}`)
+    if (query.length >= 2) {
+        fetch(` /search?query=${encodeURIComponent(query)}`)
             .then(response => {
-                if (!response.ok) throw new Error("Network response was not ok");
-                return response.json();
+
+               if (!response.ok) {
+                console.error(`HTTP Error: ${response.status} ${response.statusText}`);
+                throw new Error("Network response was not ok");
+               }
+               return response.json();
             })
             .then(data => {
-                $searchResults.innerHTML = ""; // 이전 검색 결과 초기화
+                $searchResults.innerHTML = "";
                 if (data.length > 0) {
                     data.forEach(product => {
                         let listItem = document.createElement("li");
                         listItem.className = "search-result-item";
 
                         let link = document.createElement("a");
-                        // link.href = `/productDetail?name=${encodeURIComponent(product.name)}`;
-                        link.href = `/product/${encodeURIComponent(product.product_id)}`;
+                        link.href = `/product/${product.product_id}`;
                         link.textContent = product.name;
-
-                        // 클릭 이벤트 추가
-                        link.addEventListener("click", (e) => {
-                            e.preventDefault();
-                            window.location.href = link.href;
-                        });
 
                         listItem.appendChild(link);
                         $searchResults.appendChild(listItem);
@@ -66,9 +63,10 @@ $searchInput.addEventListener("input", () => {
                 $searchResults.innerHTML = "<li class='search-result-error'>검색 중 오류가 발생했습니다.</li>";
             });
     } else {
-        $searchResults.innerHTML = ""; // 검색어가 짧으면 초기화
+        $searchResults.innerHTML = "";
     }
 });
+
 
 // 외부 클릭 시 검색 결과 숨기기
 document.addEventListener("click", (e) => {
