@@ -73,3 +73,74 @@ document.addEventListener("click", (e) => {
         $searchResults.innerHTML = ""; // 검색 결과 숨기기
     }
 });
+
+
+
+function loadNotification(){
+    $.ajax({
+        url: "/notification",
+        type: "GET",
+        success: function(response){
+            if(response.status === "fetch_success"){
+                console.log(response);
+                if(!response.notificationList || response.notificationList.length === 0){
+                    $("#header_alarm_dropdown").html("<li class='header_alarm_dropdown_list' style='text-decoration: none; cursor: auto'>알림이 없습니다.</li>");
+                    return;
+                }
+                let notificationHtml = "";
+                response.notificationList.forEach((notification) => {
+                    notificationHtml += `
+                        <li class="header_alarm_dropdown_list"
+                        onclick="readNotification(this)"
+                        data-notification-id="${notification.notificationId}"
+                        data-product-id="${notification.productId}">
+                            [${notification.productName}] 제품의 가격이 하락했습니다.<br>
+                            이전 가격: €${notification.previousPrice}<br>
+                            현재 가격: €${notification.currentPrice}<br>
+                            ${notification.createdAt}
+                        </li>
+                    `;
+                });
+                $("#header_alarm_dropdown").html(notificationHtml);
+            }
+        },
+        error: function(xhr, status, error){
+            console.log("Error", error);
+        }
+    });
+}
+
+function readNotification(element){
+    let notificationId = element.dataset.notificationId;
+    let productId = element.dataset.productId;
+    console.log(element);
+    console.log(notificationId);
+    console.log(productId);
+    $.ajax({
+        url: "/notification/read",
+        type: "POST",
+        data: {
+            notificationId: notificationId
+        },
+        success: function(response){
+            if(response.status === "update_success"){
+                if(element){
+                    element.remove();
+                    checkNotification();
+                }
+                window.location.href = "/product/" + productId;
+            }
+        },
+        error: function(xhr, status, error){
+            console.log("Error:", error);
+        }
+    });
+}
+
+function checkNotification(){
+    let notifications = document.querySelectorAll(".header_alarm_dropdown_list");
+        if(!notifications || notifications.length === 0){
+            $("#header_alarm_dropdown").html("<li class='header_alarm_dropdown_list' style='text-decoration: none; cursor: auto'>알림이 없습니다.</li>");
+            return;
+        }
+}
