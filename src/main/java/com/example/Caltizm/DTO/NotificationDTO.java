@@ -11,6 +11,7 @@ public class NotificationDTO {
     private String productName;
     private double previousPrice;
     private double currentPrice;
+    private String createdAt;
     private boolean isRead;
 
 }

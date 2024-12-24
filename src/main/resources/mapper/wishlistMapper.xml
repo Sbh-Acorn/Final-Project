@@ -59,8 +59,9 @@
     </update>
 
     <select id="selectNotification" resultType="NotificationDTO">
-        select n.notification_id as notificationId, u.email, p.product_id as productId, p.name as productName,
-        d.previous_price as previousPrice, d.current_price as currentPrice, n.is_read as isRead
+        select n.notification_id as notificationId, u.email, p.product_id as productId,
+        p.name as productName, d.previous_price as previousPrice, d.current_price as currentPrice,
+        n.created_at as createdAt, n.is_read as isRead
         from notification n
         join pricedrop d
         on n.product_id = d.product_id
