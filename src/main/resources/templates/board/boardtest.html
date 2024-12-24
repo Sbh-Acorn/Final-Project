@@ -7,14 +7,16 @@
 </head>
 <body>
 <h1>게시판</h1>
-
+<a th:href="@{/post}" style="margin-left: 20px;">
+    <button type="button">작성하기</button>
+</a>
 <!-- 전체 게시판 목록 출력 -->
 <h2>전체 게시판</h2>
 <ul>
     <li th:each="post : ${boardAll}">
-        <span th:text="${post.title}"></span> -
-        <span th:text="${post.user_id}"></span> -
-        <span th:text="${post.created_at}"></span>
+        <a th:href="@{/postone/{post_id}(post_id=${post.post_id})}" th:text="${post.title}"></a> -
+        <span th:text="${post.user_id}">작성자</span> -
+        <span th:text="${post.created_at}">작성일</span>
     </li>
 </ul>
 
@@ -22,9 +24,9 @@
 <h2>공지사항</h2>
 <ul>
     <li th:each="post : ${boardNotice}">
-        <span th:text="${post.title}"></span> -
-        <span th:text="${post.user_id}"></span> -
-        <span th:text="${post.created_at}"></span>
+        <a th:href="@{/postone/{post_id}(post_id=${post.post_id})}" th:text="${post.title}"></a> -
+        <span th:text="${post.user_id}">작성자</span> -
+        <span th:text="${post.created_at}">작성일</span>
     </li>
 </ul>
 
@@ -32,9 +34,9 @@
 <h2>자유게시판</h2>
 <ul>
     <li th:each="post : ${boardFree}">
-        <span th:text="${post.title}"></span> -
-        <span th:text="${post.user_id}"></span> -
-        <span th:text="${post.created_at}"></span>
+        <a th:href="@{/postone/{post_id}(post_id=${post.post_id})}" th:text="${post.title}"></a> -
+        <span th:text="${post.user_id}">작성자</span> -
+        <span th:text="${post.created_at}">작성일</span>
     </li>
 </ul>
 
@@ -42,9 +44,9 @@
 <h2>리뷰</h2>
 <ul>
     <li th:each="post : ${boardReview}">
-        <span th:text="${post.title}"></span> -
-        <span th:text="${post.user_id}"></span> -
-        <span th:text="${post.created_at}"></span>
+        <a th:href="@{/postone/{post_id}(post_id=${post.post_id})}" th:text="${post.title}"></a> -
+        <span th:text="${post.user_id}">작성자</span> -
+        <span th:text="${post.created_at}">작성일</span>
     </li>
 </ul>
 
@@ -52,9 +54,9 @@
 <h2>Q&A</h2>
 <ul>
     <li th:each="post : ${boardQna}">
-        <span th:text="${post.title}"></span> -
-        <span th:text="${post.user_id}"></span> -
-        <span th:text="${post.created_at}"></span>
+        <a th:href="@{/postone/{post_id}(post_id=${post.post_id})}" th:text="${post.title}"></a> -
+        <span th:text="${post.user_id}">작성자</span> -
+        <span th:text="${post.created_at}">작성일</span>
     </li>
 </ul>
 
