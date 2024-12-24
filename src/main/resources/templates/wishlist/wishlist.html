@@ -51,8 +51,10 @@
                 type: "DELETE",
                 success: function(response){
                     alert(response.message);
-                    if(item){
-                        item.remove();
+                    if(response.status === "delete_success"){
+                        if(item){
+                            item.remove();
+                        }
                     }
                 },
                 error: function(xhr, status, error){

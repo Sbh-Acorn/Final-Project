@@ -1,5 +1,6 @@
 package com.example.Caltizm.Controller;
 
+import com.example.Caltizm.DTO.NotificationDTO;
 import com.example.Caltizm.DTO.WishlistRequestDTO;
 import com.example.Caltizm.DTO.WishlistDTO;
 import com.example.Caltizm.Repository.WishlistRepository;
@@ -122,6 +123,62 @@ public class WishListController {
         response.put("status", "delete_success");
         response.put("message", "제품을 위시리스트에서 삭제했습니다.");
         System.out.println(response);
+        return response;
+
+    }
+
+    @ResponseBody
+    @GetMapping("/notification")
+    public Map<String, Object> getNotification(@SessionAttribute(value="email", required=false) String email){
+
+        Map<String, Object> response = new HashMap<>();
+
+        if(email == null){
+            response.put("status", "session_invalid");
+            response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        List<NotificationDTO> notificationList = repository.selectNotification(email);
+        System.out.println(notificationList);
+        response.put("status", "fetch_success");
+        response.put("message", "알림 목록을 불러왔습니다.");
+        response.put("notificationList", notificationList);
+        System.out.println(response);
+        return response;
+
+    }
+
+    @ResponseBody
+    @PostMapping("/notification/read")
+    public Map<String, String> readNotification(@SessionAttribute(value="email", required=false) String email,
+                                                @RequestParam(name="notificationId") String notificationId){
+
+        Map<String, String> response = new HashMap<>();
+
+        if(email == null){
+            response.put("status", "session_invalid");
+            response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        System.out.println("notificationId: " + notificationId);
+
+        int rRow = repository.readNotification(notificationId);
+        System.out.println("rRow: " + rRow);
+        if(rRow != 1){
+            response.put("status", "update_fail");
+            response.put("message", "알림 수정에 실패했습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        response.put("status", "update_success");
+        response.put("message", "알림을 수정했습니다.");
+        System.out.println(response);
+//        List<NotificationDTO> notificationList = repository.selectNotification(email);
         return response;
 
     }
