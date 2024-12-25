@@ -3,6 +3,7 @@ package com.example.Caltizm.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +14,9 @@ public class ProductDTO {
         public String product_id;
         public String image_url;
         public String name;
+        @Setter
         public Double original_price; // null 허용
+        @Setter
         public double current_price;
         public String description;
         public String category1;
@@ -41,14 +44,6 @@ public class ProductDTO {
                 this.is_fta = false;
         }
 
-        // Optional: 세터 또는 메서드를 통해 가격을 포맷팅하여 추가할 수 있음
-        public void setOriginal_price(Double original_price) {
-                this.original_price = original_price;
-        }
-
-        public void setCurrent_price(double current_price) {
-                this.current_price = current_price;
-        }
 }
 
 

@@ -55,14 +55,16 @@ public class ExchangeRateService {
 
     // 단독 실행을 위한 main 메서드
     public static void main(String[] args) {
-        ExchangeRateService service = new ExchangeRateService();
-        try {
-            Map<String, Double> rates = service.getExchangeRates();
 
-            System.out.println("EUR to KRW Rate: " + rates.get("EUR_TO_KRW"));
-            System.out.println("USD to EUR Rate: " + rates.get("USD_TO_EUR"));
-        } catch (Exception e) {
-            System.err.println("Failed to fetch exchange rate: " + e.getMessage());
-        }
+//        ExchangeRateService service = new ExchangeRateService();
+//        try {
+//            Map<String, Double> rates = service.getExchangeRates();
+//
+//            System.out.println("EUR to KRW Rate: " + rates.get("EUR_TO_KRW"));
+//            System.out.println("USD to EUR Rate: " + rates.get("USD_TO_EUR"));
+//        } catch (Exception e) {
+//            System.err.println("Failed to fetch exchange rate: " + e.getMessage());
+//        }
+
     }
 }

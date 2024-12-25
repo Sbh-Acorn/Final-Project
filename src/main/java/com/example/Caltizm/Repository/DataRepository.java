@@ -250,4 +250,6 @@ public class DataRepository {
     public List<String> getAllCategoryName(){
         return session.selectList("product.selectAllCategoryName");
     }
+
+    public Map<String ,Object> getMaxPrice(){return session.selectOne("product.selectMaxPrice");}
 }

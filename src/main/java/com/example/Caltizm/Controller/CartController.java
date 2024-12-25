@@ -34,15 +34,20 @@ public class CartController {
     @Autowired
     CalculatorService calculatorService;
 
+    @ModelAttribute("taxBaseAmount")
+    public Double getconvert150UsdToEur(){
+        return calculatorService.convertUsdToKrw(150);
+    }
+
     // 모든 메서드에서 사용할 제품 리스트를 미리 로드
     @ModelAttribute("products")
     public List<ProductDTO> getAllProducts() {
         List<ProductDTO> products = repository.getProduct();
         products.sort(Comparator.comparing(ProductDTO::getBrand));
         for (ProductDTO product : products){
-            product.setCurrent_price(calculatorService.calculator(product.getCurrent_price()));
+            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
             if(product.getOriginal_price() != null){
-                product.setOriginal_price(calculatorService.calculator(product.getOriginal_price()));
+                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
             }
         }
         return products;
@@ -71,7 +76,6 @@ public class CartController {
                 return "수량을 증가하였습니다."; // 이미 존재하면 수량만 증가하고 메서드 종료
             }
         }
-
 
         cartList.add(addCartItem);
         System.out.println("장바구니 추가");
@@ -208,29 +212,4 @@ public class CartController {
         // 장바구니 페이지로 리다이렉트
         return "장바구니 수량이 변경되었습니다";
     }
-
-
-
-    //    @PostMapping("/remove")
-    //    public String removeCart(@RequestParam(name = "product_id") String product_id,
-    //                             @RequestParam(name = "current_product_id") String current_product_id,
-    //                             HttpSession session) {
-    //        // 세션에서 장바구니 가져오기
-    //        List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
-    //
-    //        if (cartList != null) {
-    //            // 조건에 맞는 상품 제거
-    //            cartList.removeIf(item -> item.getProduct_id().equals(product_id));
-    //        }
-    //
-    //        // 갱신된 장바구니 세션에 저장
-    //        session.setAttribute("cartList", cartList);
-    //
-    //        // 상품 상세 페이지로 리다이렉트
-    //        return "redirect:/product/" + current_product_id;
-    //    }
-
-
-
-
 }

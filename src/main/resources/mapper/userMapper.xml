@@ -38,7 +38,6 @@
         where email = #{email}
     </update>
 
-
     <select id="selectUserIdByEmail" parameterType="String" resultType="Integer">
         SELECT user_id
         FROM user
