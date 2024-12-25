@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/board.css}">
+    <link rel="stylesheet" th:href="@{/css/board_common.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/board_common.js}"></script>
+</head>
+<body>
+<th:block th:replace="fragments/header2 :: header"></th:block>
+<main>
+    <div class="left_box">
+        <nav class="left_box_nav">
+            <ul>
+                <!-- 일단 js로 프론트단에서 클릭된것에 active 클래스가 추가되도록 코드를 짜두긴 했습니다 -->
+                <!-- 근데 a태그를 이용해서 이동하면 아마 제대로 작동하지 않을것으로 예상됩니다 -->
+                <!-- 그렇게 된다면 타임리프를 통해 if로 처리하면 되실겁니다 -->
+                <li class="nav_list active"><a th:href="@{/}"><p>ALL</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/}"><p>공지사항</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/}"><p>자유게시판</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/}"><p>후기</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/}"><p>Q&A</p></a><hr></li>
+            </ul>
+            <form th:action="@{/}">
+                <input type="text" id="search">
+                <button id="search_btn" type="submit">검색</button>
+            </form>
+            <a th:href="@{/}" class="write_btn">
+                <div class="write_wrap">
+                    <img th:src="@{/img/write.svg}" alt="" id="write_img">
+                    <p id="write_txt">글쓰기</p>
+                </div>
+            </a>
+        </nav>
+        <div class="text_box">
+            <!-- 게시글 제목 -->
+            <p class="text_title">대병학고트마스터가야겠지</p>
+            <div class="text_title2">
+                <!-- 게시글 작성자 -->
+                <p class="text_writer">슈뢰딩거의케르베로스</p>
+                <div class="text_info">
+                    <p class="info rec">추천 116</p>
+                    <p class="info check">조회수 22465</p>
+                    <p class="info date">작성일 2024-12-09</p>
+                </div>
+            </div>
+            <div class="text_area">
+                <img class="daebyeonghak" th:src="@{/img/daebyeonghak.png}" alt=""><br>
+                <img th:src="@{/img/itrustyou.jpg}" alt="" class="itrustyou">
+                <p class="trust_txt">믿고 있었다고!!!</p>
+            </div>
+            <!-- ajax를 사용해서 페이지 리로딩 없이 추천, 비추천을 적용해야하는 부분입니다 -->
+            <!-- 추천 클릭시 이미지는 /img/star.svg, /img/star_fill.svg 를 이용해주시면 됩니다 -->
+            <div class="rec_wrap">
+                <div class="rec_box2">
+                    <img th:src="@{/img/star.svg}" alt="" id="rec_img" class="rec_img">
+                    <p id="rec" class="rec_num">116</p>
+                </div>
+            </div>
+            <div class="button_wrap">
+                <form th:action="@{/}">
+                    <button class="modify" type="submit">글 수정</button>
+                </form>
+                <form th:action="@{/}">
+                    <button class="remove" type="submit">글 삭제</button>
+                </form>
+            </div>
+            <!-- 댓글 개수를 [] 로 표시 -->
+            <p id="comment_title" class="text_title">댓글 [ 3 ]</p>
+            <ul class="comment_list_wrap">
+                <!-- 예시입니다 제거하시면됩니다 -->
+                <li class="comment_box">
+                    <p class="comment_writer">대병학부계123</p>
+                    <p class="comment">이건 인정할수밖에 없네 개추 먹어라</p>
+                </li>
+                <li class="comment_box">
+                    <p class="comment_writer">대병학부계124</p>
+                    <p class="comment">이건 인정할수밖에 없네 개추 먹어라</p>
+                </li>
+                <li class="comment_box">
+                    <p class="comment_writer">대병학부계125</p>
+                    <p class="comment">이건 인정할수밖에 없네 개추 먹어라</p>
+                </li>
+            </ul>
+            <form th:action="@{/}">
+                <div class="comment_write">
+                    <div class="write_title">
+                        <p class="write_title_txt">댓글 작성</p>
+                        <!-- 작성자 이름 -->
+                        <p class="write_title_txt">대병학부계126</p>
+                    </div>
+                    <textarea wrap="hard" class="comment_input"></textarea>
+                    <div class="input_wrap">
+                        <button class="input" type="submit">작성</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="right_box">
+        <div class="rec_box">
+            <!-- 최대 4개만 띄웁니다 -->
+            <p class="box_title">오늘의 인기글</p>
+            <p class="box_item">시공의폭풍속으로빨려들어가고있어시간이너무빨리흘러가멈출수가없어제발나를멈춰줘</p>
+            <p class="box_item">대병학고트마스터가야겠지</p>
+            <p class="box_item">놀랍게도 졸라 귀찮%습$니&다</p>
+            <p class="box_item">이제 [메인?끝났네 이게맞나 으헝헝</p>
+        </div>
+        <div class="ad_box">
+            <img th:src="@{/img/testImg.jpg}" alt="" class="ad">
+        </div>
+    </div>
+</main>
+</body>
+</html>

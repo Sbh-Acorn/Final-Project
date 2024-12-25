@@ -3,6 +3,7 @@ package com.example.Caltizm.Controller;
 import com.example.Caltizm.DTO.CartDTO;
 import com.example.Caltizm.DTO.ProductDTO;
 import com.example.Caltizm.Repository.DataRepository;
+import com.example.Caltizm.Repository.SearchProductRepository;
 import com.example.Caltizm.Service.CalculatorService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,14 @@ public class ProductController {
     @Autowired
     CalculatorService calculatorService;
 
+
     private static final int taxBaseAmount = 150;
+
+
+    @Autowired
+    SearchProductRepository searchProductRepository;
+
+    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
 
     @ModelAttribute("products")
     public List<ProductDTO> getAllProducts() {
@@ -79,31 +87,51 @@ public class ProductController {
     }
 
     @GetMapping("/product/{product_id}")
-    public String productDetail(@PathVariable(name = "product_id") String product_id, Model model, HttpSession session) {
+    public String productDetail(
+            @PathVariable(name = "product_id") String product_id,
+            Model model,
+            HttpSession session
+    ) {
+        // 우선 모델에서 products를 가져와 조회
         List<ProductDTO> products = (List<ProductDTO>) model.getAttribute("products");
+        ProductDTO product = null;
 
-        ProductDTO product = products.stream()
-                .filter(p -> p.getProduct_id().equals(product_id))
-                .findFirst()
-                .orElse(null);
+        if (products != null) {
+            // 모델에서 product_id로 필터링
+            product = products.stream()
+                    .filter(p -> p.getProduct_id().equals(product_id))
+                    .findFirst()
+                    .orElse(null);
+        }
 
+        // 모델에 없는 경우 DB에서 조회
+        if (product == null) {
+            product = searchProductRepository.findProductById(product_id);
+        }
+
+        // 상품이 여전히 null인 경우 404 페이지로 이동
+        if (product == null) {
+            return "error/404";
+        }
+
+        // 모델에 상품 데이터 추가
         model.addAttribute("product", product);
 
+        // 할인율 계산 후 모델에 추가
         if (product.getOriginal_price() != null) {
-            int discountRate = (int) Math.round((1 - ((double) product.getCurrent_price() / product.getOriginal_price())) * 100);
+            int discountRate = (int) Math.round((1 - (product.getCurrent_price() / product.getOriginal_price())) * 100);
             model.addAttribute("discountRate", discountRate);
         }
 
+        // 세션에서 cartList 가져오기
         List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
-
         if (cartList == null) {
             cartList = new ArrayList<>();
         }
-
         model.addAttribute("cartList", cartList);
-        return "product/product-detail";
-    }
 
+        return "product/product-detail"; // 상세 페이지로 이동
+    }
 
     @GetMapping("/product/filter")
     public String filter(

@@ -7,73 +7,14 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/main.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script defer th:src="@{/js/header.js}"></script>
     <script defer th:src="@{/js/main.js}"></script>
 </head>
 <body>
 
-<header>
-    <div id="logo_wrap">
-        <h1 id="logo">CALTIZM</h1>
-    </div>
-    <div id="wrap_wrap">
-        <div id="wrap1">
-            <div id="header_input_wrap">
-                <input type="text" id="header_input" placeholder="상품명을 입력하세요" autocomplete="off">
-                <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
+<th:block th:replace="fragments/header1 :: header"></th:block>
 
-                <!-- 검색 결과 목록 -->
-                <div id="search_results" class="search-dropdown">
-                    <ul>
-                        <!-- 동적 데이터 추가될 부분 -->
-                    </ul>
-                </div>
-            </div>
-            <div id="header_icon_wrap">
-                <!-- 알림 아이콘 -->
-                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
-                <div id="header_alarm_dropdown">
-                    현재 내용이 없습니다.
-                </div>
-
-                <!-- 프로필 아이콘 -->
-                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
-
-                <!-- 로그인/회원가입 메뉴 -->
-                <ul id="header_profile_dropdown" class="dropdown" th:if="${sessionEmail == null}">
-                    <li class="header_profile_dropdown_list">
-                        <a th:href="@{/login}">로그인</a>
-                    </li>
-                    <li class="header_profile_dropdown_list">
-                        <a th:href="@{/signup}">회원가입</a>
-                    </li>
-                </ul>
-
-                <!-- 로그아웃/마이페이지 메뉴 -->
-                <ul id="header_profile_dropdown2" class="dropdown" th:if="${sessionEmail != null}">
-                    <li class="header_profile_dropdown_list">
-                        <a th:href="@{/logout}">로그아웃</a>
-                    </li>
-                    <li class="header_profile_dropdown_list">
-                        <a th:href="@{/myPage}">마이페이지</a>
-                    </li>
-                </ul>
-
-                <!-- 장바구니 아이콘 -->
-                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
-            </div>
-        </div>
-        <div id="wrap2">
-            <ul id="header_nav">
-                <li class="header_list">ALL</li>
-                <li class="header_list">BRAND</li>
-                <li class="header_list">FTA</li>
-                <li class="header_list">TAX</li>
-                <li class="header_list">COMMUNITY</li>
-            </ul>
-        </div>
-    </div>
-</header>
 <main>
     <div id="banner_wrap">
         <div id="prev_btn_wrap" class="btn_wrap">
@@ -83,13 +24,13 @@
             <img th:src="@{/img/next.svg}" alt="" class="btn">
         </div>
         <ul id="banner">
-            <li th:each="bi : ${BannerImages}">
+            <li th:each="bi : ${BannerImages}" class="banner_img_wrap">
                 <a th:href="@{/promotion}" target="_blank">
-                    <img th:src="${bi}" alt="Banner Image" />
+                    <img th:src="${bi}" alt="Banner Image" class="banner_img"/>
                 </a>
             </li>
         </ul>
-        <p id="random_text">This is the Random Text</p>
+        <p id="random_text"></p>
     </div>
 </main>
 <footer>footer</footer>

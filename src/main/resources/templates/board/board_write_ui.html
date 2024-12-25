@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/board_common.css}">
+    <link rel="stylesheet" th:href="@{/css/board_write.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/board_common.js}"></script>
+</head>
+<body>
+<th:block th:replace="fragments/header2 :: header"></th:block>
+<main>
+    <div class="left_box">
+        <nav>
+            <ul>
+                <!-- 일단 js로 프론트단에서 클릭된것에 active 클래스가 추가되도록 코드를 짜두긴 했습니다 -->
+                <!-- 근데 a태그를 이용해서 이동하면 아마 제대로 작동하지 않을것으로 예상됩니다 -->
+                <!-- 그렇게 된다면 타임리프를 통해 if로 처리하면 되실겁니다 -->
+                <li class="nav_list active"><a th:href="@{/}"><p>ALL</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/}"><p>공지사항</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/}"><p>자유게시판</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/}"><p>후기</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/}"><p>Q&A</p></a><hr></li>
+            </ul>
+            <form th:action="@{/}">
+                <input type="text" id="search">
+                <button type="submit" id="search_btn">검색</button>
+            </form>
+            <a th:href="@{/}" class="write_btn">
+                <div class="write_wrap">
+                    <img th:src="@{/img/write.svg}" alt="" id="write_img">
+                    <p id="write_txt">글쓰기</p>
+                </div>
+            </a>
+        </nav>
+        <form th:action="@{/}">
+            <div class="write_box">
+                <img th:src="@{/img/dropdown.svg}" alt="" class="dropdown_img">
+                <select name="select" id="select">
+                    <option value="">공지</option>
+                    <option value="">자유</option>
+                    <option value="">후기</option>
+                    <option value="">Q&A</option>
+                </select>
+                <input type="text" class="write_title" id="write_title" placeholder="제목">
+            </div>
+            <textarea id="textarea" class="textarea" placeholder="맘대로 편하게 쓰십쇼"></textarea>
+            <div class="submit_wrap">
+                <button class="submit" type="submit">작성</button>
+            </div>
+        </form>
+    </div>
+    <div class="right_box">
+        <div class="rec_box">
+            <!-- 최대 4개만 띄웁니다 -->
+            <p class="box_title">오늘의 인기글</p>
+            <p class="box_item">시공의폭풍속으로빨려들어가고있어시간이너무빨리흘러가멈출수가없어제발나를멈춰줘</p>
+            <p class="box_item">대병학고트마스터가야겠지</p>
+            <p class="box_item">놀랍게도 졸라 귀찮%습$니&다</p>
+            <p class="box_item">이제 [메인?끝났네 이게맞나 으헝헝</p>
+        </div>
+        <div class="ad_box">
+            <img th:src="@{/img/testImg.jpg}" alt="" class="ad">
+        </div>
+    </div>
+</main>
+</body>
+</html>

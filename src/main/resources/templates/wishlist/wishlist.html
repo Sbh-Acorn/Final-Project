@@ -10,44 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<header>
-    <div id="logo_wrap">
-        <h1 id="logo">CALTIZM</h1>
-    </div>
-    <div id="wrap_wrap">
-        <div id="wrap1">
-            <div id="header_input_wrap">
-                <input type="text" id="header_input">
-                <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
-            </div>
-            <div id="header_icon_wrap">
-                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
-                <div id="header_alarm_dropdown">
-                    현재 내용이 없습니다.
-                </div>
-                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
-                <ul id="header_profile_dropdown">
-                    <li class="header_profile_dropdown_list">로그인</li>
-                    <li class="header_profile_dropdown_list">회원가입</li>
-                </ul>
-                <ul id="header_profile_dropdown2">
-                    <li class="header_profile_dropdown_list">로그아웃</li>
-                    <li class="header_profile_dropdown_list">마이페이지</li>
-                </ul>
-                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
-            </div>
-        </div>
-        <div id="wrap2">
-            <ul id="header_nav">
-                <li class="header_list">ALL</li>
-                <li class="header_list">BRAND</li>
-                <li class="header_list">FTA</li>
-                <li class="header_list">TAX</li>
-                <li class="header_list">COMMUNITY</li>
-            </ul>
-        </div>
-    </div>
-</header>
+<th:block th:replace="fragments/header1 :: header"></th:block>
 <main>
     <div id="wrap_wrap2">
         <p class="title">위시리스트</p>
@@ -88,8 +51,10 @@
                 type: "DELETE",
                 success: function(response){
                     alert(response.message);
-                    if(item){
-                        item.remove();
+                    if(response.status === "delete_success"){
+                        if(item){
+                            item.remove();
+                        }
                     }
                 },
                 error: function(xhr, status, error){

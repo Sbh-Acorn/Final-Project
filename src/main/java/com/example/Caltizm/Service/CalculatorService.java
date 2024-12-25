@@ -1,5 +1,6 @@
 package com.example.Caltizm.Service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,14 +17,18 @@ public class CalculatorService {
     Double eurToKrwRate = rates.get("EUR_TO_KRW");
     Double usdToEurRate = rates.get("USD_TO_EUR");
 
+
     public double convertEurToKrw(double price) {
         double taxFreePrice = price / 1.19;
 
         BigDecimal roundedTaxFreePrice = new BigDecimal(taxFreePrice).setScale(2, RoundingMode.HALF_UP);
 
+
         BigDecimal priceInWon = roundedTaxFreePrice.multiply(new BigDecimal(eurToKrwRate));
 
+
         BigDecimal roundedPriceInWon = priceInWon.setScale(0, RoundingMode.HALF_UP);
+
 
 //        System.out.println("현재 환율: " + EXCHANGE);
 //        System.out.println("세금 제외 가격 (소수점 두 자리): " + roundedTaxFreePrice + "€");
@@ -81,4 +86,5 @@ public class CalculatorService {
 //        System.out.println("USD -> EUR 150달러 환전금액 : " + service.convertUsdToEur(150));
 //        System.out.println();
     }
+
 }

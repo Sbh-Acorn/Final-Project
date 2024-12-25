@@ -5,7 +5,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class BoardRepository {
@@ -46,4 +48,60 @@ public class BoardRepository {
     // 유저 아이디 가져오기
     public int getUser(String email){
         return session.selectOne("board.user_id",email);}
+
+    // 게시글 한개 조회
+    public PostDTO selectPostOne(int post_id){return session.selectOne("board.postOne",post_id);}
+
+    // 게시글 삭제
+    public int deletePost(int post_id){
+        return session.update("board.delete-post",post_id);
+    }
+
+    // 게시글 수정
+    public int editPost(PostDTO postDTO){
+        return session.update("board.edit-post",postDTO);
+    }
+
+    //조회수 증가
+    public int incViews(int post_id) {
+        return session.update("board.incViews", post_id);
+    }
+
+    // 추천
+    public int incLikes(int post_id){
+        return session.update("board.incLikes", post_id);
+    }
+
+    public int decLikes(int post_id){
+        return session.update("board.decLikes", post_id);
+    }
+    
+    // 추천 테이블 추가
+    public int insertLikes(int post_id, int user_id){
+        Map<String, Integer> map = new HashMap<>();
+        map.put("post_id",post_id);
+        map.put("user_id",user_id);
+        return session.insert("board.insert-likes",map);
+    }
+
+    // 추천 테이블 삭제
+    public int deleteLikes(int post_id, int user_id){
+        Map<String, Integer> map = new HashMap<>();
+        map.put("post_id",post_id);
+        map.put("user_id",user_id);
+        return session.delete("board.delete-likes",map);
+    }
+
+    // 추천 테이블 확인
+    public int checkLikes(int post_id, int user_id){
+        Map<String, Integer> map = new HashMap<>();
+        map.put("post_id",post_id);
+        map.put("user_id",user_id);
+        return session.selectOne("board.check-likes",map);
+    }
+
+    // 좋아요 수
+    public int countLikes(int post_id) {
+        return session.selectOne("board.count-likes", post_id);
+    }
 }

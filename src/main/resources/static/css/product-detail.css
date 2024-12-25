@@ -1,36 +1,37 @@
 main {
     display: flex;
-    padding: 0 120px;
+    padding: 50px 120px;
     width: 100%;
-    margin-top: 50px;
 }
 
 #product_img_wrap {
-    width: 520px;
-    height: 680px;
+    width: 450px;
+    height: 720px;
 }
 
 #product_img {
-    width: 100%;
-    height: 100%;
+    width: 450px;
+    height: 720px;
 }
 
 #product_info_wrap {
-    margin-left: 80px;
+    margin-left: 120px;
+    width: 600px;
 }
 
 #product_brand {
-    font-size: 34px;
-    font-weight: 700;
+    font-size: 40px;
+    font-weight: 600;
+    margin-bottom: 10px;
 }
 
 #product_name {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 500;
 }
 
 #product_price {
-    margin-top: 40px;
+    margin-top: 20px;
     font-size: 36px;
     color: salmon;
     font-weight: bold;
@@ -43,7 +44,7 @@ main {
 }
 
 #product_category {
-    margin: 8px 0 20px 0;
+    margin: 20px 0;
     display: flex;
 }
 
@@ -66,17 +67,29 @@ b {
     text-decoration: line-through;
 }
 
+#product_point {
+    display: grid;
+    grid-auto-rows: auto;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
 #product_point li::before {
     content: "-";
     margin-right: 4px;
 }
 
 .btn {
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 10px 22px;
     background-color: rgba(190, 190, 190, 0.2);
     position: relative;
     cursor: pointer;
+    border-radius: 4px;
+    width: 550px;
+}
+
+#wishlist_btn {
+    margin-top: 30px;
 }
 
 .btn:hover {
@@ -98,6 +111,52 @@ b {
 }
 
 #bucket_btn {
-    margin-top: 20px;
-    margin-bottom: 40px;
+    margin: 20px 0 10px 0;
+    position: relative;
+}
+
+#count_wrap {
+    display: none;
+    border: 1.5px solid #d6bac3;
+    width: 140px;
+    height: 42px;
+    align-items: center;
+    position: absolute;
+    right: 460px;
+}
+
+#count_num {
+    width: 60px;
+    height: 42px;
+    padding: 10px;
+    color: #bb899a;
+    text-align: center;
+    border-right: 1.5px solid #d6bac3;
+}
+
+.count {
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#count_minus {
+    border-right: 1.5px solid #d6bac3;
+}
+
+.count:hover {
+    background-color: #e8dee1;
+}
+
+@media (max-width: 800px) {
+    #product_info_wrap {
+        display: none;
+    }
+    #product_img_wrap, #product_img {
+        width: 600px;
+        height: 960px;
+    }
+
 }

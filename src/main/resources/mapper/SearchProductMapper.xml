@@ -4,8 +4,18 @@
 
 <mapper namespace="com.example.Caltizm.Repository.SearchProductRepository">
 
-    <!-- 이름으로 상품 검색 -->
-    <select id="findProductsByName" parameterType="string" resultType="com.example.Caltizm.DTO.ProductDTO">
+
+    <select id="findProductsByName" parameterType="string" resultType="map">
+        SELECT
+        product_id, -- 상품 ID
+        name        -- 상품 이름
+        FROM Product
+        WHERE name LIKE CONCAT('%', #{name}, '%') -- 검색어와 일치하는 이름 검색
+        LIMIT 10; -- 최대 10개까지 가져오기
+    </select>
+
+    <!-- ID로 상품의 전체 데이터 가져오기 -->
+    <select id="findProductById" parameterType="string" resultType="com.example.Caltizm.DTO.ProductDTO">
         SELECT
         brand_id AS brand,
         product_id,
@@ -17,12 +27,11 @@
         category1_id AS category1,
         category2_id AS category2,
         category3_id AS category3,
-        is_excludedVoucher
+        is_excludedVoucher,
+        is_fta
         FROM Product
-        WHERE name LIKE CONCAT('%', #{name}, '%')
-        LIMIT 10;
+        WHERE product_id = #{id};
     </select>
-
     <!-- 모든 상품 데이터 가져오기 -->
     <select id="getAllProducts" resultType="com.example.Caltizm.DTO.ProductDTO">
         SELECT

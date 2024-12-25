@@ -87,3 +87,41 @@ function execDaumPostcode() {
         }
     }).open();
 }
+
+$(document).ready(function(){
+    $("#btn2").click(function(){
+        let addressId = $("#addressId").val();
+        let address = $("#addressEnglishInput").val();
+        let zipCode = $("#postcodeInput").val();
+        let detail = $("#detailed_p").val();
+        console.log(addressId, address, zipCode, detail);
+
+        if(addressId.trim() === "" || address.trim() === "" || zipCode.trim() === "" || detail.trim() == ""){
+            alert("모든 필드를 채워주세요.");
+            return;
+        }
+
+        let data = {
+            addressId: addressId,
+            address: address,
+            zipCode: zipCode,
+            detail: detail
+        };
+
+        $.ajax({
+            url: "/address/update",
+            type: "PATCH",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function(response){
+                alert(response.message);
+                if(response.status === "update_success"){
+                    window.location.href = "/myPage";
+                }
+            },
+            error: function(xhr, status, error){
+                console.log("Error:", error);
+            }
+        });
+    });
+});

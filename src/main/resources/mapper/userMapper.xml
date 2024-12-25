@@ -27,7 +27,7 @@
         <if test="pccc == null">
             update user
             set first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
-            birth_date = #{birthDate}
+            birth_date = #{birthDate}, pccc = null
             where email = #{email}
         </if>
     </update>
