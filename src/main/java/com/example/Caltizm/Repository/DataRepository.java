@@ -252,4 +252,17 @@ public class DataRepository {
     }
 
     public Map<String ,Object> getMaxPrice(){return session.selectOne("product.selectMaxPrice");}
+
+    public List<ProductDTO> getFTAProduct (){
+        List<ProductDTO> FTAProducts = session.selectList("selectAllFTA");
+        return FTAProducts;
+    }
+    public List<String> getAllFTABrandName(){
+        return session.selectList("product.selectAllFTABrandName");
+    }
+
+    public List<String> getAllFTACategoryName(){
+        return session.selectList("product.selectAllFTACategoryName");
+    }
+    public Map<String ,Object> getFTAMaxPrice(){return session.selectOne("product.selectFTAMaxPrice");}
 }

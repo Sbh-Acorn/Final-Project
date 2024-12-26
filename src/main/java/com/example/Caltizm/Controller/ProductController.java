@@ -7,6 +7,7 @@ import com.example.Caltizm.Repository.SearchProductRepository;
 import com.example.Caltizm.Service.CalculatorService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,36 +24,32 @@ import java.util.stream.Collectors;
 @Controller
 public class ProductController {
 
+    private static final int taxBaseAmount = 150;
+    private static final int ITEMS_PER_PAGE = 20; // 페이지당 표시할 상품 수
     @Autowired
     DataRepository repository;
-
     @Autowired
     CalculatorService calculatorService;
-
-
-    private static final int taxBaseAmount = 150;
-
-
     @Autowired
     SearchProductRepository searchProductRepository;
 
     // 모든 메서드에서 사용할 제품 리스트를 미리 로드
 
-    @ModelAttribute("products")
-    public List<ProductDTO> getAllProducts() {
-        List<ProductDTO> products = repository.getProduct();
-        products.sort(
-                Comparator.comparing(ProductDTO::getBrand)
-                        .thenComparing(ProductDTO::getName)
-        );
-        for (ProductDTO product : products) {
-            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
-            if (product.getOriginal_price() != null) {
-                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
-            }
-        }
-        return products;
-    }
+    //    @ModelAttribute("products")
+    //    public List<ProductDTO> getAllProducts() {
+    //        List<ProductDTO> products = repository.getProduct();
+    //        products.sort(
+    //                Comparator.comparing(ProductDTO::getBrand)
+    //                        .thenComparing(ProductDTO::getName)
+    //        );
+    //        for (ProductDTO product : products) {
+    //            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
+    //            if (product.getOriginal_price() != null) {
+    //                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
+    //            }
+    //        }
+    //        return products;
+    //    }
 
     @ModelAttribute("brandNames")
     public List<String> getAllBrandName() {
@@ -66,7 +62,7 @@ public class ProductController {
     }
 
     @ModelAttribute("maxPrice")
-    public Map<String, Object> getMinAndMaxPrice() {
+    public Map<String, Object> getMaxPrice() {
         Map<String, Object> priceData = repository.getMaxPrice();
 
         BigDecimal maxPrice = (BigDecimal) priceData.get("max_price");
@@ -82,8 +78,38 @@ public class ProductController {
 
 
     @GetMapping("/product")
-    public String product(Model model) {
+    public String product() {
         return "product/product-list";
+    }
+
+
+    @GetMapping("/product/")
+    public ResponseEntity<Map<String, Object>> getProductList(@RequestParam(name = "page", defaultValue = "1") int page) {
+        // 전체 상품 리스트를 가져옴
+        List<ProductDTO> products = repository.getProduct();
+
+        // 페이징 처리
+        int start = (page - 1) * ITEMS_PER_PAGE;
+        if (start >= products.size()) {
+            return ResponseEntity.ok(Map.of("products", List.of()));  // 빈 리스트 반환
+        }
+
+        int end = Math.min(start + ITEMS_PER_PAGE, products.size());
+
+        // 필요한 범위의 상품 리스트 추출
+        List<ProductDTO> paginatedProducts = products.subList(start, end);
+
+        // 가격 변환
+        for (ProductDTO product : paginatedProducts) {
+            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
+            if (product.getOriginal_price() != null) {
+                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
+            }
+        }
+
+        // JSON 응답 생성
+        Map<String, Object> response = Map.of("products", paginatedProducts);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/product/{product_id}")
@@ -134,7 +160,8 @@ public class ProductController {
     }
 
     @GetMapping("/product/filter")
-    public String filter(
+    public ResponseEntity<Map<String, Object>> filter(
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) Double minPrice,
@@ -192,22 +219,107 @@ public class ProductController {
                     .collect(Collectors.toList());
         }
 
-        allProducts.sort(
-                Comparator.comparing(ProductDTO::getBrand)
-                        .thenComparing(ProductDTO::getName)
-        );
 
-        for (ProductDTO product : allProducts) {
+        // 페이징 처리
+        int start = (page - 1) * ITEMS_PER_PAGE;
+        if (start >= allProducts.size()) {
+            return ResponseEntity.ok(Map.of("products", List.of()));  // 빈 리스트 반환
+        }
+        int end = Math.min(start + ITEMS_PER_PAGE, allProducts.size());
+
+
+        // 필요한 범위의 상품 리스트 추출
+        List<ProductDTO> paginatedProducts = allProducts.subList(start, end);
+
+
+        // 가격 변환
+        for (ProductDTO product : paginatedProducts) {
             product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
             if (product.getOriginal_price() != null) {
                 product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
             }
         }
 
-        model.addAttribute("products", allProducts);
-        return "product/product-list";
+        // JSON 응답 생성
+        Map<String, Object> response = Map.of("products", paginatedProducts);
+        return ResponseEntity.ok(response);
     }
 
+
+    //    @GetMapping("/product/filter")
+    //    public String filter(
+    //            @RequestParam(required = false) List<String> brands,
+    //            @RequestParam(required = false) List<String> categories,
+    //            @RequestParam(required = false) Double minPrice,
+    //            @RequestParam(required = false) Double maxPrice,
+    //            @RequestParam(required = false) String tax,
+    //            @RequestParam(required = false) String fta,
+    //            Model model
+    //    ) {
+    //        // 필터링 로직 처리
+    //        List<ProductDTO> allProducts = repository.getProduct();
+    //
+    //        // 가격 필터링
+    //        if (minPrice != null && maxPrice != null) {
+    //            allProducts = allProducts.stream()
+    //                    .filter(p -> p.getCurrent_price() >= calculatorService.convertKrwToEur(minPrice)
+    //                            && p.getCurrent_price() <= calculatorService.convertKrwToEur(maxPrice))
+    //                    .collect(Collectors.toList());
+    //        }
+    //
+    //        // 브랜드 필터링
+    //        if (brands != null && !brands.isEmpty()) {
+    //            allProducts = allProducts.stream()
+    //                    .filter(p -> brands.contains(p.getBrand()))
+    //                    .collect(Collectors.toList());
+    //        }
+    //
+    //        // 카테고리 필터링
+    //        if (categories != null && !categories.isEmpty()) {
+    //            allProducts = allProducts.stream()
+    //                    .filter(p -> categories.contains(p.getCategory1()) ||
+    //                            categories.contains(p.getCategory2()) ||
+    //                            categories.contains(p.getCategory3()))
+    //                    .collect(Collectors.toList());
+    //        }
+    //
+    //        // 세금 필터링
+    //        if ("TAX".equals(tax)) {
+    //            allProducts = allProducts.stream()
+    //                    .filter(p -> p.getCurrent_price() >= calculatorService.convertUsdToEur(taxBaseAmount))
+    //                    .collect(Collectors.toList());
+    //        } else if ("NOT TAX".equals(tax)) {
+    //            allProducts = allProducts.stream()
+    //                    .filter(p -> p.getCurrent_price() <= calculatorService.convertUsdToEur(taxBaseAmount))
+    //                    .collect(Collectors.toList());
+    //        }
+    //
+    //        // FTA 필터링
+    //        if ("FTA".equals(fta)) {
+    //            allProducts = allProducts.stream()
+    //                    .filter(ProductDTO::is_fta)
+    //                    .collect(Collectors.toList());
+    //        } else if ("NOT FTA".equals(fta)) {
+    //            allProducts = allProducts.stream()
+    //                    .filter(p -> !p.is_fta())
+    //                    .collect(Collectors.toList());
+    //        }
+    //
+    //        allProducts.sort(
+    //                Comparator.comparing(ProductDTO::getBrand)
+    //                        .thenComparing(ProductDTO::getName)
+    //        );
+    //
+    //        for (ProductDTO product : allProducts) {
+    //            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
+    //            if (product.getOriginal_price() != null) {
+    //                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
+    //            }
+    //        }
+    //
+    //        model.addAttribute("products", allProducts);
+    //        return "product/product-list";
+    //    }
 
 
 }

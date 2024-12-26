@@ -1,130 +1,3 @@
-            let currentPage = 1;
-            let isFiltered = false;
-            let selectedBrands = [];
-                    let selectedCategories = [];
-                    let minPrice = 0;
-                    let maxPrice = 0;
-                    let isTax = null;
-                    let isFta = null;
-
-                    $('#filter_btn').click(() => {
-                        currentPage = 1;  // 필터 변경 시 페이지 초기화
-                        isFiltered = true; // 필터링 상태 활성화
-                        selectedBrands = [];
-                        selectedCategories = [];
-                        minPrice = parseFloat($('#value1').text().trim().replace(/[^0-9]/g, ''));
-                        maxPrice = parseFloat($('#value2').text().trim().replace(/[^0-9]/g, ''));
-                        isTax = $('#tax').prop('checked') ? 'TAX' : $('#not_tax').prop('checked') ? 'NOT TAX' : null;
-                        isFta = $('#fta').prop('checked') ? 'FTA' : $('#not_fta').prop('checked') ? 'NOT FTA' : null;
-
-                        $('.filter_wrap ul.filter_checkbox input[type="checkbox"]:checked').each(function () {
-                            const label = $(this).closest('label').find('p').text();
-                            const parent = $(this).closest('.filter_wrap').prev('p.filter_txt').text().trim();
-
-                            if (parent === 'BRAND') {
-                                selectedBrands.push(label);
-                            } else if (parent === 'CATEGORY') {
-                                selectedCategories.push(label);
-                            }
-                        });
-
-                        $('#item_box_wrap').empty(); // 기존 상품 목록 지우기
-                        loadFilteredProducts(currentPage); // 필터링된 데이터 로드
-                    });
-
-            function loadMoreProducts() {
-                const nextPage = currentPage + 1;
-
-                $.get(`/product/?page=${nextPage}`, (response) => {
-                    const newProducts = response.products;
-
-                    newProducts.forEach((product) => {
-                        const productHtml = `
-                            <li class="item_box">
-                                <a href="/product/${product.product_id}">
-                                    <img src="${product.image_url}" alt="Image" class="item_img">
-                                    <p class="item_brand">${product.brand}</p>
-                                    <p class="item_name">${product.name}</p>
-                                    <p class="item_price">
-                                        <span class="current_price">￦${product.current_price}</span>
-                                        ${product.original_price > product.current_price
-                                            ? `<span class="original_price">(￦${product.original_price})</span>`
-                                            : ''}
-                                    </p>
-                                </a>
-                            </li>
-                        `;
-                        $('#item_box_wrap').append(productHtml);
-                    });
-
-                    currentPage = nextPage;
-                }).fail(() => {
-                    console.error("Failed to load products");
-                });
-            }
-
-            function loadFilteredProducts(page) {
-                const params = new URLSearchParams({
-                    page: page,
-                    brands: selectedBrands.join(','),
-                    categories: selectedCategories.join(','),
-                    minPrice: minPrice,
-                    maxPrice: maxPrice,
-                    tax: isTax,
-                    fta: isFta
-                });
-
-                $.get(`/product/filter?${params.toString()}`, (response) => {
-                    const newProducts = response.products;
-
-                    newProducts.forEach((product) => {
-                        const productHtml = `
-                            <li class="item_box">
-                                <a href="/product/${product.product_id}">
-                                    <img src="${product.image_url}" alt="Image" class="item_img">
-                                    <p class="item_brand">${product.brand}</p>
-                                    <p class="item_name">${product.name}</p>
-                                    <p class="item_price">
-                                        <span class="current_price">￦${product.current_price}</span>
-                                        ${product.original_price > product.current_price
-                                            ? `<span class="original_price">(￦${product.original_price})</span>`
-                                            : ''}
-                                    </p>
-                                </a>
-                            </li>
-                        `;
-                        $('#item_box_wrap').append(productHtml);
-                    });
-
-                    currentPage = page;
-                }).fail(() => {
-                    console.error("Failed to load filtered products");
-                });
-            }
-
-
-            // 초기 데이터 로드
-            loadMoreProducts();
-
-            // 무한 스크롤 이벤트
-            $(window).scroll(function() {
-                const nearBottom = $(window).scrollTop() + $(window).height() >= $(document).height() - 100;
-
-                if (nearBottom) {
-                    if (isFiltered) {
-                        // 필터링된 상품 목록 로드
-                        loadFilteredProducts(currentPage + 1);
-                    } else {
-                        // 기본 상품 목록 로드
-                        loadMoreProducts();
-                    }
-                }
-            });
-
-
-
-
-
             const urlParams = new URLSearchParams(window.location.search);
                   let $range = document.getElementById("range");
 
@@ -134,7 +7,6 @@
             const sortedMinPrice = urlParams.has('minPrice') && !isNaN(urlParams.get('minPrice')) ? parseFloat(urlParams.get('minPrice')) : 0;
             const sortedMaxPrice = urlParams.has('maxPrice') && !isNaN(urlParams.get('maxPrice')) ? parseFloat(urlParams.get('maxPrice')) : parseFloat($range.max);
             const sortedIsTax = urlParams.get('tax') && urlParams.get('tax') !== 'null' ? urlParams.get('tax') : null; // null 제외
-            const sortedIsFta = urlParams.get('fta') && urlParams.get('fta') !== 'null' ? urlParams.get('fta') : null; // null 제외
 
             console.log(sortedMinPrice);
             console.log(sortedMaxPrice);
@@ -158,17 +30,37 @@
                     $('#tax, #not_tax').prop('checked', false); // null인 경우, 체크해제
                 }
 
-                // FTA 체크박스 상태 반영
-                if (sortedIsFta === 'FTA') {
-                    $('#fta').prop('checked', true);
-                } else if (sortedIsTax === 'NOT FTA') {
-                    $('#not_fta').prop('checked', true);
-                } else {
-                    $('#fta, #not_fta').prop('checked', false); // null인 경우, 체크해제
-                }
 
 
+// 필터 함수
+    function filter() {
+        const selectedBrands = [];
+        const selectedCategories = [];
+        const minPrice = parseFloat($('#value1').text().trim().replace(/[^0-9]/g, ''));
+        const maxPrice = parseFloat($('#value2').text().trim().replace(/[^0-9]/g, ''));
+        const isTax = $('#tax').prop('checked') ? 'TAX' : $('#not_tax').prop('checked') ? 'NOT TAX' : null;
 
+        $('.filter_wrap ul.filter_checkbox input[type="checkbox"]:checked').each(function () {
+            const label = $(this).closest('label').find('p').text();
+            const parent = $(this).closest('.filter_wrap').prev('p.filter_txt').text().trim();
+
+            if (parent === 'BRAND') {
+                selectedBrands.push(label);
+            } else if (parent === 'CATEGORY') {
+                selectedCategories.push(label);
+            }
+        });
+
+        const params = new URLSearchParams({
+            brands: selectedBrands.join(','),
+            categories: selectedCategories.join(','),
+            minPrice: minPrice,
+            maxPrice: maxPrice,
+            tax: isTax,
+        });
+
+        window.location.href = `/product/filter?${params.toString()}`;
+    }
 
     // 특정 value를 가진 li 삭제하는 함수
     function removeLiByValue(value) {
@@ -207,7 +99,9 @@
 
     formatPrices();
 
-
+        $('#filter_btn').click(() => {
+            filter();
+        });
 
 
 
@@ -300,47 +194,6 @@
             }
         }
     });
-
-    $('#fta, #not_fta').change(function () {
-        const label = $(this).closest('label').text().trim(); // input의 부모 label을 찾아 텍스트 가져오기
-        const value = label ? label : null; // 텍스트가 없으면 null로 설정
-
-        if (value) { // value가 유효한 경우에만 처리
-            if (this.checked) {
-                // 이미 추가된 li가 있는지 확인
-                const exists = [...selectedUl.children].some(li => li.innerText.includes(value));
-                if (!exists) {
-                    const listItem = document.createElement("li");
-                    listItem.classList.add("selected_li");
-                    listItem.innerHTML = `
-                        <p class="selected_li_txt">${value}</p>
-                        <img src="/img/close.svg" alt="Close" class="selected_li_close">
-                    `;
-                    listItem.querySelector(".selected_li_close").addEventListener('click', function () {
-                        selectedUl.removeChild(listItem);
-                        $(`#${$(this).data('name')}`).prop('checked', false);
-                    });
-                    selectedUl.appendChild(listItem);
-                }
-
-                // 반대 체크박스 해제 및 해당 li 제거
-                if (this.id === 'fta') {
-                    $('#not_fta').prop('checked', false);
-                    removeLiByValue('NOT FTA'); // 반대 항목 li 제거
-                } else if (this.id === 'not_fta') {
-                    $('#fta').prop('checked', false);
-                    removeLiByValue('FTA'); // 반대 항목 li 제거
-                }
-            } else {
-                // 체크 해제 시 해당 li 삭제
-                removeLiByValue(value);
-            }
-        }
-    });
-
-
-
-
 
 
         let $leftThumb = document.querySelector(".thumb-left");
