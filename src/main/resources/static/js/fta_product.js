@@ -1,15 +1,181 @@
-            const urlParams = new URLSearchParams(window.location.search);
+            let currentPage = 1;
+            let isFiltered = isFilterApplied();
+            let selectedBrands = [];
+                    let selectedCategories = [];
+                    let minPrice = 0;
+                    let maxPrice = 0;
+                    let isTax = null;
+                    let isLoading = false;
+
+                    // 초기 데이터 로드
+                                if (isFiltered) {
+                                    // 필터링된 상태일 경우
+                                    loadFilteredProducts(currentPage);
+                                } else {
+                                    // 기본 상태일 경우
+                                    loadMoreProducts();
+                                }
+
+                    $('#filter_btn').click(() => {
+                        currentPage = 1;  // 필터 변경 시 페이지 초기화
+                        isFiltered = true; // 필터링 상태 활성화
+                        selectedBrands = [];
+                        selectedCategories = [];
+
+                        // 가격 범위 설정
+                        minPrice = parseFloat($('#value1').text().trim().replace(/[^0-9]/g, ''));
+                        maxPrice = parseFloat($('#value2').text().trim().replace(/[^0-9]/g, ''));
+
+                        // 세금 상태 설정
+                        isTax = $('#tax').prop('checked') ? 'TAX' : $('#not_tax').prop('checked') ? 'NOT TAX' : null;
+
+                        // 선택된 브랜드 및 카테고리 수집
+                        $('.filter_wrap ul.filter_checkbox input[type="checkbox"]:checked').each(function () {
+                            const label = $(this).closest('label').find('p').text();
+                            const parent = $(this).closest('.filter_wrap').prev('p.filter_txt').text().trim();
+
+                            if (parent === 'BRAND') {
+                                selectedBrands.push(label);
+                            } else if (parent === 'CATEGORY') {
+                                selectedCategories.push(label);
+                            }
+                        });
+
+                        // URLSearchParams를 사용해 쿼리 문자열 생성
+                        const params = new URLSearchParams();
+
+                        if (selectedBrands.length > 0) {
+                            params.append('brands', selectedBrands.join(','));
+                        }
+                        if (selectedCategories.length > 0) {
+                            params.append('categories', selectedCategories.join(','));
+                        }
+                        if (!isNaN(minPrice)) {
+                            params.append('minPrice', minPrice);
+                        }
+                        if (!isNaN(maxPrice)) {
+                            params.append('maxPrice', maxPrice);
+                        }
+                        if (isTax) {
+                            params.append('tax', isTax);
+                        }
+
+                        // 페이지 리다이렉션
+                        window.location.href = `/product/filter?${params.toString()}`;
+                    });
+
+
+            function loadMoreProducts() {
+                const nextPage = currentPage + 1;
+                if (isLoading) return; // 로딩 중이면 함수 종료
+                    isLoading = true; // 로딩 시작
+
+                $.get(`/fta-product/?page=${nextPage}`, (response) => {
+                    const newProducts = response.products;
+
+                    newProducts.forEach((product) => {
+                        const productHtml = `
+                            <li class="item_box">
+                                <a href="/product/${product.product_id}">
+                                    <img src="${product.image_url}" alt="Image" class="item_img">
+                                    <p class="item_brand">${product.brand}</p>
+                                    <p class="item_name">${product.name}</p>
+                                    <p class="item_price">
+                                        <span class="current_price">￦${product.current_price}</span>
+                                        ${product.original_price > product.current_price
+                                            ? `<span class="original_price">(￦${product.original_price})</span>`
+                                            : ''}
+                                    </p>
+                                </a>
+                            </li>
+                        `;
+                        $('#item_box_wrap').append(productHtml);
+                    });
+                    formatPrices();
+                    currentPage = nextPage;
+                        isLoading = false; // 로딩 완료
+                    }).fail(() => {
+                        console.error("Failed to load products");
+                        isLoading = false; // 실패 시에도 로딩 플래그 해제
+                    });
+                }
+
+            function loadFilteredProducts(page) {
+                const params = new URLSearchParams(window.location.search);
+                params.set('page', page);
+
+                 if (isLoading) return; // 로딩 중이면 함수 종료
+                     isLoading = true; // 로딩 시작
+
+
+                $.get(`/fta-product/filter/?${params.toString()}`, (response) => {
+                    const newProducts = response.products;
+
+                    newProducts.forEach((product) => {
+                        const productHtml = `
+                            <li class="item_box">
+                                <a href="/product/${product.product_id}">
+                                    <img src="${product.image_url}" alt="Image" class="item_img">
+                                    <p class="item_brand">${product.brand}</p>
+                                    <p class="item_name">${product.name}</p>
+                                    <p class="item_price">
+                                        <span class="current_price">￦${product.current_price}</span>
+                                        ${product.original_price > product.current_price
+                                            ? `<span class="original_price">(￦${product.original_price})</span>`
+                                            : ''}
+                                    </p>
+                                </a>
+                            </li>
+                        `;
+                        $('#item_box_wrap').append(productHtml);
+                    });
+                    formatPrices();
+                    currentPage = page;
+                isLoading = false; // 로딩 완료
+            }).fail(() => {
+                console.error("Failed to load filtered products");
+                isLoading = false; // 실패 시에도 로딩 플래그 해제
+            });
+        }
+
+
+
+            function isFilterApplied() {
+                const params = new URLSearchParams(window.location.search);
+                return (
+                    params.has('brands') ||
+                    params.has('categories') ||
+                    params.has('minPrice') ||
+                    params.has('maxPrice') ||
+                    params.has('tax')
+                );
+            }
+
+
+            // 무한 스크롤 이벤트
+            $(window).scroll(function() {
+                const nearBottom = $(window).scrollTop() + $(window).height() >= $(document).height() - 200;
+
+                if (nearBottom) {
+                    if (isFiltered) {
+                        // 필터링된 상품 목록 로드
+                        loadFilteredProducts(currentPage + 1);
+                    } else {
+                        // 기본 상품 목록 로드
+                        loadMoreProducts();
+                    }
+                }
+            });
+
+             const urlParams = new URLSearchParams(window.location.search);
                   let $range = document.getElementById("range");
 
-            // URL에서 파라미터 추출
+//            // URL에서 파라미터 추출
             const sortedBrands = urlParams.get('brands') ? urlParams.get('brands').split(',') : [];
             const sortedCategories = urlParams.get('categories') ? urlParams.get('categories').split(',') : [];
             const sortedMinPrice = urlParams.has('minPrice') && !isNaN(urlParams.get('minPrice')) ? parseFloat(urlParams.get('minPrice')) : 0;
             const sortedMaxPrice = urlParams.has('maxPrice') && !isNaN(urlParams.get('maxPrice')) ? parseFloat(urlParams.get('maxPrice')) : parseFloat($range.max);
             const sortedIsTax = urlParams.get('tax') && urlParams.get('tax') !== 'null' ? urlParams.get('tax') : null; // null 제외
-
-            console.log(sortedMinPrice);
-            console.log(sortedMaxPrice);
 
                 // 브랜드 체크박스 상태 반영
                 sortedBrands.forEach(brand => {
@@ -30,37 +196,6 @@
                     $('#tax, #not_tax').prop('checked', false); // null인 경우, 체크해제
                 }
 
-
-
-// 필터 함수
-    function filter() {
-        const selectedBrands = [];
-        const selectedCategories = [];
-        const minPrice = parseFloat($('#value1').text().trim().replace(/[^0-9]/g, ''));
-        const maxPrice = parseFloat($('#value2').text().trim().replace(/[^0-9]/g, ''));
-        const isTax = $('#tax').prop('checked') ? 'TAX' : $('#not_tax').prop('checked') ? 'NOT TAX' : null;
-
-        $('.filter_wrap ul.filter_checkbox input[type="checkbox"]:checked').each(function () {
-            const label = $(this).closest('label').find('p').text();
-            const parent = $(this).closest('.filter_wrap').prev('p.filter_txt').text().trim();
-
-            if (parent === 'BRAND') {
-                selectedBrands.push(label);
-            } else if (parent === 'CATEGORY') {
-                selectedCategories.push(label);
-            }
-        });
-
-        const params = new URLSearchParams({
-            brands: selectedBrands.join(','),
-            categories: selectedCategories.join(','),
-            minPrice: minPrice,
-            maxPrice: maxPrice,
-            tax: isTax,
-        });
-
-        window.location.href = `/product/filter?${params.toString()}`;
-    }
 
     // 특정 value를 가진 li 삭제하는 함수
     function removeLiByValue(value) {
@@ -94,16 +229,6 @@
             }
         });
     }
-
-
-
-    formatPrices();
-
-        $('#filter_btn').click(() => {
-            filter();
-        });
-
-
 
     // 체크박스 상태에 따라 li 초기화
     const selectedUl = document.getElementById("selected_ul");
@@ -194,7 +319,6 @@
             }
         }
     });
-
 
         let $leftThumb = document.querySelector(".thumb-left");
         let $rightThumb = document.querySelector(".thumb-right");

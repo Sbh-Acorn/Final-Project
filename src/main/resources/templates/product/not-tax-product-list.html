@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/product.css}">
     <script defer th:src="@{/js/header.js}"></script>
-    <script defer th:src="@{/js/fta_product.js}"></script>
+    <script defer th:src="@{/js/not-tax_product.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
@@ -58,19 +58,19 @@
         </p>
         <hr class="hr1">
 
-        <p class="filter_txt">TAX</p>
-        <div id="tax_wrap" class="filter_wrap">
+        <p class="filter_txt">FTA</p>
+        <div id="fta_wrap" class="filter_wrap">
             <ul class="filter_checkbox">
                 <li class="filter_check">
-                    <label for="tax">
-                        <input type="checkbox" id="tax" class="check" name="tax" value="TAX">
-                        <p>TAX</p>
+                    <label for="fta">
+                        <input type="checkbox" id="fta" class="check" name="fta" value="FTA">
+                        <p>FTA</p>
                     </label>
                 </li>
                 <li class="filter_check">
-                    <label for="not_tax">
-                        <input type="checkbox" id="not_tax" class="check" name="tax" value="NOT TAX">
-                        <p>NOT TAX</p>
+                    <label for="not_fta">
+                        <input type="checkbox" id="not_fta" class="check" name="fta" value="NOT FTA">
+                        <p>NOT FTA</p>
                     </label>
                 </li>
             </ul>
@@ -79,7 +79,7 @@
     </div>
     <div id="right_box">
         <ul id="item_box_wrap">
-<!--            상품 추가-->
+<!--    상품 추가       -->
         </ul>
     </div>
 </main>

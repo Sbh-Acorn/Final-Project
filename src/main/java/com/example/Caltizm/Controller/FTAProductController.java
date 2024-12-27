@@ -2,52 +2,29 @@ package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.ProductDTO;
 import com.example.Caltizm.Repository.DataRepository;
-import com.example.Caltizm.Repository.SearchProductRepository;
 import com.example.Caltizm.Service.CalculatorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-public class FTAController {
+public class FTAProductController {
 
+    private static final int taxBaseAmount = 150;
+    private static final int ITEMS_PER_PAGE = 20; // 페이지당 표시할 상품 수
     @Autowired
     DataRepository repository;
-
     @Autowired
     CalculatorService calculatorService;
 
-    private static final int taxBaseAmount = 150;
-
-    @Autowired
-    SearchProductRepository searchProductRepository;
-
-    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
-
-    @ModelAttribute("products")
-    public List<ProductDTO> getAllFTAProducts() {
-        List<ProductDTO> ftaProducts = repository.getFTAProduct();
-        ftaProducts.sort(
-                Comparator.comparing(ProductDTO::getBrand)
-                        .thenComparing(ProductDTO::getName)
-        );
-        for (ProductDTO product : ftaProducts) {
-            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
-            if (product.getOriginal_price() != null) {
-                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
-            }
-        }
-        return ftaProducts;
-    }
 
     @ModelAttribute("brandNames")
     public List<String> getAllFTABrandName() {
@@ -59,7 +36,7 @@ public class FTAController {
         return repository.getAllFTACategoryName();
     }
 
-    @ModelAttribute("MaxPrice")
+    @ModelAttribute("maxPrice")
     public Map<String, Object> getFTAMaxPrice() {
         Map<String, Object> priceData = repository.getFTAMaxPrice();
 
@@ -75,27 +52,66 @@ public class FTAController {
     }
 
 
-    @GetMapping("/fta")
-    public String ftaProduct(Model model) {
+    @GetMapping("/fta-product")
+    public String product() {
         return "product/fta-product-list";
     }
 
 
-    @GetMapping("/fta/filter")
-    public String filter(
+    @GetMapping("/fta-product/")
+    public ResponseEntity<Map<String, Object>> getProductList(@RequestParam(name = "page", defaultValue = "1") int page) {
+        // 전체 상품 리스트를 가져옴
+        List<ProductDTO> products = repository.getFTAProduct();
+
+
+        // 페이징 처리
+        int start = (page - 1) * ITEMS_PER_PAGE;
+        if (start >= products.size()) {
+            return ResponseEntity.ok(Map.of("products", List.of()));  // 빈 리스트 반환
+        }
+
+        int end = Math.min(start + ITEMS_PER_PAGE, products.size());
+
+        // 필요한 범위의 상품 리스트 추출
+        List<ProductDTO> paginatedProducts = products.subList(start, end);
+
+        // 가격 변환
+        for (ProductDTO product : paginatedProducts) {
+            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
+            if (product.getOriginal_price() != null) {
+                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
+            }
+        }
+
+        // JSON 응답 생성
+        Map<String, Object> response = Map.of("products", paginatedProducts);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/fta-product/filter")
+    public String filter() {
+        // 필터 페이지로 이동
+        return "product/product-list"; // HTML 뷰 반환
+    }
+
+
+    @GetMapping("/fta-product/filter/")
+    public ResponseEntity<Map<String, Object>> getFilterList(
+            @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) String tax,
-            Model model
+            @RequestParam(required = false) String tax
     ) {
-        // 필터링 로직 처리
-        List<ProductDTO> ftaProducts = repository.getFTAProduct();
+        // 전체 상품 가져오기
+        List<ProductDTO> allProducts = repository.getFTAProduct();
+
 
         // 가격 필터링
         if (minPrice != null && maxPrice != null) {
-            ftaProducts = ftaProducts.stream()
+            allProducts = allProducts.stream()
                     .filter(p -> p.getCurrent_price() >= calculatorService.convertKrwToEur(minPrice)
                             && p.getCurrent_price() <= calculatorService.convertKrwToEur(maxPrice))
                     .collect(Collectors.toList());
@@ -103,14 +119,14 @@ public class FTAController {
 
         // 브랜드 필터링
         if (brands != null && !brands.isEmpty()) {
-            ftaProducts = ftaProducts.stream()
+            allProducts = allProducts.stream()
                     .filter(p -> brands.contains(p.getBrand()))
                     .collect(Collectors.toList());
         }
 
         // 카테고리 필터링
         if (categories != null && !categories.isEmpty()) {
-            ftaProducts = ftaProducts.stream()
+            allProducts = allProducts.stream()
                     .filter(p -> categories.contains(p.getCategory1()) ||
                             categories.contains(p.getCategory2()) ||
                             categories.contains(p.getCategory3()))
@@ -119,32 +135,38 @@ public class FTAController {
 
         // 세금 필터링
         if ("TAX".equals(tax)) {
-            ftaProducts = ftaProducts.stream()
+            allProducts = allProducts.stream()
                     .filter(p -> p.getCurrent_price() >= calculatorService.convertUsdToEur(taxBaseAmount))
                     .collect(Collectors.toList());
         } else if ("NOT TAX".equals(tax)) {
-            ftaProducts = ftaProducts.stream()
+            allProducts = allProducts.stream()
                     .filter(p -> p.getCurrent_price() <= calculatorService.convertUsdToEur(taxBaseAmount))
                     .collect(Collectors.toList());
         }
 
 
-        ftaProducts.sort(
-                Comparator.comparing(ProductDTO::getBrand)
-                        .thenComparing(ProductDTO::getName)
-        );
+        // 페이징 처리
+        int start = (page - 1) * ITEMS_PER_PAGE;
+        if (start >= allProducts.size()) {
+            return ResponseEntity.ok(Map.of("products", List.of()));  // 빈 리스트 반환
+        }
+        int end = Math.min(start + ITEMS_PER_PAGE, allProducts.size());
 
-        for (ProductDTO product : ftaProducts) {
+        // 필요한 범위의 상품 리스트 추출
+        List<ProductDTO> paginatedProducts = allProducts.subList(start, end);
+
+        // 가격 변환
+        for (ProductDTO product : paginatedProducts) {
             product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
             if (product.getOriginal_price() != null) {
                 product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
             }
         }
 
-        model.addAttribute("products", ftaProducts);
-        return "product/fta-product-list";
+        // JSON 응답 생성
+        Map<String, Object> response = Map.of("products", paginatedProducts);
+        return ResponseEntity.ok(response);
     }
-
 
 
 }

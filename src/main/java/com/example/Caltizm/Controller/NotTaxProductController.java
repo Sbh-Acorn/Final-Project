@@ -1,28 +1,20 @@
 package com.example.Caltizm.Controller;
 
-import com.example.Caltizm.DTO.CartDTO;
 import com.example.Caltizm.DTO.ProductDTO;
 import com.example.Caltizm.Repository.DataRepository;
-import com.example.Caltizm.Repository.SearchProductRepository;
 import com.example.Caltizm.Service.CalculatorService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
-public class ProductController {
+public class NotTaxProductController {
 
     private static final int taxBaseAmount = 150;
     private static final int ITEMS_PER_PAGE = 20; // 페이지당 표시할 상품 수
@@ -30,47 +22,74 @@ public class ProductController {
     DataRepository repository;
     @Autowired
     CalculatorService calculatorService;
-    @Autowired
-    SearchProductRepository searchProductRepository;
-
 
 
     @ModelAttribute("brandNames")
-    public List<String> getAllBrandName() {
-        return repository.getAllBrandName();
+    public List<String> getAllTaxBrandName() {
+        List<ProductDTO> productDTOs = repository.getProduct();
+        Set<String> brands = new TreeSet<>();
+        // calculatorService에서 세금 기반 금액을 환산한 값 구하기
+        double taxBaseAmountInEur = calculatorService.convertUsdToEur(taxBaseAmount);
+
+        // productDTOs를 순회하면서 조건에 맞는 브랜드 추가
+        for (ProductDTO productDTO : productDTOs) {
+            // taxBaseAmount보다 작은 제품의 브랜드를 brands 리스트에 추가
+            if (productDTO.getCurrent_price() <= taxBaseAmountInEur) {
+                brands.add(productDTO.getBrand());
+            }
+        }
+
+        // 브랜드 리스트 반환
+        return new ArrayList(brands);
     }
 
     @ModelAttribute("categoryNames")
-    public List<String> getAllCategoryName() {
-        return repository.getAllCategoryName();
+    public List<String> getAllTaxCategoryName() {
+        List<ProductDTO> productDTOs = repository.getProduct();
+        Set<String> categories = new TreeSet<>();
+        // calculatorService에서 세금 기반 금액을 환산한 값 구하기
+        double taxBaseAmountInEur = calculatorService.convertUsdToEur(taxBaseAmount);
+
+        for (ProductDTO productDTO : productDTOs) {
+            if (productDTO.getCurrent_price() <= taxBaseAmountInEur) {
+                categories.add(productDTO.getCategory1());
+                categories.add(productDTO.getCategory2());
+                if(productDTO.getCategory3() != null){
+                    categories.add(productDTO.getCategory3());
+                }
+            }
+        }
+
+        return new ArrayList<>(categories);
     }
 
     @ModelAttribute("maxPrice")
-    public Map<String, Object> getMaxPrice() {
+    public Map<String, Object> getTaxMaxPrice() {
         Map<String, Object> priceData = repository.getMaxPrice();
 
-        BigDecimal maxPrice = (BigDecimal) priceData.get("max_price");
+        double taxBaseAmountInKrw = calculatorService.convertUsdToKrw(taxBaseAmount);
 
-        Double maxPriceAsDouble = maxPrice.doubleValue();
-
-        Double maxPriceInWon = calculatorService.convertEurToKrw(maxPriceAsDouble);
-
-        priceData.put("max_price_in_won", maxPriceInWon);
+        priceData.put("max_price_in_won", taxBaseAmountInKrw);
 
         return priceData;
     }
 
 
-    @GetMapping("/product")
+    @GetMapping("/not-tax-product")
     public String product() {
-        return "product/product-list";
+        return "product/not-tax-product-list";
     }
 
 
-    @GetMapping("/product/")
+    @GetMapping("/not-tax-product/")
     public ResponseEntity<Map<String, Object>> getProductList(@RequestParam(name = "page", defaultValue = "1") int page) {
         // 전체 상품 리스트를 가져옴
         List<ProductDTO> products = repository.getProduct();
+
+        //세금 이하 필터링
+        products = products.stream()
+                .filter(p -> p.getCurrent_price() <= calculatorService.convertUsdToEur(taxBaseAmount))
+                .collect(Collectors.toList());
 
 
         // 페이징 처리
@@ -97,72 +116,30 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/product/{product_id}")
-    public String productDetail(
-            @PathVariable(name = "product_id") String product_id,
-            Model model,
-            HttpSession session
-    ) {
-        // 우선 모델에서 products를 가져와 조회
-        List<ProductDTO> products = (List<ProductDTO>) model.getAttribute("products");
-        ProductDTO product = null;
 
-        if (products != null) {
-            // 모델에서 product_id로 필터링
-            product = products.stream()
-                    .filter(p -> p.getProduct_id().equals(product_id))
-                    .findFirst()
-                    .orElse(null);
-        }
-
-        // 모델에 없는 경우 DB에서 조회
-        if (product == null) {
-            product = searchProductRepository.findProductById(product_id);
-        }
-
-        // 상품이 여전히 null인 경우 404 페이지로 이동
-        if (product == null) {
-            return "error/404";
-        }
-
-        // 모델에 상품 데이터 추가
-        model.addAttribute("product", product);
-
-        // 할인율 계산 후 모델에 추가
-        if (product.getOriginal_price() != null) {
-            int discountRate = (int) Math.round((1 - (product.getCurrent_price() / product.getOriginal_price())) * 100);
-            model.addAttribute("discountRate", discountRate);
-        }
-
-        // 세션에서 cartList 가져오기
-        List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
-        if (cartList == null) {
-            cartList = new ArrayList<>();
-        }
-        model.addAttribute("cartList", cartList);
-
-        return "product/product-detail"; // 상세 페이지로 이동
-    }
-
-    @GetMapping("/product/filter")
+    @GetMapping("/not-tax-product/filter")
     public String filter() {
         // 필터 페이지로 이동
-        return "product/product-list"; // HTML 뷰 반환
+        return "product/not-tax-product-list"; // HTML 뷰 반환
     }
 
 
-    @GetMapping("/product/filter/")
+    @GetMapping("/not-tax-product/filter/")
     public ResponseEntity<Map<String, Object>> getFilterList(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) String tax,
             @RequestParam(required = false) String fta
     ) {
         // 전체 상품 가져오기
         List<ProductDTO> allProducts = repository.getProduct();
+
+        //세금 이하 필터링
+        allProducts = allProducts.stream()
+                .filter(p -> p.getCurrent_price() <= calculatorService.convertUsdToEur(taxBaseAmount))
+                .collect(Collectors.toList());
 
 
         // 가격 필터링
@@ -189,17 +166,6 @@ public class ProductController {
                     .collect(Collectors.toList());
         }
 
-        // 세금 필터링
-        if ("TAX".equals(tax)) {
-            allProducts = allProducts.stream()
-                    .filter(p -> p.getCurrent_price() >= calculatorService.convertUsdToEur(taxBaseAmount))
-                    .collect(Collectors.toList());
-        } else if ("NOT TAX".equals(tax)) {
-            allProducts = allProducts.stream()
-                    .filter(p -> p.getCurrent_price() <= calculatorService.convertUsdToEur(taxBaseAmount))
-                    .collect(Collectors.toList());
-        }
-
         // FTA 필터링
         if ("FTA".equals(fta)) {
             allProducts = allProducts.stream()
@@ -210,6 +176,7 @@ public class ProductController {
                     .filter(p -> !p.is_fta())
                     .collect(Collectors.toList());
         }
+
 
         // 페이징 처리
         int start = (page - 1) * ITEMS_PER_PAGE;
@@ -233,7 +200,6 @@ public class ProductController {
         Map<String, Object> response = Map.of("products", paginatedProducts);
         return ResponseEntity.ok(response);
     }
-
 
 
 }
