@@ -5,7 +5,6 @@ let $count = document.querySelector("#count_wrap");
 let $minus = document.querySelector("#count_minus");
 let $plus = document.querySelector("#count_plus");
 let $countNum = document.querySelector("#count_num");
-
 const $productInfo = document.querySelector("#product-info");
 const $dataCode = $productInfo.getAttribute("data-code");
 const $userId = $productInfo.getAttribute("data-userid");
@@ -30,10 +29,6 @@ function sendData(action) {
     });
 }
 
-
-
-
-
         $("#wishlist_btn").click(function(){
             let productId = $(this).data("product-id");
 
@@ -51,11 +46,6 @@ function sendData(action) {
                 }
             });
         });
-
-
-$(document).ready(function() {
-
-        formatPrices();
 
         $("#bucket_btn").click(function() {
                     var productId = $(this).data("product-id");
@@ -77,39 +67,7 @@ $(document).ready(function() {
                         }
                     });
                 });
-        });
 
-    function formatPrices() {
-        // 현재 가격 포맷
-        $("#product_price").each(function() {
-            var priceText = $(this).text().trim();
-            var priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, ''));
-
-            if (!isNaN(priceNumber)) {
-                var formattedPrice = Math.round(priceNumber).toLocaleString();
-                $(this).text("￦" + formattedPrice);
-            }
-        });
-
-      $("#product_sales").each(function() {
-          var priceText = $(this).find('b').text().trim();  // b 태그 내의 텍스트 가져오기
-          var priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, ''));
-
-          if (!isNaN(priceNumber)) {
-              var formattedPrice = Math.round(priceNumber).toLocaleString();
-              $(this).find('b').text("￦" + formattedPrice); // b 태그 내의 가격만 포맷팅하여 수정
-          }
-      });
-
-    }
-// 이벤트 핸들러 등록
-//$wishlist.addEventListener("click", function() {
-//    sendData("wishlist"); // 위시리스트에 추가
-//});
-
-//$bucket.addEventListener("click", function() {
-//    sendCartData("bucket"); // 장바구니에 추가
-//});
 
 $bucket.addEventListener('click', () => {
     if ($count.style.display = 'none') {

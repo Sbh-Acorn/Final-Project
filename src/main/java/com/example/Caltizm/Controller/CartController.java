@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -35,23 +34,28 @@ public class CartController {
     CalculatorService calculatorService;
 
     @ModelAttribute("taxBaseAmount")
-    public Double getconvert150UsdToEur(){
+    public Double getConvert150UsdToEur(){
         return calculatorService.convertUsdToKrw(150);
     }
 
-    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
-    @ModelAttribute("products")
-    public List<ProductDTO> getAllProducts() {
-        List<ProductDTO> products = repository.getProduct();
-        products.sort(Comparator.comparing(ProductDTO::getBrand));
-        for (ProductDTO product : products){
-            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
-            if(product.getOriginal_price() != null){
-                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
-            }
-        }
-        return products;
+    @ModelAttribute("shipPrice")
+    public double getShipPrice(){
+        return calculatorService.convertEurToKrwWithTax(25);
     }
+
+//    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
+//    @ModelAttribute("products")
+//    public List<ProductDTO> getAllProducts() {
+//        List<ProductDTO> products = repository.getProduct();
+//        products.sort(Comparator.comparing(ProductDTO::getBrand));
+//        for (ProductDTO product : products){
+//            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
+//            if(product.getOriginal_price() != null){
+//                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
+//            }
+//        }
+//        return products;
+//    }
 
     @PostMapping("/add")
     @ResponseBody

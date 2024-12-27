@@ -62,7 +62,7 @@
             </div>
             <li class="final"><p>총 상품 금액 </p><span id="total_original_p">519,000</span></li>
             <li class="final"><p>총 할인 금액 </p><span id="total-sale_p"></span></li>
-            <li class="final"><p>예상 배송비 </p><span id="shipping_p">30,000</span></li>
+            <li class="final"><p>예상 배송비 </p><span id="shipping_p" th:text="${#numbers.formatInteger(shipPrice, 3, 'COMMA')}" >30,000</span></li>
             <li class="final"><p>예상 부가세 </p><span id="total_VAT">0</span></li>
             <li class="final"><p>예상 관세 </p><span id="total_Tax">0</span></li>
             <li class="final"><p id="final_p">최종 금액 </p><span id="final_span">222,220</span></li>
