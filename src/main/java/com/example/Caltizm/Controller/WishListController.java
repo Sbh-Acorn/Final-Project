@@ -4,6 +4,7 @@ import com.example.Caltizm.DTO.NotificationDTO;
 import com.example.Caltizm.DTO.WishlistRequestDTO;
 import com.example.Caltizm.DTO.WishlistDTO;
 import com.example.Caltizm.Repository.WishlistRepository;
+import com.example.Caltizm.Service.CalculatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,9 @@ public class WishListController {
     @Autowired
     WishlistRepository repository;
 
+    @Autowired
+    CalculatorService calculatorService;
+
     @GetMapping("/wishlist")
     public String wishlist(@SessionAttribute(value="email", required=false) String email,
                            Model model){
@@ -28,6 +32,12 @@ public class WishListController {
         }
 
         List<WishlistDTO> wishlist = repository.selectWishlist(email);
+
+        for(WishlistDTO product : wishlist){
+            product.setOriginalPrice(calculatorService.convertEurToKrw(product.getOriginalPrice()));
+            product.setCurrentPrice(calculatorService.convertEurToKrw(product.getCurrentPrice()));
+        }
+
         model.addAttribute("wishlist", wishlist);
 
         return "wishlist/wishlist";

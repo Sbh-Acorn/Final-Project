@@ -89,6 +89,12 @@
         select likes from post where post_id = #{post_id}
     </select>
 
+    <select id="allByEmail" resultType="PostDTO">
+        select * from post
+        where user_id = (select user_id from user where email = #{email})
+        and is_deleted = false
+    </select>
+
 
     <!-- 댓글 작성 -->
     <insert id="insert-comment" parameterType="CommentDTO">

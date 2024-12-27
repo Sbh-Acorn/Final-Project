@@ -23,7 +23,7 @@
                 <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
 
                 <!-- 로그인/회원가입 메뉴 -->
-                <ul id="header_profile_dropdown" class="dropdown" th:if="${sessionEmail == null}">
+                <ul id="header_profile_dropdown" class="dropdown" th:if="${session.email == null}">
                     <li class="header_profile_dropdown_list">
                         <a th:href="@{/login}">로그인</a>
                     </li>
@@ -33,7 +33,7 @@
                 </ul>
 
                 <!-- 로그아웃/마이페이지 메뉴 -->
-                <ul id="header_profile_dropdown2" class="dropdown" th:if="${sessionEmail != null}">
+                <ul id="header_profile_dropdown2" class="dropdown" th:if="${session.email != null}">
                     <li class="header_profile_dropdown_list">
                         <a th:href="@{/logout}">로그아웃</a>
                     </li>

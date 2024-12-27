@@ -40,6 +40,9 @@ function sendData(action) {
                 },
                 success: function(response){
                     alert(response.message);
+                    if(response.status === "session_invalid"){
+                        window.location.href = "/login";
+                    }
                 },
                 error: function(xhr, status, error){
                     console.log("Error:", error);
