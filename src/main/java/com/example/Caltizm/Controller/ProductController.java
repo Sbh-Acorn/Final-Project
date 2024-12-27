@@ -33,23 +33,7 @@ public class ProductController {
     @Autowired
     SearchProductRepository searchProductRepository;
 
-    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
 
-    //    @ModelAttribute("products")
-    //    public List<ProductDTO> getAllProducts() {
-    //        List<ProductDTO> products = repository.getProduct();
-    //        products.sort(
-    //                Comparator.comparing(ProductDTO::getBrand)
-    //                        .thenComparing(ProductDTO::getName)
-    //        );
-    //        for (ProductDTO product : products) {
-    //            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
-    //            if (product.getOriginal_price() != null) {
-    //                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
-    //            }
-    //        }
-    //        return products;
-    //    }
 
     @ModelAttribute("brandNames")
     public List<String> getAllBrandName() {
@@ -87,6 +71,7 @@ public class ProductController {
     public ResponseEntity<Map<String, Object>> getProductList(@RequestParam(name = "page", defaultValue = "1") int page) {
         // 전체 상품 리스트를 가져옴
         List<ProductDTO> products = repository.getProduct();
+
 
         // 페이징 처리
         int start = (page - 1) * ITEMS_PER_PAGE;
@@ -160,18 +145,25 @@ public class ProductController {
     }
 
     @GetMapping("/product/filter")
-    public ResponseEntity<Map<String, Object>> filter(
-            @RequestParam(defaultValue = "1") int page,
+    public String filter() {
+        // 필터 페이지로 이동
+        return "product/product-list"; // HTML 뷰 반환
+    }
+
+
+    @GetMapping("/product/filter/")
+    public ResponseEntity<Map<String, Object>> getFilterList(
+            @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
             @RequestParam(required = false) String tax,
-            @RequestParam(required = false) String fta,
-            Model model
+            @RequestParam(required = false) String fta
     ) {
-        // 필터링 로직 처리
+        // 전체 상품 가져오기
         List<ProductDTO> allProducts = repository.getProduct();
+
 
         // 가격 필터링
         if (minPrice != null && maxPrice != null) {
@@ -219,7 +211,6 @@ public class ProductController {
                     .collect(Collectors.toList());
         }
 
-
         // 페이징 처리
         int start = (page - 1) * ITEMS_PER_PAGE;
         if (start >= allProducts.size()) {
@@ -227,10 +218,8 @@ public class ProductController {
         }
         int end = Math.min(start + ITEMS_PER_PAGE, allProducts.size());
 
-
         // 필요한 범위의 상품 리스트 추출
         List<ProductDTO> paginatedProducts = allProducts.subList(start, end);
-
 
         // 가격 변환
         for (ProductDTO product : paginatedProducts) {
@@ -245,81 +234,6 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-
-    //    @GetMapping("/product/filter")
-    //    public String filter(
-    //            @RequestParam(required = false) List<String> brands,
-    //            @RequestParam(required = false) List<String> categories,
-    //            @RequestParam(required = false) Double minPrice,
-    //            @RequestParam(required = false) Double maxPrice,
-    //            @RequestParam(required = false) String tax,
-    //            @RequestParam(required = false) String fta,
-    //            Model model
-    //    ) {
-    //        // 필터링 로직 처리
-    //        List<ProductDTO> allProducts = repository.getProduct();
-    //
-    //        // 가격 필터링
-    //        if (minPrice != null && maxPrice != null) {
-    //            allProducts = allProducts.stream()
-    //                    .filter(p -> p.getCurrent_price() >= calculatorService.convertKrwToEur(minPrice)
-    //                            && p.getCurrent_price() <= calculatorService.convertKrwToEur(maxPrice))
-    //                    .collect(Collectors.toList());
-    //        }
-    //
-    //        // 브랜드 필터링
-    //        if (brands != null && !brands.isEmpty()) {
-    //            allProducts = allProducts.stream()
-    //                    .filter(p -> brands.contains(p.getBrand()))
-    //                    .collect(Collectors.toList());
-    //        }
-    //
-    //        // 카테고리 필터링
-    //        if (categories != null && !categories.isEmpty()) {
-    //            allProducts = allProducts.stream()
-    //                    .filter(p -> categories.contains(p.getCategory1()) ||
-    //                            categories.contains(p.getCategory2()) ||
-    //                            categories.contains(p.getCategory3()))
-    //                    .collect(Collectors.toList());
-    //        }
-    //
-    //        // 세금 필터링
-    //        if ("TAX".equals(tax)) {
-    //            allProducts = allProducts.stream()
-    //                    .filter(p -> p.getCurrent_price() >= calculatorService.convertUsdToEur(taxBaseAmount))
-    //                    .collect(Collectors.toList());
-    //        } else if ("NOT TAX".equals(tax)) {
-    //            allProducts = allProducts.stream()
-    //                    .filter(p -> p.getCurrent_price() <= calculatorService.convertUsdToEur(taxBaseAmount))
-    //                    .collect(Collectors.toList());
-    //        }
-    //
-    //        // FTA 필터링
-    //        if ("FTA".equals(fta)) {
-    //            allProducts = allProducts.stream()
-    //                    .filter(ProductDTO::is_fta)
-    //                    .collect(Collectors.toList());
-    //        } else if ("NOT FTA".equals(fta)) {
-    //            allProducts = allProducts.stream()
-    //                    .filter(p -> !p.is_fta())
-    //                    .collect(Collectors.toList());
-    //        }
-    //
-    //        allProducts.sort(
-    //                Comparator.comparing(ProductDTO::getBrand)
-    //                        .thenComparing(ProductDTO::getName)
-    //        );
-    //
-    //        for (ProductDTO product : allProducts) {
-    //            product.setCurrent_price(calculatorService.convertEurToKrw(product.getCurrent_price()));
-    //            if (product.getOriginal_price() != null) {
-    //                product.setOriginal_price(calculatorService.convertEurToKrw(product.getOriginal_price()));
-    //            }
-    //        }
-    //
-    //        model.addAttribute("products", allProducts);
-    //        return "product/product-list";
-    //    }
 
 
 }

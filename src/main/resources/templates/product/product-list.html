@@ -97,17 +97,17 @@
     </div>
     <div id="right_box">
         <ul id="item_box_wrap">
-<!--            <li class="item_box" th:each="product : ${products}">-->
-<!--                <a th:href="@{/product/{product_id}(product_id=${product.product_id})}">-->
-<!--                <img th:src="${product.image_url}" alt="Image" class="item_img">-->
-<!--                <p class="item_brand" th:text="${product.brand}" >Brand</p>-->
-<!--                <p class="item_name" th:text="${product.name}" >Product Name</p>-->
-<!--                    <p class="item_price">-->
-<!--                        <span class="current_price" th:text="${product.current_price}"></span>-->
-<!--                        <span class="original_price" th:if="${product.original_price > product.current_price}" th:text="${product.original_price}"></span>-->
-<!--                    </p>-->
-<!--                </a>-->
-<!--            </li>-->
+            <li class="item_box" th:each="product : ${products}">
+                <a th:href="@{/product/{product_id}(product_id=${product.product_id})}">
+                <img th:src="${product.image_url}" alt="Image" class="item_img">
+                <p class="item_brand" th:text="${product.brand}" >Brand</p>
+                <p class="item_name" th:text="${product.name}" >Product Name</p>
+                    <p class="item_price">
+                        <span class="current_price" th:text="${product.current_price}"></span>
+                        <span class="original_price" th:if="${product.original_price > product.current_price}" th:text="${product.original_price}"></span>
+                    </p>
+                </a>
+            </li>
         </ul>
     </div>
 </main>
