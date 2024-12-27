@@ -23,7 +23,7 @@
 
     <select id="review" resultType="PostDTO">
         select * from post
-        where subject = '후기' and is_deleted = false
+        where subject = '리뷰' and is_deleted = false
     </select>
 
     <select id="qna" resultType="PostDTO">

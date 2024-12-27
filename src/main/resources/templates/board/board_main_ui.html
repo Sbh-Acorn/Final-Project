@@ -32,10 +32,10 @@
                 <input type="text" id="search">
                 <button type="submit" id="search_btn">검색</button>
             </form>
-            <a th:href="@{/}" class="write_btn">
+            <a th:href="@{/post}" class="write_btn">
                 <div class="write_wrap">
                     <img th:src="@{/img/write.svg}" alt="" id="write_img">
-                    <p> id="write_txt">글쓰기</p>
+                    <p id="write_txt">글쓰기</p>
                 </div>
             </a>
         </nav>
@@ -52,27 +52,20 @@
             <!-- 페이징 테스트를 위해 js를 통해 요소를 추가해둔 상태입니다 -->
             <!-- 해당 코드는 board_main.js 에서 27번째줄에 있습니다 -->
             <!-- 확인을 하셨다면 해당 코드를 싹 지워주시면 됩니다 -->
+
+            <li class="board_list" th:each="post : ${boardAll}">
+                <p class="board_list_p" th:text="${post.subject}"></p>
+                <p class="board_list_p" th:text="${post.title}"></p>
+                <p class="board_list_p" th:text="${post.user_id}"></p>
+                <p class="board_list_p" th:text="${#temporals.createDate(post.created_at, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                <p class="board_list_p" th:text="${post.views}"></p>
+                <p class="board_list_p" th:text="${post.likes}"></p>
+                <a th:href="@{/postone/{id}(id = ${post.post_id})}"></a>
+            </li>
+
             <li class="board_list">
                 <p class="board_list_p">공지</p>
                 <p class="board_list_p">칼티즘 전체규정213213123123123213dsasada121312</p>
-                <p class="board_list_p">울라숑</p>
-                <p class="board_list_p">12.03</p>
-                <p class="board_list_p">177</p>
-                <p class="board_list_p">0</p>
-                <a th:href="@{/}"></a>
-            </li>
-            <li class="board_list">
-                <p class="board_list_p">공지</p>
-                <p class="board_list_p">칼티즘 전체규정</p>
-                <p class="board_list_p">울라숑</p>
-                <p class="board_list_p">12.03</p>
-                <p class="board_list_p">177</p>
-                <p class="board_list_p">0</p>
-                <a th:href="@{/}"></a>
-            </li>
-            <li class="board_list" id="test">
-                <p class="board_list_p">공지</p>
-                <p class="board_list_p">칼티즘 전체규정</p>
                 <p class="board_list_p">울라숑</p>
                 <p class="board_list_p">12.03</p>
                 <p class="board_list_p">177</p>

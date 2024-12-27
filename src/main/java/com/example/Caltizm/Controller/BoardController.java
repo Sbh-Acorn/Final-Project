@@ -59,7 +59,7 @@ public class BoardController {
         List<PostDTO> boardList5 = repository.selectQna();
         model.addAttribute("boardQna",boardList5);
 
-        return "board/boardtest";
+        return "board/board_main_ui";
     }
 
     // 공지사항 조회
