@@ -1,5 +1,6 @@
 package com.example.Caltizm.Repository;
 
+import com.example.Caltizm.DTO.CommentDTO;
 import com.example.Caltizm.DTO.PostDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,4 +105,26 @@ public class BoardRepository {
     public int countLikes(int post_id) {
         return session.selectOne("board.count-likes", post_id);
     }
+
+
+    // 댓글 작성
+    public int insertComment(CommentDTO commentDTO){
+        return  session.insert("board.insert-comment", commentDTO);
+    }
+
+    // 댓글 목록
+    public List<CommentDTO> commentList(int post_id){
+        return session.selectList("board.list-comment", post_id);
+    }
+
+    // 댓글 삭제
+    public int deleteComment(int comment_id){
+        return session.update("board.delete-comment",comment_id);
+    }
+
+    // 댓글의 포스트ID 가져오기
+    public int getPost_id(int comment_id) {
+        return session.selectOne("board.getPost_id",comment_id);
+    }
+
 }
