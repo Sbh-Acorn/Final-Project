@@ -61,7 +61,7 @@
                         }
 
                         // 페이지 리다이렉션
-                        window.location.href = `/product/filter?${params.toString()}`;
+                        window.location.href = `/fta-product/filter?${params.toString()}`;
                     });
 
 
