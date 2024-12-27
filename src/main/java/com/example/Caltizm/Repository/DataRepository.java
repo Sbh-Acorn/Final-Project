@@ -20,12 +20,12 @@ public class DataRepository {
     @Autowired
     WishlistRepository wishlistRepository;
 
-    public void collectAndInsertData(){
+    public void collectAndInsertData() {
         collectAndInsertBrandData();
         collectAndInsertProductData();
     }
 
-    public void collectAndInsertBrandData(){
+    public void collectAndInsertBrandData() {
         List<BrandDTO> brands = service.collectBrandInfo();
         // 안전 업데이트 모드 끄기
         session.update("brand.setSafeUpdateOff");
@@ -36,11 +36,11 @@ public class DataRepository {
         for (BrandDTO brand : brands) {
             try {
                 // 2. 동일한 이름의 데이터 존재 여부 확인
-                int checkName = session.selectOne("brand.checkName" , brand.getName());
-                if(checkName > 0){
+                int checkName = session.selectOne("brand.checkName", brand.getName());
+                if (checkName > 0) {
                     session.update("brand.setDeletedFalse", brand.getName());
-                }else {
-                    session.insert("brand.insert" , brand);
+                } else {
+                    session.insert("brand.insert", brand);
                     System.out.println("새로운 브랜드 : " + brand.getName());
                 }
 
@@ -55,27 +55,28 @@ public class DataRepository {
 
     }
 
-    public List<BrandDTO> getAllBrand(){
+    public List<BrandDTO> getAllBrand() {
         List<BrandDTO> brands = session.selectList("brand.selectAll");
         return brands;
 
     }
-    public BrandDTO getBrandByName (String name){
-        BrandDTO brand = session.selectOne("brand.selectOne" , name);
+
+    public BrandDTO getBrandByName(String name) {
+        BrandDTO brand = session.selectOne("brand.selectOne", name);
         return brand;
     }
-    public Map<String , Object> getBrandAndProduct (String name){
-        Map<String , Object> brandAndProduct = new HashMap<>();
-        BrandDTO brand = session.selectOne("brand.selectOne" , name);
+
+    public Map<String, Object> getBrandAndProduct(String name) {
+        Map<String, Object> brandAndProduct = new HashMap<>();
+        BrandDTO brand = session.selectOne("brand.selectOne", name);
         List<ProductDTO> products = session.selectList("product.selectProductInBrand", name);
 
-        brandAndProduct.put("brand" , brand);
-        brandAndProduct.put("products" , products);
+        brandAndProduct.put("brand", brand);
+        brandAndProduct.put("products", products);
 
         return brandAndProduct;
 
     }
-
 
 
     public void collectAndInsertProductData() {
@@ -170,13 +171,13 @@ public class DataRepository {
 
                 double previousPrice = session.selectOne("product.selectPreviousPrice", product.getProduct_id());
                 double currentPrice = product.getCurrent_price();
-                if(currentPrice != previousPrice){
+                if (currentPrice != previousPrice) {
                     ProductPriceDTO productPriceDTO = new ProductPriceDTO();
                     productPriceDTO.setProductId(product.getProduct_id());
                     productPriceDTO.setCurrentPrice(currentPrice);
                     session.update("product.updateCurrentPrice", productPriceDTO);
                     System.out.println(product.getProduct_id() + " 가격 변경: " + previousPrice + " -> " + currentPrice);
-                    if(currentPrice < previousPrice){
+                    if (currentPrice < previousPrice) {
                         PriceDropDTO priceDropDTO = new PriceDropDTO();
                         priceDropDTO.setProductId(product.getProduct_id());
                         priceDropDTO.setPreviousPrice(previousPrice);
@@ -243,13 +244,33 @@ public class DataRepository {
         return cartItemInfo;
     }
 
-    public List<String> getAllBrandName(){
+    public List<String> getAllBrandName() {
         return session.selectList("product.selectAllBrandName");
     }
 
-    public List<String> getAllCategoryName(){
+    public List<String> getAllCategoryName() {
         return session.selectList("product.selectAllCategoryName");
     }
 
-    public Map<String ,Object> getMaxPrice(){return session.selectOne("product.selectMaxPrice");}
+    public Map<String, Object> getMaxPrice() {
+        return session.selectOne("product.selectMaxPrice");
+    }
+
+    public List<ProductDTO> getFTAProduct() {
+        List<ProductDTO> FTAProducts = session.selectList("selectAllFTA");
+        return FTAProducts;
+    }
+
+    public List<String> getAllFTABrandName() {
+        return session.selectList("product.selectAllFTABrandName");
+    }
+
+    public List<String> getAllFTACategoryName() {
+        return session.selectList("product.selectAllFTACategoryName");
+    }
+
+    public Map<String, Object> getFTAMaxPrice() {
+        return session.selectOne("product.selectFTAMaxPrice");
+    }
+
 }
