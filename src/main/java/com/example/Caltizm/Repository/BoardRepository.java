@@ -127,4 +127,8 @@ public class BoardRepository {
         return session.selectOne("board.getPost_id",comment_id);
     }
 
+    public List<PostDTO> hotview(){
+        return session.selectList("board.hotview");
+    }
+
 }

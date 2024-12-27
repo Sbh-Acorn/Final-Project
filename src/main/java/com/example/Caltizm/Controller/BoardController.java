@@ -45,19 +45,11 @@ public class BoardController {
     @GetMapping("/boardAll")
     public String boardAll(Model model){
         List<PostDTO> boardList = repository.selectAll();
-        model.addAttribute("boardAll",boardList);
-
-        List<PostDTO> boardList2 = repository.selectNotice();
-        model.addAttribute("boardNotice",boardList2);
-
-        List<PostDTO> boardList3 = repository.selectFree();
-        model.addAttribute("boardFree", boardList3);
-
-        List<PostDTO> boardList4 = repository.selectReview();
-        model.addAttribute("boardReview", boardList4);
-
-        List<PostDTO> boardList5 = repository.selectQna();
-        model.addAttribute("boardQna",boardList5);
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList",boardList);
 
         return "board/board_main_ui";
     }
@@ -66,32 +58,48 @@ public class BoardController {
     @GetMapping("/boardNotice")
     public String boardNotice(Model model){
         List<PostDTO> boardList = repository.selectNotice();
-        model.addAttribute("boardNotice",boardList);
-        return "board/boardtest";
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList",boardList);
+        return "board/board_main_ui";
     }
 
     // 자유게시판 조회
     @GetMapping("/boardFree")
     public String boardFree(Model model){
         List<PostDTO> boardList = repository.selectFree();
-        model.addAttribute("boardFree", boardList);
-        return "board/boardtest";
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList", boardList);
+        return "board/board_main_ui";
     }
 
     // 리뷰 조회
     @GetMapping("/boardReview")
     public String boardReview(Model model){
         List<PostDTO> boardList = repository.selectReview();
-        model.addAttribute("boardReview", boardList);
-        return "board/boardtest";
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList", boardList);
+        return "board/board_main_ui";
     }
 
     // Q&A 조회
     @GetMapping("/boardQna")
     public String boardQna(Model model){
         List<PostDTO> boardList = repository.selectQna();
-        model.addAttribute("boardQna",boardList);
-        return "board/boardtest";
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList",boardList);
+        return "board/board_main_ui";
     }
 
     //Test
@@ -191,12 +199,15 @@ public class BoardController {
         model.addAttribute("postOne",post);
         model.addAttribute("commentList", comments);
 
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+
         if(email != null) {
             int user =  repository.getUser(email);
             model.addAttribute("user",user);
         }
 
-        return "board/postone";
+        return "board/board_ui";
     }
 
     // 게시글 삭제
@@ -256,7 +267,7 @@ public class BoardController {
                                           @SessionAttribute(value = "email") String email) {
         int user_id = repository.getUser(email);
         comment.setUser_id(user_id);
-
+        System.out.println(comment);
         repository.insertComment(comment);
         List<CommentDTO> commentList = repository.commentList(comment.getPost_id());
 

@@ -110,6 +110,10 @@
         select post_id from Comment where comment_id = #{comment_id}
     </select>
 
+    <select id="hotview" resultType="PostDTO">
+        select * from post where is_deleted = false order by views desc limit 4
+    </select>
+
 
 
 
