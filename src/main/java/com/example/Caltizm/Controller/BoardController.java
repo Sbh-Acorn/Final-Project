@@ -1,5 +1,6 @@
 package com.example.Caltizm.Controller;
 
+import com.example.Caltizm.DTO.CommentDTO;
 import com.example.Caltizm.DTO.PostDTO;
 import com.example.Caltizm.Repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,23 @@ public class BoardController {
 
     //Test
     @GetMapping("/post")
-    public String postTest(){
+    public String postTest(Model model){
+
+        List<PostDTO> boardList = repository.selectAll();
+        model.addAttribute("boardAll",boardList);
+
+        List<PostDTO> boardList2 = repository.selectNotice();
+        model.addAttribute("boardNotice",boardList2);
+
+        List<PostDTO> boardList3 = repository.selectFree();
+        model.addAttribute("boardFree", boardList3);
+
+        List<PostDTO> boardList4 = repository.selectReview();
+        model.addAttribute("boardReview", boardList4);
+
+        List<PostDTO> boardList5 = repository.selectQna();
+        model.addAttribute("boardQna",boardList5);
+
         return "board/formtest";
     }
 
@@ -153,12 +170,22 @@ public class BoardController {
     // 게시글 한 개 조회
     @GetMapping("/postone/{post_id}")
     public String postOne(@PathVariable("post_id") int post_id,
+                          @SessionAttribute(value = "email", required=false) String email,
                           Model model){
-        System.out.println("Received post_id: " + post_id);
+//        System.out.println("Received post_id: " + post_id);
         PostDTO post = repository.selectPostOne(post_id);
         repository.incViews(post_id);
 
+        List<CommentDTO> comments = repository.commentList(post_id);
+
         model.addAttribute("postOne",post);
+        model.addAttribute("commentList", comments);
+
+        if(email != null) {
+            int user =  repository.getUser(email);
+            model.addAttribute("user",user);
+        }
+
         return "board/postone";
     }
 
@@ -210,9 +237,32 @@ public class BoardController {
             repository.deleteLikes(Integer.parseInt(post_id), user_id);
         }
         return repository.countLikes(Integer.parseInt(post_id));
-
-
     }
+
+    // 댓글 작성
+    @ResponseBody
+    @PostMapping("/insertComment")
+    public List<CommentDTO> insertComment(@RequestBody CommentDTO comment,
+                                          @SessionAttribute(value = "email") String email) {
+        int user_id = repository.getUser(email);
+        comment.setUser_id(user_id);
+
+        repository.insertComment(comment);
+        List<CommentDTO> commentList = repository.commentList(comment.getPost_id());
+
+        return commentList;
+    }
+
+    @ResponseBody
+    @GetMapping("/deleteComment/{comment_id}")
+    public List<CommentDTO> deleteComment(@PathVariable("comment_id") int comment_id){
+        int post_id = repository.getPost_id(comment_id);
+        repository.deleteComment(comment_id);
+
+        List<CommentDTO> commentList = repository.commentList(post_id);
+        return commentList;
+    }
+
 
 
 
