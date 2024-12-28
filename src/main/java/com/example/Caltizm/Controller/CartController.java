@@ -99,7 +99,7 @@ public class CartController {
         if (cartList == null) {
             cartList = new ArrayList<>();
             session.setAttribute("cartList", cartList);
-            return "cart/cart_test";
+            return "cart/cart";
         }
 
         List<ProductDTO> products = (List<ProductDTO>) model.getAttribute("products");
@@ -121,7 +121,7 @@ public class CartController {
 
         model.addAttribute("cartProducts", finalCartList);
 
-        return "cart/cart_test";
+        return "cart/cart";
     }
 
     // 장바구니에서 상품을 제거하는 메서드

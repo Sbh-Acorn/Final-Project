@@ -7,91 +7,74 @@
     <link rel="stylesheet" th:href="@{/css/mylist.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/mylist.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<header>
-    <div id="logo_wrap">
-        <h1 id="logo">CALTIZM</h1>
-    </div>
-    <div id="wrap_wrap">
-        <div id="wrap1">
-            <div id="header_input_wrap">
-                <input type="text" id="header_input">
-                <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
-            </div>
-            <div id="header_icon_wrap">
-                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
-                <div id="header_alarm_dropdown">
-                    현재 내용이 없습니다.
-                </div>
-                <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
-                <ul id="header_profile_dropdown">
-                    <li class="header_profile_dropdown_list">로그인</li>
-                    <li class="header_profile_dropdown_list">회원가입</li>
-                </ul>
-                <ul id="header_profile_dropdown2">
-                    <li class="header_profile_dropdown_list">로그아웃</li>
-                    <li class="header_profile_dropdown_list">마이페이지</li>
-                </ul>
-                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
-            </div>
-        </div>
-        <div id="wrap2">
-            <ul id="header_nav">
-                <li class="header_list">ALL</li>
-                <li class="header_list">BRAND</li>
-                <li class="header_list">FTA</li>
-                <li class="header_list">TAX</li>
-                <li class="header_list">COMMUNITY</li>
-            </ul>
-        </div>
-    </div>
-</header>
+<th:block th:replace="fragments/header1 :: header"></th:block>
 <main>
     <div id="wrap_wrap2">
         <p class="title">장바구니</p>
         <hr>
         <ul class="list_wrap">
-            <form th:action="@{/}">
                 <li class="list" th:each="item : ${cartProducts}">
                     <div class="close_wrap">
-                        <img th:src="@{/img/close.svg}" alt="" class="close">
+                        <a class="close" th:data-product-id="${item.product_id}"><img th:src="@{/img/close.svg}" alt="">
+                        </a>
                     </div>
-                    <p class="price"  th:text="'€' + ${item.current_price}" >Current Price</p>
+                    <p class="price" th:data-current-price="${item.current_price}">
+                        Current Price</p>
                     <div class="img_wrap">
                         <img th:src="${item.image_url}" alt="Product Image" class="img">
                     </div>
                     <div class="info_box">
-                        <p class="info_title"  th:text="${item.name}">Product Name</p>
+                        <p class="info_title" th:text="${item.name}">Product Name</p>
                         <ul class="info_wrap">
-                            <li class="info" th:if="${item.original_price != null}">
-                                <span th:text="'€' + ${item.original_price}">₩105,000</span>
-                                <b class="small" th:text="'원래가격'">원래가격</b>
+                            <li class="info">
+                                <span class="original_price" th:data-original-price="${item.original_price}">Original Price</span>
+                                <b class="small"> * 원래가격</b>
                             </li>
-                            <li class="info">19% 부가가치세</li>
-                            <div th:unless="${item.is_excludedVoucher}" style="color: green;">* 쿠폰 적용 가능</div>
-                            <div th:if="${item.is_excludedVoucher}"  style="color: red;">* 쿠폰 적용 불가능</div>
-                            <div th:if="${item.is_fta}" style="color: green;">* FTA 적용</div>
-                            <div th:unless="${item.is_fta}" style="color: red;">* FTA 미적용</div>
+                            <li class="info">19% 부가가치세 제외</li>
+                            <div th:unless="${item.is_excludedVoucher}" class="coupon" style="color: green;">* 쿠폰 적용 가능</div>
+                            <div th:if="${item.is_excludedVoucher}" class="coupon" style="color: red;">* 쿠폰 적용 불가능</div>
+                            <div th:if="${item.is_fta}" class="fta" style="color: green;">* FTA 적용</div>
+                            <div th:unless="${item.is_fta}" class="fta" style="color: red;">* FTA 미적용</div>
                         </ul>
-                    </div>
-                    <div class="count_wrap">
-                        <div class="count count_minus"><img th:src="@{/img/minus2.svg}" alt=""></div>
-                        <div class="count_num">1</div>
-                        <div class="count count_plus"><img th:src="@{/img/plus2.svg}" alt=""></div>
+                        <div class="count_wrap">
+                            <div class="count count_minus" th:data-product-id="${item.product_id}">
+                                <img th:src="@{/img/minus2.svg}" alt="">
+                            </div>
+                            <div type="number" class="count_num" th:id="'count_num_'+ ${item.product_id}"
+                                   th:text="${item.quantity}"></div>
+                            <div class="count count_plus" th:data-product-id="${item.product_id}">
+                                <img th:src="@{/img/plus2.svg}" alt="">
+                            </div>
+                        </div>
                     </div>
                 </li>
-            </form>
         </ul>
         <ul class="final_wrap">
-            <li class="final"><p>총 상품 금액 </p><span>519,000</span></li>
-            <li class="final"><p>총 할인 금액 </p><span>135,000</span></li>
-            <li class="final"><p>예상 배송비 </p><span>37,000</span></li>
-            <li class="final"><p>예상 부가세 </p><span>37,000</span></li>
-            <li class="final"><p>예상 관세 </p><span>12,000</span></li>
+            <div class="coupon_wrap">
+                <input type="text" id="coupon_input" placeholder="쿠폰 할인율을 입력하세요" class="coupon_input" maxlength="2">
+                <button type="button" id="apply_coupon_button" class="apply_coupon_button">쿠폰 적용</button>
+            </div>
+            <li class="final"><p>총 상품 금액 </p><span id="total_original_p">519,000</span></li>
+            <li class="final"><p>총 할인 금액 </p><span id="total-sale_p"></span></li>
+            <li class="final"><p>예상 배송비 </p><span id="shipping_p" th:text="${#numbers.formatInteger(shipPrice, 3, 'COMMA')}" >30,000</span></li>
+            <li class="final"><p>예상 부가세 </p><span id="total_VAT">0</span></li>
+            <li class="final"><p>예상 관세 </p><span id="total_Tax">0</span></li>
             <li class="final"><p id="final_p">최종 금액 </p><span id="final_span">222,220</span></li>
         </ul>
     </div>
 </main>
+
+<script>
+    const taxBaseAmount = [[${taxBaseAmount}]];
+</script>
+
+
+
+
 </body>
 </html>

@@ -64,6 +64,9 @@ main hr {
     top: 60%;
     font-weight: bold;
 }
+.price ::before{
+    content: "₩ ";
+}
 
 .img_wrap {
     width: 110px;
@@ -105,9 +108,6 @@ main hr {
     font-size: 11px !important;
 }
 
-.small::before {
-    content: "* ";
-}
 
 @media (max-width: 1200px) {
     .price {
@@ -154,6 +154,10 @@ main hr {
 
 .final span::before {
     content: "₩ ";
+}
+
+#shipping_p::after {
+    content: " (25€)";
 }
 
 #final_p, #final_span {

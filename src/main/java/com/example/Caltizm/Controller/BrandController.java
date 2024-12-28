@@ -1,5 +1,6 @@
 package com.example.Caltizm.Controller;
 
+import com.example.Caltizm.DTO.BrandDTO;
 import com.example.Caltizm.DTO.ProductDTO;
 import com.example.Caltizm.Repository.DataRepository;
 import com.example.Caltizm.Repository.SearchProductRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
@@ -29,12 +31,6 @@ public class BrandController {
     CalculatorService calculatorService;
     @Autowired
     SearchProductRepository searchProductRepository;
-
-
-    @ModelAttribute("brandNames")
-    public List<String> getAllBrandName() {
-        return repository.getAllBrandName();
-    }
 
     @ModelAttribute("categoryNames")
     public List<String> getAllCategoryName() {
@@ -81,16 +77,23 @@ public class BrandController {
     }
 
 
-    @GetMapping("/brand/{brand_name}")
-    public String selectBrand() {
+    @GetMapping("/brand/{brandName}")
+    public String selectBrand( @PathVariable(name = "brandName") String brandName, Model model) {
+
+        Map<String , Object> brandAndProduct = repository.getBrandAndProduct(brandName);
+        BrandDTO brand = (BrandDTO) brandAndProduct.get("brand");
+        model.addAttribute("brand", brand);  // 해당 브랜드 상세 정보 추가
         return "product/brand";
     }
 
 
-    @GetMapping("/brand/{brand_name}/")
-    public ResponseEntity<Map<String, Object>> getProductList(@RequestParam(name = "page", defaultValue = "1") int page) {
-        // 전체 상품 리스트를 가져옴
-        List<ProductDTO> products = repository.getProduct();
+    @GetMapping("/brand/{brandName}/")
+    public ResponseEntity<Map<String, Object>> getProductList(
+            @PathVariable(name = "brandName") String brandName,
+            @RequestParam(name = "page", defaultValue = "1") int page) {
+
+        Map<String , Object> brandAndProduct = repository.getBrandAndProduct(brandName);
+        List<ProductDTO> products = (List<ProductDTO>) brandAndProduct.get("products");
 
 
         // 페이징 처리
@@ -117,17 +120,17 @@ public class BrandController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/brand/{brand_name}/filter")
+    @GetMapping("/brand/{brandName}/filter")
     public String filter() {
         // 필터 페이지로 이동
         return "product/brand"; // HTML 뷰 반환
     }
 
 
-    @GetMapping("/brand/{brand_name}/filter/")
+    @GetMapping("/brand/{brandName}/filter/")
     public ResponseEntity<Map<String, Object>> getFilterList(
+            @PathVariable(name = "brandName") String brandName,
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(required = false) List<String> brands,
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
@@ -135,7 +138,8 @@ public class BrandController {
             @RequestParam(required = false) String fta
     ) {
         // 전체 상품 가져오기
-        List<ProductDTO> allProducts = repository.getProduct();
+        Map<String , Object> brandAndProduct = repository.getBrandAndProduct(brandName);
+        List<ProductDTO> allProducts = (List<ProductDTO>) brandAndProduct.get("products");
 
 
         // 가격 필터링
@@ -146,12 +150,6 @@ public class BrandController {
                     .collect(Collectors.toList());
         }
 
-        // 브랜드 필터링
-        if (brands != null && !brands.isEmpty()) {
-            allProducts = allProducts.stream()
-                    .filter(p -> brands.contains(p.getBrand()))
-                    .collect(Collectors.toList());
-        }
 
         // 카테고리 필터링
         if (categories != null && !categories.isEmpty()) {
