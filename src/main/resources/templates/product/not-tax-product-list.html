@@ -8,7 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/product.css}">
     <script defer th:src="@{/js/header.js}"></script>
-    <script defer th:src="@{/js/product.js}"></script>
+    <script defer th:src="@{/js/not-tax_product.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
@@ -57,24 +57,6 @@
             <b id="value2" th:text="${maxPrice['max_price_in_won']}">Max Price</b>
         </p>
         <hr class="hr1">
-
-        <p class="filter_txt">TAX</p>
-        <div id="tax_wrap" class="filter_wrap">
-            <ul class="filter_checkbox">
-                <li class="filter_check">
-                    <label for="tax">
-                        <input type="checkbox" id="tax" class="check" name="tax" value="TAX">
-                        <p>TAX</p>
-                    </label>
-                </li>
-                <li class="filter_check">
-                    <label for="not_tax">
-                        <input type="checkbox" id="not_tax" class="check" name="tax" value="NOT TAX">
-                        <p>NOT TAX</p>
-                    </label>
-                </li>
-            </ul>
-        </div>
 
         <p class="filter_txt">FTA</p>
         <div id="fta_wrap" class="filter_wrap">

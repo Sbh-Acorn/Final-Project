@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/mylist.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script defer th:src="@{/js/header.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
@@ -20,7 +21,7 @@
                 <div class="close_wrap" th:onclick="deleteItem(this)">
                     <img th:src="@{/img/close.svg}" alt="" class="close">
                 </div>
-                <p class="price" th:text="'€' + ${item.currentPrice}"></p>
+                <p class="price" th:text="'￦' + ${#numbers.formatInteger(item.currentPrice, 0, 'COMMA')}"></p>
                 <div class="img_wrap">
                     <img th:src="${item.imageUrl}" alt="" class="img">
                 </div>
@@ -33,8 +34,8 @@
                     </a>
                     <ul class="info_wrap">
                         <li class="info">
-                            <span th:if="${item.originalPrice != null}" th:text="'€' + ${item.originalPrice}"></span>
-                            <b class="small" th:if="${item.originalPrice != null}" th:text="정가"></b>
+                            <span th:if="${item.originalPrice != null}" th:text="'￦' + ${#numbers.formatInteger(item.originalPrice, 0, 'COMMA')}"></span>
+                            <b class="small" th:if="${item.originalPrice != null}" th:text="원래가격"></b>
                         </li>
                     </ul>
                 </div>

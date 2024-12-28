@@ -3,7 +3,9 @@
 <body>
 <header>
     <div id="logo_wrap">
-        <h1 id="logo">CALTIZM</h1>
+        <a th:href="@{/main}">
+            <h1 id="logo">CALTIZM</h1>
+        </a>
     </div>
     <div id="wrap_wrap">
         <div id="wrap1">
@@ -12,7 +14,9 @@
                 <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
             </div>
             <div id="header_icon_wrap">
-                <img th:src="@{/img/header_wishlist.svg}" alt="" id="header_wishlist" class="header_icon">
+                <a th:href="@{/wishlist}">
+                    <img th:src="@{/img/header_wishlist.svg}" alt="Wishlist" id="header_wishlist" class="header_icon">
+                </a>
                 <!-- 알림 아이콘 -->
                 <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon"
                      onclick="loadNotification()">
@@ -23,7 +27,7 @@
                 <img th:src="@{/img/header_profile.svg}" alt="" id="header_profile" class="header_icon">
 
                 <!-- 로그인/회원가입 메뉴 -->
-                <ul id="header_profile_dropdown" class="dropdown" th:if="${sessionEmail == null}">
+                <ul id="header_profile_dropdown" class="dropdown" th:if="${session.email == null}">
                     <li class="header_profile_dropdown_list">
                         <a th:href="@{/login}">로그인</a>
                     </li>
@@ -33,7 +37,7 @@
                 </ul>
 
                 <!-- 로그아웃/마이페이지 메뉴 -->
-                <ul id="header_profile_dropdown2" class="dropdown" th:if="${sessionEmail != null}">
+                <ul id="header_profile_dropdown2" class="dropdown" th:if="${session.email != null}">
                     <li class="header_profile_dropdown_list">
                         <a th:href="@{/logout}">로그아웃</a>
                     </li>
@@ -43,17 +47,24 @@
                 </ul>
 
                 <!-- 장바구니 아이콘 -->
-                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+                <a th:href="@{/cart/view}">
+                    <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+                </a>
             </div>
         </div>
         <div id="wrap2">
             <ul id="header_nav">
-                <li class="header_list">ALL</li>
-                <li class="header_list">BRAND</li>
-                <li class="header_list">FTA</li>
-                <li class="header_list">TAX</li>
-                <li class="header_list">COMMUNITY</li>
+                <li id="header_all" class="header_list">ALL</li>
+                <li id="header_brand" class="header_list">BRAND</li>
+                <li id="header_fta" class="header_list">FTA</li>
+                <li id="header_tax" class="header_list">TAX</li>
+                <li id="header_community" class="header_list">COMMUNITY</li>
             </ul>
+            <a id="all_anchor" th:href="@{/product}"></a>
+            <a id="brand_anchor" href="board.html"></a>
+            <a id="fta_anchor" th:href="@{/fta-product}"></a>
+            <a id="tax_anchor" th:href="@{/not-tax-product}"></a>
+            <a id="community_anchor" th:href="@{/boardAll}"></a>
         </div>
     </div>
 </header>

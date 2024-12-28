@@ -135,21 +135,9 @@
     <div id="board_box" style="display: none;">
         <div class="box_wrap">
             <ul id="board_info" class="info_wrap">
-                <li class="info2">
-                    <p>자유</p>
-                    <p>머리아파일하기싫어우에엥</p>
-                </li>
-                <li class="info2">
-                    <p>자유</p>
-                    <p>마음을 좀 편히 먹어도 될걸</p>
-                </li>
-                <li class="info2">
-                    <p>후기</p>
-                    <p>이 상품 정말 괜찮아요!</p>
-                </li>
-                <li class="info2">
-                    <p>공지</p>
-                    <p>칼티즘 소개글</p>
+                <li class="info2" th:each="post : ${postList}">
+                    <p th:text="${#strings.equals(post.subject, '자유게시판') ? '자유' : post.subject}"></p>
+                    <p><a th:href="@{/postone/{id}(id = ${post.post_id})}" style="cursor: pointer">[[${post.title}]]</a></p>
                 </li>
                 <!-- li가 추가되는 형식으로 제작 -->
             </ul>

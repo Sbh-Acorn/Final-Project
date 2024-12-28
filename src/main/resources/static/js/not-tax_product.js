@@ -4,7 +4,6 @@
                     let selectedCategories = [];
                     let minPrice = 0;
                     let maxPrice = 0;
-                    let isTax = null;
                     let isFta = null;
                     let isLoading = false;
 
@@ -26,9 +25,6 @@
                         // 가격 범위 설정
                         minPrice = parseFloat($('#value1').text().trim().replace(/[^0-9]/g, ''));
                         maxPrice = parseFloat($('#value2').text().trim().replace(/[^0-9]/g, ''));
-
-                        // 세금 상태 설정
-                        isTax = $('#tax').prop('checked') ? 'TAX' : $('#not_tax').prop('checked') ? 'NOT TAX' : null;
 
                         // FTA 상태 설정
                         isFta = $('#fta').prop('checked') ? 'FTA' : $('#not_fta').prop('checked') ? 'NOT FTA' : null;
@@ -60,15 +56,12 @@
                         if (!isNaN(maxPrice)) {
                             params.append('maxPrice', maxPrice);
                         }
-                        if (isTax) {
-                            params.append('tax', isTax);
-                        }
                         if (isFta) {
                             params.append('fta', isFta);
                         }
 
                         // 페이지 리다이렉션
-                        window.location.href = `/product/filter?${params.toString()}`;
+                        window.location.href = `/not-tax-product/filter?${params.toString()}`;
                     });
 
 
@@ -77,7 +70,7 @@
                 if (isLoading) return; // 로딩 중이면 함수 종료
                     isLoading = true; // 로딩 시작
 
-                $.get(`/product/?page=${nextPage}`, (response) => {
+                $.get(`/not-tax-product/?page=${nextPage}`, (response) => {
                     const newProducts = response.products;
 
                     newProducts.forEach((product) => {
@@ -115,7 +108,7 @@
                      isLoading = true; // 로딩 시작
 
 
-                $.get(`/product/filter/?${params.toString()}`, (response) => {
+                $.get(`/not-tax-product/filter/?${params.toString()}`, (response) => {
                     const newProducts = response.products;
 
                     newProducts.forEach((product) => {
@@ -154,7 +147,6 @@
                     params.has('categories') ||
                     params.has('minPrice') ||
                     params.has('maxPrice') ||
-                    params.has('tax') ||
                     params.has('fta')
                 );
             }
@@ -175,10 +167,6 @@
                 }
             });
 
-
-
-
-
              const urlParams = new URLSearchParams(window.location.search);
                   let $range = document.getElementById("range");
 
@@ -187,7 +175,6 @@
             const sortedCategories = urlParams.get('categories') ? urlParams.get('categories').split(',') : [];
             const sortedMinPrice = urlParams.has('minPrice') && !isNaN(urlParams.get('minPrice')) ? parseFloat(urlParams.get('minPrice')) : 0;
             const sortedMaxPrice = urlParams.has('maxPrice') && !isNaN(urlParams.get('maxPrice')) ? parseFloat(urlParams.get('maxPrice')) : parseFloat($range.max);
-            const sortedIsTax = urlParams.get('tax') && urlParams.get('tax') !== 'null' ? urlParams.get('tax') : null; // null 제외
             const sortedIsFta = urlParams.get('fta') && urlParams.get('fta') !== 'null' ? urlParams.get('fta') : null; // null 제외
 
                 // 브랜드 체크박스 상태 반영
@@ -200,25 +187,14 @@
                     $('input[name="categories"][value="' + category + '"]').prop('checked', true);
                 });
 
-                // TAX 체크박스 상태 반영
-                if (sortedIsTax === 'TAX') {
-                    $('#tax').prop('checked', true);
-                } else if (sortedIsTax === 'NOT TAX') {
-                    $('#not_tax').prop('checked', true);
-                } else {
-                    $('#tax, #not_tax').prop('checked', false); // null인 경우, 체크해제
-                }
-
                 // FTA 체크박스 상태 반영
-                if (sortedIsFta === 'FTA') {
-                    $('#fta').prop('checked', true);
-                } else if (sortedIsFta === 'NOT FTA') {
-                    $('#not_fta').prop('checked', true);
-                } else {
-                    $('#fta, #not_fta').prop('checked', false); // null인 경우, 체크해제
-                }
-
-
+                                if (sortedIsFta === 'FTA') {
+                                    $('#fta').prop('checked', true);
+                                } else if (sortedIsFta === 'NOT FTA') {
+                                    $('#not_fta').prop('checked', true);
+                                } else {
+                                    $('#fta, #not_fta').prop('checked', false); // null인 경우, 체크해제
+                                }
 
 
     // 특정 value를 가진 li 삭제하는 함수
@@ -253,14 +229,6 @@
             }
         });
     }
-
-
-
-
-
-
-
-
 
     // 체크박스 상태에 따라 li 초기화
     const selectedUl = document.getElementById("selected_ul");
@@ -315,84 +283,42 @@
         });
     });
 
-    $('#tax, #not_tax').change(function () {
-        const label = $(this).closest('label').text().trim(); // input의 부모 label을 찾아 텍스트 가져오기
-        const value = label ? label : null; // 텍스트가 없으면 null로 설정
-
-        if (value) { // value가 유효한 경우에만 처리
-            if (this.checked) {
-                // 이미 추가된 li가 있는지 확인
-                const exists = [...selectedUl.children].some(li => li.innerText.includes(value));
-                if (!exists) {
-                    const listItem = document.createElement("li");
-                    listItem.classList.add("selected_li");
-                    listItem.innerHTML = `
-                        <p class="selected_li_txt">${value}</p>
-                        <img src="/img/close.svg" alt="Close" class="selected_li_close">
-                    `;
-                    listItem.querySelector(".selected_li_close").addEventListener('click', function () {
-                        selectedUl.removeChild(listItem);
-                        $(`#${$(this).data('name')}`).prop('checked', false);
-                    });
-                    selectedUl.appendChild(listItem);
-                }
-
-                // 반대 체크박스 해제 및 해당 li 제거
-                if (this.id === 'tax') {
-                    $('#not_tax').prop('checked', false);
-                    removeLiByValue('NOT TAX'); // 반대 항목 li 제거
-                } else if (this.id === 'not_tax') {
-                    $('#tax').prop('checked', false);
-                    removeLiByValue('TAX'); // 반대 항목 li 제거
-                }
-            } else {
-                // 체크 해제 시 해당 li 삭제
-                removeLiByValue(value);
-            }
-        }
-    });
-
     $('#fta, #not_fta').change(function () {
-        const label = $(this).closest('label').text().trim(); // input의 부모 label을 찾아 텍스트 가져오기
-        const value = label ? label : null; // 텍스트가 없으면 null로 설정
+            const label = $(this).closest('label').text().trim(); // input의 부모 label을 찾아 텍스트 가져오기
+            const value = label ? label : null; // 텍스트가 없으면 null로 설정
 
-        if (value) { // value가 유효한 경우에만 처리
-            if (this.checked) {
-                // 이미 추가된 li가 있는지 확인
-                const exists = [...selectedUl.children].some(li => li.innerText.includes(value));
-                if (!exists) {
-                    const listItem = document.createElement("li");
-                    listItem.classList.add("selected_li");
-                    listItem.innerHTML = `
-                        <p class="selected_li_txt">${value}</p>
-                        <img src="/img/close.svg" alt="Close" class="selected_li_close">
-                    `;
-                    listItem.querySelector(".selected_li_close").addEventListener('click', function () {
-                        selectedUl.removeChild(listItem);
-                        $(`#${$(this).data('name')}`).prop('checked', false);
-                    });
-                    selectedUl.appendChild(listItem);
-                }
+            if (value) { // value가 유효한 경우에만 처리
+                if (this.checked) {
+                    // 이미 추가된 li가 있는지 확인
+                    const exists = [...selectedUl.children].some(li => li.innerText.includes(value));
+                    if (!exists) {
+                        const listItem = document.createElement("li");
+                        listItem.classList.add("selected_li");
+                        listItem.innerHTML = `
+                            <p class="selected_li_txt">${value}</p>
+                            <img src="/img/close.svg" alt="Close" class="selected_li_close">
+                        `;
+                        listItem.querySelector(".selected_li_close").addEventListener('click', function () {
+                            selectedUl.removeChild(listItem);
+                            $(`#${$(this).data('name')}`).prop('checked', false);
+                        });
+                        selectedUl.appendChild(listItem);
+                    }
 
-                // 반대 체크박스 해제 및 해당 li 제거
-                if (this.id === 'fta') {
-                    $('#not_fta').prop('checked', false);
-                    removeLiByValue('NOT FTA'); // 반대 항목 li 제거
-                } else if (this.id === 'not_fta') {
-                    $('#fta').prop('checked', false);
-                    removeLiByValue('FTA'); // 반대 항목 li 제거
+                    // 반대 체크박스 해제 및 해당 li 제거
+                    if (this.id === 'fta') {
+                        $('#not_fta').prop('checked', false);
+                        removeLiByValue('NOT FTA'); // 반대 항목 li 제거
+                    } else if (this.id === 'not_fta') {
+                        $('#fta').prop('checked', false);
+                        removeLiByValue('FTA'); // 반대 항목 li 제거
+                    }
+                } else {
+                    // 체크 해제 시 해당 li 삭제
+                    removeLiByValue(value);
                 }
-            } else {
-                // 체크 해제 시 해당 li 삭제
-                removeLiByValue(value);
             }
-        }
-    });
-
-
-
-
-
+        });
 
         let $leftThumb = document.querySelector(".thumb-left");
         let $rightThumb = document.querySelector(".thumb-right");
@@ -408,7 +334,7 @@
 
         const $value1 = document.getElementById("value1");
         const $value2 = document.getElementById("value2");
-        const minDifference = 500000; // 50만원
+        const minDifference = 50000; // 50만원
 
         function updateValues() {
         // 최소값 출력: 10,000 단위로 반올림

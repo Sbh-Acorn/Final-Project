@@ -5,7 +5,6 @@
                     let minPrice = 0;
                     let maxPrice = 0;
                     let isTax = null;
-                    let isFta = null;
                     let isLoading = false;
 
                     // 초기 데이터 로드
@@ -29,9 +28,6 @@
 
                         // 세금 상태 설정
                         isTax = $('#tax').prop('checked') ? 'TAX' : $('#not_tax').prop('checked') ? 'NOT TAX' : null;
-
-                        // FTA 상태 설정
-                        isFta = $('#fta').prop('checked') ? 'FTA' : $('#not_fta').prop('checked') ? 'NOT FTA' : null;
 
                         // 선택된 브랜드 및 카테고리 수집
                         $('.filter_wrap ul.filter_checkbox input[type="checkbox"]:checked').each(function () {
@@ -63,12 +59,9 @@
                         if (isTax) {
                             params.append('tax', isTax);
                         }
-                        if (isFta) {
-                            params.append('fta', isFta);
-                        }
 
                         // 페이지 리다이렉션
-                        window.location.href = `/product/filter?${params.toString()}`;
+                        window.location.href = `/fta-product/filter?${params.toString()}`;
                     });
 
 
@@ -77,7 +70,7 @@
                 if (isLoading) return; // 로딩 중이면 함수 종료
                     isLoading = true; // 로딩 시작
 
-                $.get(`/product/?page=${nextPage}`, (response) => {
+                $.get(`/fta-product/?page=${nextPage}`, (response) => {
                     const newProducts = response.products;
 
                     newProducts.forEach((product) => {
@@ -115,7 +108,7 @@
                      isLoading = true; // 로딩 시작
 
 
-                $.get(`/product/filter/?${params.toString()}`, (response) => {
+                $.get(`/fta-product/filter/?${params.toString()}`, (response) => {
                     const newProducts = response.products;
 
                     newProducts.forEach((product) => {
@@ -154,8 +147,7 @@
                     params.has('categories') ||
                     params.has('minPrice') ||
                     params.has('maxPrice') ||
-                    params.has('tax') ||
-                    params.has('fta')
+                    params.has('tax')
                 );
             }
 
@@ -175,10 +167,6 @@
                 }
             });
 
-
-
-
-
              const urlParams = new URLSearchParams(window.location.search);
                   let $range = document.getElementById("range");
 
@@ -188,7 +176,6 @@
             const sortedMinPrice = urlParams.has('minPrice') && !isNaN(urlParams.get('minPrice')) ? parseFloat(urlParams.get('minPrice')) : 0;
             const sortedMaxPrice = urlParams.has('maxPrice') && !isNaN(urlParams.get('maxPrice')) ? parseFloat(urlParams.get('maxPrice')) : parseFloat($range.max);
             const sortedIsTax = urlParams.get('tax') && urlParams.get('tax') !== 'null' ? urlParams.get('tax') : null; // null 제외
-            const sortedIsFta = urlParams.get('fta') && urlParams.get('fta') !== 'null' ? urlParams.get('fta') : null; // null 제외
 
                 // 브랜드 체크박스 상태 반영
                 sortedBrands.forEach(brand => {
@@ -208,17 +195,6 @@
                 } else {
                     $('#tax, #not_tax').prop('checked', false); // null인 경우, 체크해제
                 }
-
-                // FTA 체크박스 상태 반영
-                if (sortedIsFta === 'FTA') {
-                    $('#fta').prop('checked', true);
-                } else if (sortedIsFta === 'NOT FTA') {
-                    $('#not_fta').prop('checked', true);
-                } else {
-                    $('#fta, #not_fta').prop('checked', false); // null인 경우, 체크해제
-                }
-
-
 
 
     // 특정 value를 가진 li 삭제하는 함수
@@ -253,14 +229,6 @@
             }
         });
     }
-
-
-
-
-
-
-
-
 
     // 체크박스 상태에 따라 li 초기화
     const selectedUl = document.getElementById("selected_ul");
@@ -351,48 +319,6 @@
             }
         }
     });
-
-    $('#fta, #not_fta').change(function () {
-        const label = $(this).closest('label').text().trim(); // input의 부모 label을 찾아 텍스트 가져오기
-        const value = label ? label : null; // 텍스트가 없으면 null로 설정
-
-        if (value) { // value가 유효한 경우에만 처리
-            if (this.checked) {
-                // 이미 추가된 li가 있는지 확인
-                const exists = [...selectedUl.children].some(li => li.innerText.includes(value));
-                if (!exists) {
-                    const listItem = document.createElement("li");
-                    listItem.classList.add("selected_li");
-                    listItem.innerHTML = `
-                        <p class="selected_li_txt">${value}</p>
-                        <img src="/img/close.svg" alt="Close" class="selected_li_close">
-                    `;
-                    listItem.querySelector(".selected_li_close").addEventListener('click', function () {
-                        selectedUl.removeChild(listItem);
-                        $(`#${$(this).data('name')}`).prop('checked', false);
-                    });
-                    selectedUl.appendChild(listItem);
-                }
-
-                // 반대 체크박스 해제 및 해당 li 제거
-                if (this.id === 'fta') {
-                    $('#not_fta').prop('checked', false);
-                    removeLiByValue('NOT FTA'); // 반대 항목 li 제거
-                } else if (this.id === 'not_fta') {
-                    $('#fta').prop('checked', false);
-                    removeLiByValue('FTA'); // 반대 항목 li 제거
-                }
-            } else {
-                // 체크 해제 시 해당 li 삭제
-                removeLiByValue(value);
-            }
-        }
-    });
-
-
-
-
-
 
         let $leftThumb = document.querySelector(".thumb-left");
         let $rightThumb = document.querySelector(".thumb-right");

@@ -35,11 +35,16 @@ public class CartController {
     CalculatorService calculatorService;
 
     @ModelAttribute("taxBaseAmount")
-    public Double getconvert150UsdToEur(){
+    public Double getConvert150UsdToEur(){
         return calculatorService.convertUsdToKrw(150);
     }
 
-    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
+    @ModelAttribute("shipPrice")
+    public double getShipPrice(){
+        return calculatorService.convertEurToKrwWithTax(25);
+    }
+
+//    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
     @ModelAttribute("products")
     public List<ProductDTO> getAllProducts() {
         List<ProductDTO> products = repository.getProduct();

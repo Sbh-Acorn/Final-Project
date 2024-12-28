@@ -1,6 +1,7 @@
 package com.example.Caltizm.Controller;
 
 import com.example.Caltizm.DTO.*;
+import com.example.Caltizm.Repository.BoardRepository;
 import com.example.Caltizm.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,10 @@ import java.util.Map;
 public class MyPageController {
 
     @Autowired
-    UserRepository repository;
+    UserRepository userRepository;
+
+    @Autowired
+    BoardRepository boardRepository;
 
     @GetMapping("/myPage")
     public String myPage(@SessionAttribute(value="email", required=false) String email, Model model){
@@ -24,18 +28,21 @@ public class MyPageController {
             return "redirect:/login";
         }
 
-        MyPageResponseDTO user = repository.selectUserInfo(email);
+        MyPageResponseDTO user = userRepository.selectUserInfo(email);
 
         if(user == null){
             return "redirect:/login";
         }
 
-        List<AddressResponseDTO> addressList = repository.selectAddressAll(email);
+        List<AddressResponseDTO> addressList = userRepository.selectAddressAll(email);
+        List<PostDTO> postList = boardRepository.selectAllByEmail(email);
 
         model.addAttribute("user", user);
         model.addAttribute("addressList", addressList);
+        model.addAttribute("postList", postList);
 
         System.out.println(addressList);
+        System.out.println(postList);
 
         System.out.println(email);
         System.out.println(user);
@@ -75,7 +82,7 @@ public class MyPageController {
                 userUpdateFormDTO.getPccc() != null ? userUpdateFormDTO.getPccc() : null);
         System.out.println(userUpdateDTO);
 
-        int rRow = repository.updateUserInfo(userUpdateDTO);
+        int rRow = userRepository.updateUserInfo(userUpdateDTO);
         System.out.println(rRow);
 
         if(rRow != 1){
@@ -117,7 +124,7 @@ public class MyPageController {
             return response;
         }
 
-        if(repository.checkMaxAddressLimit(email)){
+        if(userRepository.checkMaxAddressLimit(email)){
             response.put("status", "max_limit");
             response.put("message", "최대 주소 개수 제한을 초과했습니다.");
             System.out.println(response);
@@ -128,7 +135,7 @@ public class MyPageController {
         addressRequestDTO.setEmail(email);
         System.out.println("addressRequestDTO: " + addressRequestDTO);
 
-        int rRow = repository.insertAddress(addressRequestDTO);
+        int rRow = userRepository.insertAddress(addressRequestDTO);
         System.out.println(rRow);
 
         if(rRow != 1){
@@ -159,7 +166,7 @@ public class MyPageController {
             return response;
         }
 
-        int rRow = repository.deleteAddress(id);
+        int rRow = userRepository.deleteAddress(id);
         System.out.println(rRow);
 
         if(rRow != 1){
@@ -184,7 +191,7 @@ public class MyPageController {
             return "redirect:/login";
         }
 
-        AddressResponseDTO address = repository.selectAddress(id);
+        AddressResponseDTO address = userRepository.selectAddress(id);
         System.out.println(address);
 
         if(address == null){
@@ -215,7 +222,7 @@ public class MyPageController {
         addressResponseDTO.setEmail(email);
         System.out.println(addressResponseDTO);
 
-        int rRow = repository.updateAddress(addressResponseDTO);
+        int rRow = userRepository.updateAddress(addressResponseDTO);
         System.out.println(rRow);
 
         if(rRow != 1){
@@ -246,7 +253,7 @@ public class MyPageController {
             return response;
         }
 
-        LoginRequestDTO user = repository.selectUserLogin(email);
+        LoginRequestDTO user = userRepository.selectUserLogin(email);
         if(user == null){
             response.put("status", "user_invalid");
             response.put("message", "사용자를 찾을 수 없습니다.");
@@ -275,7 +282,7 @@ public class MyPageController {
         passwordUpdateDTO.setEmail(email);
         passwordUpdateDTO.setNewPassword(newPassword1);
 
-        int rRow = repository.updatePassword(passwordUpdateDTO);
+        int rRow = userRepository.updatePassword(passwordUpdateDTO);
         System.out.println(rRow);
 
         if(rRow != 1){
