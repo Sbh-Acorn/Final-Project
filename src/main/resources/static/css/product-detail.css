@@ -160,3 +160,12 @@ b {
     }
 
 }
+
+#product_price::after {
+    content: " - 19% 부가가치세 제외 가격";
+    font-size: 13px;
+    color: black;
+    margin-left: 5px;
+}
+
+

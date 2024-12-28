@@ -17,20 +17,25 @@
     <!-- ID로 상품의 전체 데이터 가져오기 -->
     <select id="findProductById" parameterType="string" resultType="com.example.Caltizm.DTO.ProductDTO">
         SELECT
-        brand_id AS brand,
-        product_id,
-        image_url,
-        name,
-        original_price,
-        current_price,
-        description,
-        category1_id AS category1,
-        category2_id AS category2,
-        category3_id AS category3,
-        is_excludedVoucher,
-        is_fta
-        FROM Product
-        WHERE product_id = #{id};
+        p.product_id as product_id,
+        b.name AS brand, -- 브랜드 이름
+        p.image_url as image_url,
+        p.name as name,
+        p.original_price as original_price,
+        p.current_price as current_price,
+        p.description as description,
+        c1.name AS category1, -- 카테고리1 이름
+        c2.name AS category2, -- 카테고리2 이름
+        c3.name AS category3, -- 카테고리3 이름
+        p.is_excludedVoucher as is_excludedVoucher,
+        p.is_fta as is_fta
+        FROM Product p
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id -- 브랜드 테이블과 조인
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id -- 카테고리1 테이블과 조인
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id -- 카테고리2 테이블과 조인
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id -- 카테고리3 테이블과 조인
+        WHERE p.is_deleted = false -- 삭제되지 않은 제품만 조회
+        And p.product_id = #{id};
     </select>
     <!-- 모든 상품 데이터 가져오기 -->
     <select id="getAllProducts" resultType="com.example.Caltizm.DTO.ProductDTO">

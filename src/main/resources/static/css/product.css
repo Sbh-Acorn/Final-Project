@@ -273,3 +273,7 @@ b {
         padding: 0;
     }
 }
+
+.original_price {
+    text-decoration: line-through;
+}
