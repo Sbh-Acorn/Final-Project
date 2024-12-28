@@ -162,6 +162,7 @@
         SELECT DISTINCT b.name
         FROM Product p
         LEFT JOIN brand b ON p.brand_id = b.brand_id
+        WHERE b.is_deleted = false
         ORDER BY b.name;
     </select>
 
