@@ -9,26 +9,31 @@
     <select id="all" resultType="PostDTO">
         select * from post
         where is_deleted = false
+        order by created_at desc
     </select>
 
     <select id="notice" resultType="PostDTO">
         select * from post
         where subject = '공지사항' and is_deleted = false
+        order by created_at desc
     </select>
 
     <select id="free" resultType="PostDTO">
         select * from post
         where subject = '자유게시판' and is_deleted = false
+        order by created_at desc
     </select>
 
     <select id="review" resultType="PostDTO">
         select * from post
         where subject = '리뷰' and is_deleted = false
+        order by created_at desc
     </select>
 
     <select id="qna" resultType="PostDTO">
         select * from post
         where subject = 'Q&amp;A' and is_deleted = false
+        order by created_at desc
     </select>
 
 
@@ -97,7 +102,7 @@
 
     <!-- 댓글 목록 -->
     <select id="list-comment" resultType="CommentDTO">
-        select * from comment where post_id = #{post_id} and is_deleted = false  order by created_at DESC;
+        select * from comment where post_id = #{post_id} and is_deleted = false  order by created_at
     </select>
 
     <!-- 댓글 삭제 -->

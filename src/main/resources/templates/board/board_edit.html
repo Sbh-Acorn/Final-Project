@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/board_common.css}">
+    <link rel="stylesheet" th:href="@{/css/board_write.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/board_common.js}"></script>
+    <link th:href="@{/post/summernote-lite.css}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script th:src="@{/post/summernote-lite.js}"></script>
+    <script th:src="@{/post/lang/summernote-ko-KR.js}"></script>
+</head>
+<body>
+<th:block th:replace="fragments/header2 :: header"></th:block>
+<main>
+    <div class="left_box">
+        <nav>
+            <ul>
+                <!-- 일단 js로 프론트단에서 클릭된것에 active 클래스가 추가되도록 코드를 짜두긴 했습니다 -->
+                <!-- 근데 a태그를 이용해서 이동하면 아마 제대로 작동하지 않을것으로 예상됩니다 -->
+                <!-- 그렇게 된다면 타임리프를 통해 if로 처리하면 되실겁니다 -->
+                <li class="nav_list active"><a th:href="@{/boardAll}"><p>ALL</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/boardNotice}"><p>공지사항</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/boardFree}"><p>자유게시판</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/boardReview}"><p>후기</p></a><hr></li>
+                <li class="nav_list"><a th:href="@{/boardQna}"><p>Q&A</p></a><hr></li>
+            </ul>
+            <form th:action="@{/}">
+                <input type="text" id="search">
+                <button type="submit" id="search_btn">검색</button>
+            </form>
+            <a th:href="@{/post}" class="write_btn">
+                <div class="write_wrap">
+                    <img th:src="@{/img/write.svg}" alt="" id="write_img">
+                    <p id="write_txt">글쓰기</p>
+                </div>
+            </a>
+        </nav>
+        <form id="postForm" th:action="@{/updatePost/{post_id}(post_id=${postOne.post_id})}" method="post">
+            <div class="write_box">
+                <img th:src="@{/img/dropdown.svg}" alt="" class="dropdown_img">
+                <select name="subject" id="select">
+                    <option value="자유게시판" th:attr="selected=${postOne.subject == '자유게시판'}">자유게시판</option>
+                    <option value="리뷰" th:attr="selected=${postOne.subject == '리뷰'}">리뷰</option>
+                    <option value="Q&A" th:attr="selected=${postOne.subject == 'Q&A'}">Q&A</option>
+                </select>
+                <input type="text" name="title" class="write_title" id="write_title" placeholder="제목" th:value="${postOne.title}" required>
+            </div>
+            <textarea id="summernote" name="content" th:utext="${postOne.content}" required></textarea>
+
+            <div class="submit_wrap">
+                <button class="submit" type="submit">작성</button>
+            </div>
+        </form>
+    </div>
+    <div class="right_box">
+        <div class="rec_box">
+            <!-- 최대 4개만 띄웁니다 -->
+            <p class="box_title">오늘의 인기글</p>
+            <a th:each="post : ${hotview}" th:href="@{/postone/{id}(id = ${post.post_id})}"><p class="box_item">[[${post.title}]]</p></a>
+        </div>
+        <div class="ad_box">
+            <img th:src="@{/img/testImg.jpg}" alt="" class="ad">
+        </div>
+    </div>
+</main>
+
+<script>
+    $(document).ready(function (){
+    // textarea summernote 적용하기
+    $("#summernote").summernote({
+        codeviewFilter: false,                              // 코드 보기 필터 비활성화
+        codeviewIframeFilter: false,                        // 코드 보기 iframe 필터 비활성화
+
+        height: 400,                                        // 에디터 높이
+        minHeight: null,                                    // 최소 높이
+        maxHeight: null,                                    // 최대 높이
+        lang: "ko-KR",                                      // 에디터 한글 설정
+        focus : true,                                       // 에디터 포커스 설정
+        // ['0.5','0.8','1.0','1.2','1.4','1.5','1.6','1.8','2.0','3.0']
+        toolbar: [
+            ['fontname', ['fontname']],                     // 글꼴 설정
+            ['fontsize', ['fontsize']],                     // 글자 크기
+            ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],  // 글자 스타일 설정
+            ['color', ['forecolor','color']],               // 글자색
+            ['table', ['table']],                           // 표 생성
+            ['insert', ['picture', 'link','video']],        // 이미지, 링크 , 동영상
+            ['para', ['ul', 'ol', 'paragraph']],            // 문단 스타일 설정
+            ['height', ['height']],                         // 줄간격
+            ['view', ['codeview','fullscreen', 'help']]     // 코드보기, 전체화면, 도움말
+        ],
+        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋음체','바탕체'], // 추가한 글꼴
+        fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'], // 추가한 폰트사이즈
+        callbacks : {
+            // 파일 업로드
+            onImageUpload : function (files) {
+                for(let i=0; i < files.length; i++){
+                    // 이미지가 여러개일 경우
+                    imageUpload(files[i]);
+                }
+            },
+            // 파일 삭제
+            onMediaDelete: function ($target){
+                if(confirm("이미지를 삭제하시겠습니까?")){
+                    let fileName = $target.attr('src').split('/').pop();
+                    deleteFile(fileName);
+                }
+            }
+        }
+    });
+
+    // Summernote 내용을 폼 전송 전에 textarea에 저장
+        $("#postForm").on("submit", function () {
+            const content = $("#summernote").summernote("code");
+            $("textarea[name='content']").val(content);
+        });
+});
+
+
+    // 이미지 업로드
+function imageUpload(file){
+    let formData = new FormData();
+    formData.append("file", file);
+
+    $.ajax({
+       url : "/imageUpload",
+       type : "POST",
+       data : formData,
+        // contentType, processData 설정 안하면 TypeError: Illegal invocation 오류가 발생한다
+       contentType: false,
+       processData: false,
+       encType : "multipart/form-data",
+       success : function (data) {
+           // 글에 이미지 넣을때 크기 설정
+           // $("#summernote").summernote("insertImage", "/uploadPath/image/"+data, function (data){
+           //     data.css("width" , "100%");
+           // });
+
+           // 글에 이미지 넣기
+           $("#summernote").summernote("insertImage", "/uploadPath/image/"+data);
+       },
+        error(e){
+           console.log("error : "+ e);
+        }
+    });
+}
+
+    // 이미지 삭제
+function deleteFile(fileName) {
+    let formData = new FormData();
+    formData.append("file", fileName);
+
+    $.ajax({
+        url : "/imageDelete",
+        type : "POST",
+        data : formData,
+        // contentType, processData 설정 안하면 TypeError: Illegal invocation 오류가 발생한다
+        contentType: false,
+        processData: false,
+        encType : "multipart/form-data"
+    });
+}
+</script>
+
+</body>
+</html>
