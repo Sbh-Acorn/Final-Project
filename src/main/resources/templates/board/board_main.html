@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/board_main.css}">
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/board_common.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/board_main.js}"></script>
+    <script defer th:src="@{/js/board_common.js}"></script>
+    <script defer th:src="@{/js/pagination.js}"></script>
+</head>
+<body>
+<th:block th:replace="fragments/header2 :: header"></th:block>
+<main>
+    <div class="left_box">
+        <nav>
+            <ul>
+                <!-- 일단 js로 프론트단에서 클릭된것에 active 클래스가 추가되도록 코드를 짜두긴 했습니다 -->
+                <!-- 근데 a태그를 이용해서 이동하면 아마 제대로 작동하지 않을것으로 예상됩니다 -->
+                <!-- 그렇게 된다면 타임리프를 통해 if로 처리하면 되실겁니다 -->
+                <li class="nav_list" th:classappend="${boardName == 'all' ? 'active' : ''}"><a th:href="@{/boardAll}"><p>ALL</p></a><hr></li>
+                <li class="nav_list" th:classappend="${boardName == 'notice' ? 'active' : ''}"><a th:href="@{/boardNotice}"><p>공지사항</p></a><hr></li>
+                <li class="nav_list" th:classappend="${boardName == 'free' ? 'active' : ''}"><a th:href="@{/boardFree}"><p>자유게시판</p></a><hr></li>
+                <li class="nav_list" th:classappend="${boardName == 'review' ? 'active' : ''}"><a th:href="@{/boardReview}"><p>후기</p></a><hr></li>
+                <li class="nav_list" th:classappend="${boardName == 'qna' ? 'active' : ''}"><a th:href="@{/boardQna}"><p>Q&A</p></a><hr></li>
+            </ul>
+            <form th:action="@{/}">
+                <input type="text" id="search">
+                <button type="submit" id="search_btn">검색</button>
+            </form>
+            <a th:href="@{/post}" class="write_btn">
+                <div class="write_wrap">
+                    <img th:src="@{/img/write.svg}" alt="" id="write_img">
+                    <p id="write_txt">글쓰기</p>
+                </div>
+            </a>
+        </nav>
+        <div class="board_title">
+            <span class="board_title_span">분류</span>
+            <span class="board_title_span">제목</span>
+            <span class="board_title_span">작성자</span>
+            <span class="board_title_span">작성일</span>
+            <span class="board_title_span">조회수</span>
+            <span class="board_title_span">추천수</span>
+        </div>
+        <ul class="board_list_wrap">
+            <!-- 글자수가 일정 개수를 넘어가면 뒷부분이... 으로 표시되도록 -->
+            <!-- 페이징 테스트를 위해 js를 통해 요소를 추가해둔 상태입니다 -->
+            <!-- 해당 코드는 board_main.js 에서 27번째줄에 있습니다 -->
+            <!-- 확인을 하셨다면 해당 코드를 싹 지워주시면 됩니다 -->
+            <li class="board_list" th:each="post : ${boardNotice}">
+                <p class="board_list_p" th:text="${post.subject}"></p>
+                <p class="board_list_p" th:text="${post.title}"></p>
+                <p class="board_list_p">익명</p>
+                <p class="board_list_p" th:text="${#temporals.createDate(post.created_at, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                <p class="board_list_p" th:text="${post.views}"></p>
+                <p class="board_list_p" th:text="${post.likes}"></p>
+                <a th:href="@{/postone/{id}(id = ${post.post_id})}"></a>
+            </li>
+            <li class="board_list" th:each="post : ${boardList}">
+                <p class="board_list_p" th:text="${post.subject}"></p>
+                <p class="board_list_p" th:text="${post.title}"></p>
+                <p class="board_list_p">익명</p>
+                <p class="board_list_p" th:text="${#temporals.createDate(post.created_at, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                <p class="board_list_p" th:text="${post.views}"></p>
+                <p class="board_list_p" th:text="${post.likes}"></p>
+                <a th:href="@{/postone/{id}(id = ${post.post_id})}"></a>
+            </li>
+        </ul>
+        <div class="page_wrap_wrap">
+            <ul class="page_wrap">
+                <li class="page" id="left_wrap"><img th:src="@{/img/left.svg}" alt="" class="left"></li>
+                <li class="page active">1</li>
+                <!-- 여기에 추가되어야 하는데... -->
+                <li class="page" id="right_wrap"><img th:src="@{/img/right.svg}" alt=""></li>
+            </ul>
+        </div>
+    </div>
+    <div class="right_box">
+        <div class="rec_box">
+            <!-- 최대 4개만 띄웁니다 -->
+            <p class="box_title">오늘의 인기글</p>
+            <a th:each="post : ${hotview}" th:href="@{/postone/{id}(id = ${post.post_id})}"><p class="box_item">[[${post.title}]]</p></a>
+        </div>
+        <div class="ad_box">
+            <img th:src="@{/img/testImg.jpg}" alt="" class="ad">
+        </div>
+    </div>
+</main>
+</body>
+</html>

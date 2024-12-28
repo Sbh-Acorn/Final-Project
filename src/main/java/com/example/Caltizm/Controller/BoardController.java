@@ -17,6 +17,8 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import java.util.List;
@@ -27,47 +29,9 @@ public class BoardController {
     @Autowired
     BoardRepository repository;
 
-    @GetMapping("/board_ui")
-    public String boardUi(Model model, HttpSession session) {
-
-        String email = (String) session.getAttribute("email");
-        model.addAttribute("sessionEmail", email);
-      
-        return "board/board_main_ui";
-    }
-
-    @GetMapping("/testBoard")
-    public String tb() {
-        return "board/board_main_ui";
-    }
-
-//    // 전체 게시판 조회
-//    @GetMapping("/boardAll")
-//    public String boardAll(Model model){
-//        List<PostDTO> boardList = repository.selectAll();
-//        model.addAttribute("boardAll",boardList);
-//
-//        List<PostDTO> boardList2 = repository.selectNotice();
-//        model.addAttribute("boardNotice",boardList2);
-//
-//        List<PostDTO> boardList3 = repository.selectFree();
-//        model.addAttribute("boardFree", boardList3);
-//
-//        List<PostDTO> boardList4 = repository.selectReview();
-//        model.addAttribute("boardReview", boardList4);
-//
-//        List<PostDTO> boardList5 = repository.selectQna();
-//        model.addAttribute("boardQna",boardList5);
-//
-//        return "board/boardtest";
-//    }
-
-
+    // 전체 게시판 조회
     @GetMapping("/boardAll")
-    public String boardAll(
-            @RequestParam(value = "query", required = false) String query,
-            Model model
-    ) {
+    public String boardAll(@RequestParam(value = "query", required = false) String query, Model model){
         if (query != null && !query.trim().isEmpty()) {
             // 검색 결과가 있을 경우
             List<PostDTO> searchResults = repository.searchPosts(query);
@@ -77,69 +41,78 @@ public class BoardController {
         } else {
             model.addAttribute("isSearch", false);
         }
+  
+        List<PostDTO> boardList = repository.selectAll();
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList",boardList);
+        model.addAttribute("boardName", "all");
 
-        // 전체 게시판 데이터 추가
-        model.addAttribute("boardAll", repository.selectAll());
-        model.addAttribute("boardNotice", repository.selectNotice());
-        model.addAttribute("boardFree", repository.selectFree());
-        model.addAttribute("boardReview", repository.selectReview());
-        model.addAttribute("boardQna", repository.selectQna());
-
-        return "board/boardtest"; // 기존 HTML 재사용
+        return "board/board_main";
     }
 
     // 공지사항 조회
     @GetMapping("/boardNotice")
     public String boardNotice(Model model){
         List<PostDTO> boardList = repository.selectNotice();
-        model.addAttribute("boardNotice",boardList);
-        return "board/boardtest";
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList",boardList);
+        model.addAttribute("boardName", "notice");
+        return "board/board_main";
     }
 
     // 자유게시판 조회
     @GetMapping("/boardFree")
     public String boardFree(Model model){
         List<PostDTO> boardList = repository.selectFree();
-        model.addAttribute("boardFree", boardList);
-        return "board/boardtest";
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList", boardList);
+        model.addAttribute("boardName", "free");
+        return "board/board_main";
     }
 
     // 리뷰 조회
     @GetMapping("/boardReview")
     public String boardReview(Model model){
         List<PostDTO> boardList = repository.selectReview();
-        model.addAttribute("boardReview", boardList);
-        return "board/boardtest";
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList", boardList);
+        model.addAttribute("boardName", "review");
+        return "board/board_main";
     }
 
     // Q&A 조회
     @GetMapping("/boardQna")
     public String boardQna(Model model){
         List<PostDTO> boardList = repository.selectQna();
-        model.addAttribute("boardQna",boardList);
-        return "board/boardtest";
+        List<PostDTO> boardNotice = repository.selectNotice();
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        model.addAttribute("boardNotice", boardNotice);
+        model.addAttribute("boardList",boardList);
+        model.addAttribute("boardName", "qna");
+        return "board/board_main";
     }
 
     //Test
     @GetMapping("/post")
     public String postTest(Model model){
 
-        List<PostDTO> boardList = repository.selectAll();
-        model.addAttribute("boardAll",boardList);
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
 
-        List<PostDTO> boardList2 = repository.selectNotice();
-        model.addAttribute("boardNotice",boardList2);
-
-        List<PostDTO> boardList3 = repository.selectFree();
-        model.addAttribute("boardFree", boardList3);
-
-        List<PostDTO> boardList4 = repository.selectReview();
-        model.addAttribute("boardReview", boardList4);
-
-        List<PostDTO> boardList5 = repository.selectQna();
-        model.addAttribute("boardQna",boardList5);
-
-        return "board/formtest";
+        return "board/board_write";
     }
 
     // 게시판 작성
@@ -217,12 +190,26 @@ public class BoardController {
         model.addAttribute("postOne",post);
         model.addAttribute("commentList", comments);
 
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+
+        model.addAttribute("boardName", post.getSubject());
+
         if(email != null) {
             int user =  repository.getUser(email);
             model.addAttribute("user",user);
+
+            // 사용자의 게시글 추천 여부 확인
+            int user_id = repository.getUser(email);
+            int count = repository.checkLikes(post_id, user_id);
+            if(count > 0){
+                model.addAttribute("isLiked", true);
+            } else{
+                model.addAttribute("isLiked", false);
+            }
         }
 
-        return "board/postone";
+        return "board/board";
     }
 
     // 게시글 삭제
@@ -238,7 +225,9 @@ public class BoardController {
                            Model model){
         PostDTO post = repository.selectPostOne(post_id);
         model.addAttribute("postOne", post);
-        return "board/editpost";
+        List<PostDTO> hotview = repository.hotview();
+        model.addAttribute("hotview", hotview);
+        return "board/board_edit";
     }
     
     // 게시글 수정
@@ -256,11 +245,13 @@ public class BoardController {
     // 게시글 추천
     @ResponseBody
     @PostMapping("/likePost")
-    public int likePost(@RequestParam(value="post_id") String post_id,
-                        @SessionAttribute(value = "email") String email) {
+    public Map<String, Object> likePost(@RequestParam(value="post_id") String post_id,
+                                        @SessionAttribute(value = "email") String email) {
 
         System.out.println(post_id);
         System.out.println(email);
+
+        Map<String, Object> response = new HashMap<>();
 
         int user_id = repository.getUser(email);
         int count = repository.checkLikes(Integer.parseInt(post_id), user_id);
@@ -268,11 +259,17 @@ public class BoardController {
         if(count == 0){
             repository.incLikes(Integer.parseInt(post_id));
             repository.insertLikes(Integer.parseInt(post_id), user_id);
+            response.put("status", "likes_increased");
         } else {
             repository.decLikes(Integer.parseInt(post_id));
             repository.deleteLikes(Integer.parseInt(post_id), user_id);
+            response.put("status", "likes_decreased");
         }
-        return repository.countLikes(Integer.parseInt(post_id));
+
+        response.put("likes", repository.countLikes(Integer.parseInt(post_id)));
+        System.out.println(response);
+
+        return response;
     }
 
     // 댓글 작성
@@ -282,7 +279,7 @@ public class BoardController {
                                           @SessionAttribute(value = "email") String email) {
         int user_id = repository.getUser(email);
         comment.setUser_id(user_id);
-
+        System.out.println(comment);
         repository.insertComment(comment);
         List<CommentDTO> commentList = repository.commentList(comment.getPost_id());
 
