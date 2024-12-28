@@ -293,6 +293,7 @@ $input.addEventListener('keydown', (event) => {
                 type: 'POST',
                 data: { product_id: productId, action: action },
                 success: function(response) {
+                    updateCartQuantity();
                     totalItemPrice();
                     OriginalTotalPrice();
                     coupon();
@@ -316,6 +317,7 @@ $input.addEventListener('keydown', (event) => {
                 data: { product_id: productId },
                 success: function(response) {
                     $(`.close[data-product-id='${productId}']`).closest('.list').remove();
+                    updateCartQuantity();
                     totalItemPrice();
                     OriginalTotalPrice();
                     coupon();

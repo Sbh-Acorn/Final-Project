@@ -222,3 +222,18 @@ header {
 .header_alarm_dropdown_list:nth-last-child(1) {
     margin-bottom: 0;
 }
+
+
+#cart_quantity {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+}

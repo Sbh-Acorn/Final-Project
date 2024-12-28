@@ -161,3 +161,29 @@ $headerList.forEach((list) => {
         }
     })
 });
+
+// 장바구니 수량 업데이트 함수
+                function updateCartQuantity() {
+                    $.ajax({
+                        url: '/cart/quantity', // 장바구니 수량을 가져오는 API
+                        type: 'GET',
+                        success: function(response) {
+                            var quantity = response.quantity;
+
+                            // 수량에 따라 동그라미 표시 여부 결정
+                            if (quantity > 0) {
+                                $("#cart_quantity").text(quantity).show(); // 수량이 0 이상일 때 표시
+                            } else {
+                                $("#cart_quantity").hide(); // 수량이 0일 때 숨김
+                            }
+                        },
+                        error: function(error) {
+                            console.log("장바구니 수량 요청 실패:", error);
+                        }
+                    });
+                }
+
+                // 페이지 로드 시 장바구니 수량을 초기화
+                $(document).ready(function() {
+                    updateCartQuantity();
+                });

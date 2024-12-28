@@ -77,7 +77,7 @@
                 if (isLoading) return; // 로딩 중이면 함수 종료
                     isLoading = true; // 로딩 시작
 
-                $.get(`/product/?page=${nextPage}`, (response) => {
+                $.get(`/product/?page=${currentPage}`, (response) => {
                     const newProducts = response.products;
 
                     newProducts.forEach((product) => {

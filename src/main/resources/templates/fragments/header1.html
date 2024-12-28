@@ -47,9 +47,12 @@
                 </ul>
 
                 <!-- 장바구니 아이콘 -->
+                <!-- 장바구니 아이콘 -->
                 <a th:href="@{/cart/view}">
                     <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+                    <span id="cart_quantity" class="cart_quantity" style="display: none;">0</span>
                 </a>
+
             </div>
         </div>
         <div id="wrap2">
@@ -61,7 +64,7 @@
                 <li id="header_community" class="header_list">COMMUNITY</li>
             </ul>
             <a id="all_anchor" th:href="@{/product}"></a>
-            <a id="brand_anchor" href="board.html"></a>
+            <a id="brand_anchor" th:href="@{/brand}"></a>
             <a id="fta_anchor" th:href="@{/fta-product}"></a>
             <a id="tax_anchor" th:href="@{/not-tax-product}"></a>
             <a id="community_anchor" th:href="@{/boardAll}"></a>
