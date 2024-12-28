@@ -127,4 +127,8 @@ public class BoardRepository {
         return session.selectOne("board.getPost_id",comment_id);
     }
 
+    public List<PostDTO> selectAllByEmail(String email){
+        return session.selectList("board.allByEmail", email);
+    }
+
 }
