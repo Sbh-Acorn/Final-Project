@@ -7,13 +7,37 @@
 </head>
 <body>
 <h1>게시판</h1>
+
+<h1 th:if="${isSearch}" th:text="'검색 결과: ' + ${query}"></h1>
+<h1 th:if="${!isSearch}">전체 게시판</h1>
+
+<!-- 검색 입력 폼 -->
+<form th:action="@{/boardAll}" method="get">
+    <input type="text" name="query" placeholder="검색어를 입력하세요"
+           th:value="${query != null} ? ${query} : ''">
+    <button type="submit">검색</button>
+</form>
+
 <a th:href="@{/post}" style="margin-left: 20px;">
     <button type="button">작성하기</button>
 </a>
+
+
 <!-- 전체 게시판 목록 출력 -->
 <h2>전체 게시판</h2>
 <ul>
     <li th:each="post : ${boardAll}">
+        <a th:href="@{/postone/{post_id}(post_id=${post.post_id})}" th:text="${post.title}"></a> -
+        <span th:text="${post.user_id}">작성자</span> -
+        <span th:text="${post.created_at}">작성일</span>
+    </li>
+</ul>
+
+<!-- 검색 게시판 -->
+<h2 th:if="${isSearch}">검색 게시판</h2>
+<ul th:if="${isSearch}">
+    <li th:if="${#lists.isEmpty(searchResults)}">검색 결과가 없습니다.</li>
+    <li th:each="post : ${searchResults}">
         <a th:href="@{/postone/{post_id}(post_id=${post.post_id})}" th:text="${post.title}"></a> -
         <span th:text="${post.user_id}">작성자</span> -
         <span th:text="${post.created_at}">작성일</span>

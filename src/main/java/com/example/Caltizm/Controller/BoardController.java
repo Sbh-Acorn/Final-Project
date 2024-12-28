@@ -41,25 +41,51 @@ public class BoardController {
         return "board/board_main_ui";
     }
 
-    // 전체 게시판 조회
+//    // 전체 게시판 조회
+//    @GetMapping("/boardAll")
+//    public String boardAll(Model model){
+//        List<PostDTO> boardList = repository.selectAll();
+//        model.addAttribute("boardAll",boardList);
+//
+//        List<PostDTO> boardList2 = repository.selectNotice();
+//        model.addAttribute("boardNotice",boardList2);
+//
+//        List<PostDTO> boardList3 = repository.selectFree();
+//        model.addAttribute("boardFree", boardList3);
+//
+//        List<PostDTO> boardList4 = repository.selectReview();
+//        model.addAttribute("boardReview", boardList4);
+//
+//        List<PostDTO> boardList5 = repository.selectQna();
+//        model.addAttribute("boardQna",boardList5);
+//
+//        return "board/boardtest";
+//    }
+
+
     @GetMapping("/boardAll")
-    public String boardAll(Model model){
-        List<PostDTO> boardList = repository.selectAll();
-        model.addAttribute("boardAll",boardList);
+    public String boardAll(
+            @RequestParam(value = "query", required = false) String query,
+            Model model
+    ) {
+        if (query != null && !query.trim().isEmpty()) {
+            // 검색 결과가 있을 경우
+            List<PostDTO> searchResults = repository.searchPosts(query);
+            model.addAttribute("searchResults", searchResults);
+            model.addAttribute("isSearch", true);
+            model.addAttribute("query", query); // 검색어 전달
+        } else {
+            model.addAttribute("isSearch", false);
+        }
 
-        List<PostDTO> boardList2 = repository.selectNotice();
-        model.addAttribute("boardNotice",boardList2);
+        // 전체 게시판 데이터 추가
+        model.addAttribute("boardAll", repository.selectAll());
+        model.addAttribute("boardNotice", repository.selectNotice());
+        model.addAttribute("boardFree", repository.selectFree());
+        model.addAttribute("boardReview", repository.selectReview());
+        model.addAttribute("boardQna", repository.selectQna());
 
-        List<PostDTO> boardList3 = repository.selectFree();
-        model.addAttribute("boardFree", boardList3);
-
-        List<PostDTO> boardList4 = repository.selectReview();
-        model.addAttribute("boardReview", boardList4);
-
-        List<PostDTO> boardList5 = repository.selectQna();
-        model.addAttribute("boardQna",boardList5);
-
-        return "board/boardtest";
+        return "board/boardtest"; // 기존 HTML 재사용
     }
 
     // 공지사항 조회

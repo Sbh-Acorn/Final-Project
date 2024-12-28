@@ -12,7 +12,9 @@
                 <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
             </div>
             <div id="header_icon_wrap">
-                <img th:src="@{/img/header_wishlist.svg}" alt="" id="header_wishlist" class="header_icon">
+                <a th:href="@{/wishlist}">
+                    <img th:src="@{/img/header_wishlist.svg}" alt="Wishlist" id="header_wishlist" class="header_icon">
+                </a>
                 <!-- 알림 아이콘 -->
                 <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon"
                      onclick="loadNotification()">
@@ -43,7 +45,9 @@
                 </ul>
 
                 <!-- 장바구니 아이콘 -->
-                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+                <a th:href="@{/cart/view}">
+                    <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+                </a>
             </div>
         </div>
         <div id="wrap2">
@@ -53,6 +57,20 @@
                 <li class="header_list">FTA</li>
                 <li class="header_list">TAX</li>
                 <li class="header_list">COMMUNITY</li>
+<!--                <a th:href="@{/product}">-->
+<!--                    <li class="header_list">ALL</li>-->
+<!--                </a>-->
+<!--                <li class="header_list">BRAND</li>-->
+<!--                <a th:href="@{/fta-product}">-->
+<!--                    <li class="header_list">FTA</li>-->
+<!--                </a>-->
+<!--                <a th:href="@{/not-tax-product}">-->
+<!--                    <li class="header_list">TAX</li>-->
+<!--                </a>-->
+<!--                <a th:href="@{/boardAll}">-->
+<!--                    <li class="header_list">COMMUNITY</li>-->
+<!--                </a>-->
+
             </ul>
         </div>
     </div>

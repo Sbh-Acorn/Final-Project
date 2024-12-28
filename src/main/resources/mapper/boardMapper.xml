@@ -112,7 +112,14 @@
 
 
 
-
+    <!-- 제목 + 내용 검색 -->
+    <select id="searchPosts" parameterType="string" resultType="PostDTO">
+        SELECT *
+        FROM post
+        WHERE (title LIKE CONCAT('%', #{query}, '%') OR content LIKE CONCAT('%', #{query}, '%'))
+        AND is_deleted = FALSE
+        ORDER BY created_at DESC
+    </select>
 
 
 
