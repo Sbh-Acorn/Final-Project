@@ -14,10 +14,18 @@
 <body>
 <th:block th:replace="fragments/header1 :: header"></th:block>
 <main>
-    <div id="wrap_wrap2">
+
+    <div id="wrap_wrap2" >
         <p class="title">장바구니</p>
         <hr>
-        <ul class="list_wrap">
+        
+        <!-- 장바구니에 상품이 없을 때 표시될 메시지 -->
+        <div th:if="${#lists.isEmpty(cartProducts)}">
+            <p>장바구니에 상품이 없습니다.</p>
+        </div>
+
+        <!-- 장바구니에 상품이 있을 경우만 리스트와 결제 정보 표시 -->
+        <ul class="list_wrap" th:unless="${#lists.isEmpty(cartProducts)}">
                 <li class="list" th:each="item : ${cartProducts}">
                     <div class="close_wrap">
                         <a class="close" th:data-product-id="${item.product_id}"><img th:src="@{/img/close.svg}" alt="">
@@ -54,7 +62,7 @@
                     </div>
                 </li>
         </ul>
-        <ul class="final_wrap">
+        <ul class="final_wrap" th:unless="${#lists.isEmpty(cartProducts)}">
             <div class="coupon_wrap">
                 <input type="text" id="coupon_input" placeholder="쿠폰 할인율을 입력하세요" class="coupon_input" maxlength="2">
                 <button type="button" id="apply_coupon_button" class="apply_coupon_button">쿠폰 적용</button>

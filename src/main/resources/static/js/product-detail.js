@@ -51,46 +51,28 @@ function sendData(action) {
         });
 
         $("#bucket_btn").click(function() {
-                    var productId = $(this).data("product-id");
+            var productId = $(this).data("product-id");
 
-                    console.log("상품 ID:", productId);
+            console.log("상품 ID:", productId);
 
-                    $.ajax({
-                        url: '/cart/add',
-                        type: 'POST',
-                        data: {
-                            product_id: productId
-                        },
-                        success: function(response) {
-                            alert(response);
-                        },
-                        error: function(error) {
-                            console.log("AJAX 요청 실패:", error);
-                            alert("장바구니에 상품을 추가하는데 실패했습니다.");
-                        }
-                    });
-                });
+            $.ajax({
+                url: '/cart/add',
+                type: 'POST',
+                data: {
+                    product_id: productId
+                },
+                success: function(response) {
+                    alert(response);
+                    updateCartQuantity(); // 장바구니 수량 업데이트 함수 호출
+                },
+                error: function(error) {
+                    console.log("AJAX 요청 실패:", error);
+                    alert("장바구니에 상품을 추가하는데 실패했습니다.");
+                }
+            });
+        });
 
 
-$bucket.addEventListener('click', () => {
-    if ($count.style.display = 'none') {
-        $count.style.display = 'flex';
-        return;
-    } else if ($count.style.display = 'flex') {
-        // AJAX 코드 넣어주시면 됩니다.
-        // 종료하면서 반드시 $count.style.display = 'none' 처리를 해주셔야 합니다.
-    } else {
-        return;
-    }
-});
 
-$minus.addEventListener("click", () => {
-    if (parseInt($countNum.textContent) === 1) return;
-    else {
-        $countNum.textContent = parseInt($countNum.textContent) - 1;
-    }
-});
 
-$plus.addEventListener("click", () => {
-    $countNum.textContent = parseInt($countNum.textContent) + 1;
-});
+

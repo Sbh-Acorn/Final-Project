@@ -13,9 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -75,18 +73,35 @@ public class CartController {
         for (CartDTO cartItem : cartList) {
             if (cartItem.getProduct_id().equals(product_id)) {
                 cartItem.setQuantity(cartItem.getQuantity() + 1);
-                System.out.println("수량 추가");
-                System.out.println("현재 장바구니 : " + cartList);
+//                System.out.println("수량 추가");
+//                System.out.println("현재 장바구니 : " + cartList);
                 session.setAttribute("cartList", cartList);
                 return "수량을 증가하였습니다."; // 이미 존재하면 수량만 증가하고 메서드 종료
             }
         }
 
         cartList.add(addCartItem);
-        System.out.println("장바구니 추가");
-        System.out.println("현재 장바구니 : " + cartList);
+//        System.out.println("장바구니 추가");
+//        System.out.println("현재 장바구니 : " + cartList);
         session.setAttribute("cartList", cartList);
         return "상품이 정상적으로 추가되었습니다.";
+    }
+
+    @GetMapping("/quantity")
+    @ResponseBody
+    public Map<String, Integer> getCartQuantity(HttpSession session) {
+        List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
+        int quantity = 0;
+
+        if (cartList != null) {
+            for (CartDTO cartItem : cartList) {
+                quantity += cartItem.getQuantity(); // 모든 상품의 수량을 합산
+            }
+        }
+
+        Map<String, Integer> response = new HashMap<>();
+        response.put("quantity", quantity);
+        return response;
     }
 
 
