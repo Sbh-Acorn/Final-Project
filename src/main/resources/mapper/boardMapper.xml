@@ -89,13 +89,6 @@
         select likes from post where post_id = #{post_id}
     </select>
 
-    <select id="allByEmail" resultType="PostDTO">
-        select * from post
-        where user_id = (select user_id from user where email = #{email})
-        and is_deleted = false
-    </select>
-
-
     <!-- 댓글 작성 -->
     <insert id="insert-comment" parameterType="CommentDTO">
         insert into comment (content, post_id, user_id, created_at, updated_at) values (#{content}, #{post_id}, #{user_id}, now(), now() )
@@ -114,6 +107,12 @@
     <!-- 댓글이 작성된 포스트ID 가져오기 -->
     <select id="getPost_id" resultType="Integer">
         select post_id from Comment where comment_id = #{comment_id}
+    </select>
+
+    <select id="allByEmail" resultType="PostDTO">
+        select * from post
+        where user_id = (select user_id from user where email = #{email})
+        and is_deleted = false
     </select>
 
 
