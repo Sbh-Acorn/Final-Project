@@ -37,21 +37,6 @@ public class BrandController {
         return repository.getAllCategoryName();
     }
 
-    @ModelAttribute("maxPrice")
-    public Map<String, Object> getMaxPrice() {
-        Map<String, Object> priceData = repository.getMaxPrice();
-
-        BigDecimal maxPrice = (BigDecimal) priceData.get("max_price");
-
-        Double maxPriceAsDouble = maxPrice.doubleValue();
-
-        Double maxPriceInWon = calculatorService.convertEurToKrw(maxPriceAsDouble);
-
-        priceData.put("max_price_in_won", maxPriceInWon);
-
-        return priceData;
-    }
-
 
     @GetMapping("/brand")
     public String brand(Model model) {
@@ -73,16 +58,24 @@ public class BrandController {
 
         model.addAttribute("BrandNames", orderedBrands);
 
+
         return "product/brand_list";
     }
 
 
     @GetMapping("/brand/{brandName}")
-    public String selectBrand( @PathVariable(name = "brandName") String brandName, Model model) {
+    public String selectBrand(@PathVariable(name = "brandName") String brandName, Model model) {
 
-        Map<String , Object> brandAndProduct = repository.getBrandAndProduct(brandName);
+        Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         BrandDTO brand = (BrandDTO) brandAndProduct.get("brand");
         model.addAttribute("brand", brand);  // 해당 브랜드 상세 정보 추가
+
+        Map<String, Object> priceData = repository.getBrandMaxPrice(brandName);
+        BigDecimal maxPrice = (BigDecimal) priceData.get("max_price");
+        Double maxPriceAsDouble = maxPrice.doubleValue();
+        Double maxPriceInWon = calculatorService.convertEurToKrw(maxPriceAsDouble);
+        priceData.put("max_price_in_won", maxPriceInWon);
+        model.addAttribute("maxPrice", priceData);
         return "product/brand";
     }
 
@@ -92,7 +85,7 @@ public class BrandController {
             @PathVariable(name = "brandName") String brandName,
             @RequestParam(name = "page", defaultValue = "1") int page) {
 
-        Map<String , Object> brandAndProduct = repository.getBrandAndProduct(brandName);
+        Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         List<ProductDTO> products = (List<ProductDTO>) brandAndProduct.get("products");
 
 
@@ -138,7 +131,7 @@ public class BrandController {
             @RequestParam(required = false) String fta
     ) {
         // 전체 상품 가져오기
-        Map<String , Object> brandAndProduct = repository.getBrandAndProduct(brandName);
+        Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         List<ProductDTO> allProducts = (List<ProductDTO>) brandAndProduct.get("products");
 
 

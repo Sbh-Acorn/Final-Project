@@ -273,4 +273,10 @@ public class DataRepository {
         return session.selectOne("product.selectFTAMaxPrice");
     }
 
+    public Map<String, Object> getBrandMaxPrice(String brandName) {
+        return session.selectOne("product.selectBrandMaxPrice", brandName);
+    }
+
+
+
 }

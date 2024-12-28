@@ -251,4 +251,20 @@
         AND is_fta = true;
     </select>
 
+    <select id="selectBrandMaxPrice" resultType="Map" parameterType="String">
+        SELECT
+        MAX(p.current_price) AS max_price
+        FROM
+        Product p
+        JOIN
+        Brand b
+        ON
+        p.brand_id = b.brand_id
+        WHERE
+        p.is_deleted = FALSE
+        AND b.is_deleted = FALSE
+        AND b.name = #{brandName};
+    </select>
+
+
 </mapper>

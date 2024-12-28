@@ -76,7 +76,7 @@
                 if (isLoading) return; // 로딩 중이면 함수 종료
                     isLoading = true; // 로딩 시작
 
-                $.get(`/brand/${brand_name}/?page=${nextPage}`, (response) => {
+                $.get(`/brand/${brand_name}/?page=${currentPage}`, (response) => {
                     const newProducts = response.products;
 
                     newProducts.forEach((product) => {
@@ -408,6 +408,7 @@
         // 값 표시
         $value1.textContent = minValue.toLocaleString();
         $value2.textContent = maxValue.toLocaleString();
+        console.log($value2.textContent);
     }
 
         function updateUI() {
