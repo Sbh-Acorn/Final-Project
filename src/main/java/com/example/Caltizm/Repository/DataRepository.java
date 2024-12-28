@@ -257,7 +257,7 @@ public class DataRepository {
     }
 
     public List<ProductDTO> getFTAProduct() {
-        List<ProductDTO> FTAProducts = session.selectList("selectAllFTA");
+        List<ProductDTO> FTAProducts = session.selectList("product.selectAllFTA");
         return FTAProducts;
     }
 
