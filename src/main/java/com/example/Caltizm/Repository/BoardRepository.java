@@ -42,6 +42,10 @@ public class BoardRepository {
         return session.selectList("board.qna");
     }
 
+    public List<PostDTO> searchPosts(String query) {
+        return session.selectList("board.searchPosts", query);
+    }
+
     // 게시글 작성
     public int insertPost(PostDTO postDTO){
         return session.insert("board.insert-post",postDTO);}
