@@ -3,7 +3,9 @@
 <body>
 <header>
     <div id="logo_wrap">
-        <h1 id="logo">CALTIZM</h1>
+        <a th:href="@{/main}">
+            <h1 id="logo">CALTIZM</h1>
+        </a>
     </div>
     <div id="wrap_wrap">
         <div id="wrap1">
@@ -52,26 +54,17 @@
         </div>
         <div id="wrap2">
             <ul id="header_nav">
-                <li class="header_list">ALL</li>
-                <li class="header_list">BRAND</li>
-                <li class="header_list">FTA</li>
-                <li class="header_list">TAX</li>
-                <li class="header_list">COMMUNITY</li>
-<!--                <a th:href="@{/product}">-->
-<!--                    <li class="header_list">ALL</li>-->
-<!--                </a>-->
-<!--                <li class="header_list">BRAND</li>-->
-<!--                <a th:href="@{/fta-product}">-->
-<!--                    <li class="header_list">FTA</li>-->
-<!--                </a>-->
-<!--                <a th:href="@{/not-tax-product}">-->
-<!--                    <li class="header_list">TAX</li>-->
-<!--                </a>-->
-<!--                <a th:href="@{/boardAll}">-->
-<!--                    <li class="header_list">COMMUNITY</li>-->
-<!--                </a>-->
-
+                <li id="header_all" class="header_list">ALL</li>
+                <li id="header_brand" class="header_list">BRAND</li>
+                <li id="header_fta" class="header_list">FTA</li>
+                <li id="header_tax" class="header_list">TAX</li>
+                <li id="header_community" class="header_list">COMMUNITY</li>
             </ul>
+            <a id="all_anchor" th:href="@{/product}"></a>
+            <a id="brand_anchor" href="board.html"></a>
+            <a id="fta_anchor" th:href="@{/fta-product}"></a>
+            <a id="tax_anchor" th:href="@{/not-tax-product}"></a>
+            <a id="community_anchor" th:href="@{/boardAll}"></a>
         </div>
     </div>
 </header>

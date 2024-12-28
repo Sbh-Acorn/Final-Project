@@ -12,6 +12,7 @@ let $searchResults = document.createElement("ul"); // 검색 결과 목록을 �
 $searchResults.id = "search_results";
 $searchResults.className = "search-dropdown";
 $searchInput.parentNode.appendChild($searchResults);
+let $headerList = document.querySelectorAll(".header_list");
 
 // 알람 드롭다운 이벤트
 $alarm.addEventListener("click", () => {
@@ -144,3 +145,19 @@ function checkNotification(){
             return;
         }
 }
+
+
+$headerList.forEach((list) => {
+    list.addEventListener("click", () => {
+        const listId = list.id;
+
+        const anchorId = listId.replace('header_', '') + '_anchor'; // "header_all" -> "all_anchor"
+        const anchor = document.getElementById(anchorId);
+
+        if (anchor) {
+            anchor.click(); // a 태그 클릭 이벤트 트리거
+        } else {
+            console.error(`Anchor tag with id "${anchorId}" not found.`);
+        }
+    })
+});

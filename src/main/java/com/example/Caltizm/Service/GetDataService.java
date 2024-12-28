@@ -14,7 +14,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -348,7 +354,6 @@ public class GetDataService {
     }
 
 
-    //메인 배너 이미지 추출
     public static List<String> collectBannerImage() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
@@ -362,7 +367,7 @@ public class GetDataService {
 
             for (WebElement img : images) {
                 String srcset = img.getAttribute("srcset");
-                imageUrls.add(extract1920wImage(srcset));
+                imageUrls.add(extract1920Image(srcset)); // 수정된 메서드 호출
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -372,7 +377,8 @@ public class GetDataService {
         return imageUrls;
     }
 
-    private static String extract1920wImage(String srcset) {
+    private static String extract1920Image(String srcset) {
+        // 정규식을 1920x720 이미지에 맞게 변경
         Pattern pattern = Pattern.compile("https?://[\\w./-]+1920x1920[\\w./-]* 1920w");
         Matcher matcher = pattern.matcher(srcset);
 
@@ -383,7 +389,54 @@ public class GetDataService {
         return null;
     }
 
+    public static void saveImage(List<String> imageUrls, String directoryPath) {
+        try {
+            // 디렉토리 존재 여부 확인 및 생성
+            File directory = new File(directoryPath);
+            if (!directory.exists()) {
+                Files.createDirectories(Paths.get(directoryPath));
+            } else {
+                // 기존 파일 삭제
+                File[] files = directory.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.isFile()) {
+                            file.delete();
+                            System.out.println("Deleted old image: " + file.getName());
+                        }
+                    }
+                }
+            }
 
+            // 새로운 이미지 저장
+            int counter = 1; // 순서 번호
+            for (String imageUrl : imageUrls) {
+                String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+                String numberedFileName = counter + "_" + fileName; // 순서 번호 추가
+
+                URL url = new URL(imageUrl);
+                try (InputStream in = url.openStream();
+                     FileOutputStream out = new FileOutputStream(new File(directoryPath, numberedFileName))) {
+
+                    byte[] buffer = new byte[4096];
+                    int bytesRead;
+
+                    while ((bytesRead = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, bytesRead);
+                    }
+
+                    System.out.println("Saved image: " + numberedFileName);
+                } catch (Exception e) {
+                    System.err.println("Failed to save image: " + imageUrl);
+                    e.printStackTrace();
+                }
+                counter++; // 순서 증가
+            }
+        } catch (Exception e) {
+            System.err.println("Error creating directory or processing images:");
+            e.printStackTrace();
+        }
+    }
 
     //에러페이지 재시도 로직
     public static Document fetchWithRetry(String url) throws IOException {
