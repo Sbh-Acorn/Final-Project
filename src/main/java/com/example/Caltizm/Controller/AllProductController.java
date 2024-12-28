@@ -59,6 +59,10 @@ public class AllProductController {
         return priceData;
     }
 
+    @GetMapping("/brandList")
+    public String brandList() {
+        return "product/brand_list";
+    }
 
     @GetMapping("/product")
     public String product() {

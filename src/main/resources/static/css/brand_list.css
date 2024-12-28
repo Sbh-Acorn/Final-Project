@@ -1,0 +1,31 @@
+main {
+    display: flex;
+    padding: 50px 120px;
+    width: 100%;
+}
+
+.brand_wrap {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 650px;
+    margin-top: 60px;
+}
+
+.brand {
+    width: 290px;
+    margin-bottom: 30px;
+}
+
+.brand_first_name {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.brand_list {
+    font-size: 13px;
+    cursor: pointer;
+    line-height: 26px;
+    font-weight: 400;
+}

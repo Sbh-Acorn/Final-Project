@@ -75,6 +75,11 @@
                             <div th:unless="${item.is_fta}" style="color: red;">* FTA 미적용</div>
                         </ul>
                     </div>
+                    <div class="count_wrap">
+                        <div class="count count_minus"><img th:src="@{/img/minus2.svg}" alt=""></div>
+                        <div class="count_num">1</div>
+                        <div class="count count_plus"><img th:src="@{/img/plus2.svg}" alt=""></div>
+                    </div>
                 </li>
             </form>
         </ul>
@@ -82,7 +87,8 @@
             <li class="final"><p>총 상품 금액 </p><span>519,000</span></li>
             <li class="final"><p>총 할인 금액 </p><span>135,000</span></li>
             <li class="final"><p>예상 배송비 </p><span>37,000</span></li>
-            <li class="final"><p>예상 관부가세 </p><span>12,000</span></li>
+            <li class="final"><p>예상 부가세 </p><span>37,000</span></li>
+            <li class="final"><p>예상 관세 </p><span>12,000</span></li>
             <li class="final"><p id="final_p">최종 금액 </p><span id="final_span">222,220</span></li>
         </ul>
     </div>

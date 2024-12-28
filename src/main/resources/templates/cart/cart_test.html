@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/mylist.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
@@ -58,7 +59,7 @@
         </ul>
         <ul class="final_wrap">
             <div class="coupon_wrap">
-                <input type="text" id="coupon_input" placeholder="쿠폰 할인율을 입력하세요" class="coupon_input">
+                <input type="text" id="coupon_input" placeholder="쿠폰 할인율을 입력하세요" class="coupon_input" maxlength="2">
                 <button type="button" id="apply_coupon_button" class="apply_coupon_button">쿠폰 적용</button>
             </div>
             <li class="final"><p>총 상품 금액 </p><span id="total_original_p">519,000</span></li>

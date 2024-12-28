@@ -32,6 +32,7 @@ main hr {
     margin-bottom: 15px;
     border-radius: 5px;
     cursor: pointer;
+    z-index: 300;
 }
 
 .list:hover {
@@ -65,9 +66,9 @@ main hr {
 }
 
 .img_wrap {
-    width: 160px;
-    height: 160px;
-    border: 1px solid rgba(148, 147, 147, 0.4);
+    width: 110px;
+    height: 156px;
+    border: 1px solid rgba(148, 147, 147, 0.2);
 }
 
 .img {
@@ -174,4 +175,86 @@ main hr {
 
 .final:nth-child(5) {
     margin-top: 15px;
+}
+
+
+
+.final:nth-last-child(1) {
+    margin-top: 15px;
+}
+
+.count_wrap {
+    border: 1.5px solid #d6bac3;
+    width: 140px;
+    height: 42px;
+    align-items: center;
+    display: flex;
+    position: absolute;
+    right: 220px;
+    top: 120px;
+    font-weight: bold;
+    z-index: 320;
+}
+
+.count_wrap:hover {
+    background-color: white;
+}
+
+.count_num {
+    width: 60px;
+    height: 42px;
+    padding: 10px;
+    color: #bb899a;
+    text-align: center;
+    border-right: 1.5px solid #d6bac3;
+}
+
+.count {
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.count_minus {
+    border-right: 1.5px solid #d6bac3;
+}
+
+.count:hover {
+    background-color: #e8dee1;
+}
+
+@media (max-width: 1400px) {
+    .count_wrap {
+        display: none;
+    }
+}
+
+.coupon_wrap {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    border: 1px solid #d6bac3;
+    padding: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.coupon_input {
+    text-align: center;
+}
+
+.apply_coupon_button {
+    border: 1px solid #d6bac3;
+    border-radius: 1px;
+    padding: 5px 12px;
+    cursor: pointer;
+    background-color: white;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.apply_coupon_button:hover {
+    background-color: #f1f0f0;
 }
