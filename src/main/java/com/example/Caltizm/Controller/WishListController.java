@@ -151,6 +151,12 @@ public class WishListController {
         }
 
         List<NotificationDTO> notificationList = repository.selectNotification(email);
+
+        for(NotificationDTO n : notificationList){
+            n.setPreviousPrice(calculatorService.convertEurToKrw(n.getPreviousPrice()));
+            n.setCurrentPrice(calculatorService.convertEurToKrw(n.getCurrentPrice()));
+        }
+
         System.out.println(notificationList);
         response.put("status", "fetch_success");
         response.put("message", "알림 목록을 불러왔습니다.");

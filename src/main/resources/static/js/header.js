@@ -96,8 +96,8 @@ function loadNotification(){
                         data-notification-id="${notification.notificationId}"
                         data-product-id="${notification.productId}">
                             [${notification.productName}] 제품의 가격이 하락했습니다.<br>
-                            이전 가격: €${notification.previousPrice}<br>
-                            현재 가격: €${notification.currentPrice}<br>
+                            이전 가격: ￦${notification.previousPrice.toLocaleString('ko-KR')}<br>
+                            현재 가격: ￦${notification.currentPrice.toLocaleString('ko-KR')}<br>
                             ${notification.createdAt}
                         </li>
                     `;

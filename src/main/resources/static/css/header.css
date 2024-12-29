@@ -110,7 +110,7 @@ header {
     z-index: 200;
 }
 
-#header_alarm_dropdown.active, #header_profile_dropdown.active {
+#header_alarm_dropdown.active, #header_profile_dropdown.active, #header_profile_dropdown2.active {
     display: block;
 }
 
@@ -120,7 +120,7 @@ header {
     padding: 5px;
 }
 
-#header_profile_dropdown {
+#header_profile_dropdown, #header_profile_dropdown2 {
     width: 120px;
     text-align: center;
     right: -30px;
