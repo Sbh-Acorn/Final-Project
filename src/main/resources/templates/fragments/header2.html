@@ -14,10 +14,14 @@
                 <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
             </div>
             <div id="header_icon_wrap">
-                <img th:src="@{/img/header_wishlist.svg}" alt="" id="header_wishlist" class="header_icon">
+                <a th:href="@{/wishlist}">
+                    <img th:src="@{/img/header_wishlist.svg}" alt="" id="header_wishlist" class="header_icon">
+                </a>
                 <!-- 알림 아이콘 -->
-                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon"
-                     onclick="loadNotification()">
+                <div id="alarm_small_icon" class="small_icon_wrap">
+                    <img src="/img/dot.svg" alt="" class="small_icon">
+                </div>
+                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
                 <ul id="header_alarm_dropdown">
                 </ul>
 
@@ -45,7 +49,10 @@
                 </ul>
 
                 <!-- 장바구니 아이콘 -->
-                <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+                <a th:href="@{/cart/view}">
+                    <img th:src="@{/img/header_bucket.svg}" alt="" id="header_bucket" class="header_icon">
+                    <span id="cart_quantity" class="cart_quantity" style="display: none;">0</span>
+                </a>
             </div>
         </div>
     </div>

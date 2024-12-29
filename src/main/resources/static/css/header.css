@@ -82,6 +82,14 @@ header {
     z-index: 90;
 }
 
+#alarm_small_icon{
+    display: none;
+}
+
+#alarm_small_icon.active{
+    display: block;
+}
+
 .small_icon {
     position: absolute;
     left: 24px;
