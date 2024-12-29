@@ -74,4 +74,10 @@ public class WishlistRepository {
 
     }
 
+    public int selectWishlistSize(String email){
+
+        return session.selectOne(namespace + "selectWishlistSize", email);
+
+    }
+
 }

@@ -43,6 +43,13 @@ function sendData(action) {
                     if(response.status === "session_invalid"){
                         window.location.href = "/login";
                     }
+                    if(response.status === "add_success"){
+                        let size = Number(response.wishlistSize);
+                        $("#wishlist_size").text(size);
+                        if(size === 1){
+                            $("#wishlist_small_icon").addClass("active");
+                        }
+                    }
                 },
                 error: function(xhr, status, error){
                     console.log("Error:", error);
