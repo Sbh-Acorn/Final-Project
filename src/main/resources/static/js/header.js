@@ -76,6 +76,25 @@ document.addEventListener("click", (e) => {
 });
 
 document.addEventListener("DOMContentLoaded", loadNotification);
+document.addEventListener("DOMContentLoaded", loadWishlistSize);
+
+function loadWishlistSize(){
+    $.ajax({
+        url: "/wishlist/size",
+        type: "GET",
+        success: function(response){
+            if(response.status === "fetch_success"){
+                if(response.wishlistSize > 0){
+                    $("#wishlist_size").text(response.wishlistSize);
+                    $("#wishlist_small_icon").addClass("active");
+                }
+            }
+        },
+        error: function(xhr, status, error){
+            console.log("Error", error);
+        }
+    });
+}
 
 function loadNotification(){
     $.ajax({

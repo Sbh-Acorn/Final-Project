@@ -84,8 +84,10 @@ public class WishListController {
             return response;
         }
 
+        int wishlistSize = repository.selectWishlistSize(email);
         response.put("status", "add_success");
         response.put("message", "제품을 위시리스트에 등록했습니다.");
+        response.put("wishlistSize", Integer.toString(wishlistSize));
         System.out.println(response);
         return response;
 
@@ -130,8 +132,10 @@ public class WishListController {
             return response;
         }
 
+        int wishlistSize = repository.selectWishlistSize(email);
         response.put("status", "delete_success");
         response.put("message", "제품을 위시리스트에서 삭제했습니다.");
+        response.put("wishlistSize", Integer.toString(wishlistSize));
         System.out.println(response);
         return response;
 
@@ -195,6 +199,29 @@ public class WishListController {
         response.put("message", "알림을 수정했습니다.");
         System.out.println(response);
 //        List<NotificationDTO> notificationList = repository.selectNotification(email);
+        return response;
+
+    }
+
+    @ResponseBody
+    @GetMapping("/wishlist/size")
+    public Map<String, Object> getWishlistSize(@SessionAttribute(value="email", required=false) String email){
+
+        Map<String, Object> response = new HashMap<>();
+
+        if(email == null){
+            response.put("status", "session_invalid");
+            response.put("message", "세션이 유효하지 않습니다.");
+            System.out.println(response);
+            return response;
+        }
+
+        int wishlistSize = repository.selectWishlistSize(email);
+
+        response.put("status", "fetch_success");
+        response.put("message", "위시리스트 제품 수를 불러왔습니다.");
+        response.put("wishlistSize", wishlistSize);
+        System.out.println(response);
         return response;
 
     }

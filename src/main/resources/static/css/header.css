@@ -82,6 +82,14 @@ header {
     z-index: 90;
 }
 
+#wishlist_small_icon{
+    display: none;
+}
+
+#wishlist_small_icon.active{
+    display: block;
+}
+
 #alarm_small_icon{
     display: none;
 }
@@ -101,7 +109,14 @@ header {
 .small_txt {
     position: absolute;
     color: white;
-    left: 36px;
+    left: 28px;
+    background-color: red;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    line-height: 20px;
 }
 
 .header_icon:hover {
