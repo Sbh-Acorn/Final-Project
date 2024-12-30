@@ -10,6 +10,7 @@
     <script defer th:src="@{/js/header.js}"></script>
     <script defer th:src="@{/js/cart.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <th:block th:insert="fragments/footerhead :: head"></th:block>
 </head>
 <body>
 <th:block th:replace="fragments/header1 :: header"></th:block>
@@ -83,6 +84,6 @@
 
 
 
-
+<th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
 </html>

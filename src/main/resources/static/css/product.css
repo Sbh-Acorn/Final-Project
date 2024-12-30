@@ -2,11 +2,11 @@ main {
     display: flex;
     padding: 0 0 0 120px;
     width: 100%;
+    margin-bottom: 100px;
 }
 
 #left_box {
     width: 260px;
-    height: 800px;
 }
 
 #selected_wrap {

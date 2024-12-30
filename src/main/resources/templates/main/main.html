@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script defer th:src="@{/js/header.js}"></script>
     <script defer th:src="@{/js/main.js}"></script>
+    <th:block th:insert="fragments/footerhead :: head"></th:block>
 </head>
 <body>
 
@@ -33,7 +34,7 @@
         <p id="random_text"></p>
     </div>
 </main>
-<footer>footer</footer>
+<th:block th:replace="fragments/footer :: footer"></th:block>
 
 </body>
 </html>

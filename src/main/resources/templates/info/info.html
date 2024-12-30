@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/info.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <script defer th:src="@{/js/header.js}"></script>
+    <script defer th:src="@{/js/footer.js}"></script>
+    <th:block th:insert="fragments/footerhead :: head"></th:block>
+</head>
+<body>
+<th:block th:replace="fragments/header1 :: header"></th:block>
+<main>
+    <div class="info_wrap_wrap">
+        <div class="info_img_wrap">
+            <img th:src="@{/img/infoImg.webp}" alt="" class="info_img">
+        </div>
+        <div class="info_box">
+            <h1 class="team_name"><b>the</b> " TEAM 1 "</h1>
+            <ul class="team_info_wrap">
+                <li class="team_info"><img th:src="@{/img/star2.svg}" alt="" class="team_info_img">소병학 (Main, Currency)</li>
+                <li class="team_info"><img th:src="@{/img/medal.svg}" alt="" class="team_info_img">백바울 (Cart, Product)</li>
+                <li class="team_info"><img th:src="@{/img/medal.svg}" alt="" class="team_info_img">송병화 (Authentication, Address)</li>
+                <li class="team_info"><img th:src="@{/img/medal.svg}" alt="" class="team_info_img">송수빈 (Community)</li>
+                <li class="team_info"><img th:src="@{/img/medal.svg}" alt="" class="team_info_img">용지민 (Wishlist, MyPage)</li>
+                <li class="team_info"><img th:src="@{/img/medal.svg}" alt="" class="team_info_img">이상민 (Front)</li>
+            </ul>
+            <h2 class="team_slogan">More easily, more conveniently</h2>
+        </div>
+        <ul class="info_box2">
+            <li class="info_link"><img th:src="@{/img/figma.svg}" alt="" class="info_link_img"><a href="https://www.figma.com/design/oX7nOuiN4E4uPu8dZRhAGk/CALTIZM_FRONT?node-id=0-1&p=f&t=sQq9WBxXrjiSysoy-0">Figma</a></li>
+            <li id="none" class="info_link"><img th:src="@{/img/project.svg}" alt="" class="info_link_img"><a href="@{/}" download="">PPT</a></li>
+        </ul>
+    </div>
+</main>
+<th:block th:replace="fragments/footer :: footer"></th:block>
+</body>
+</html>

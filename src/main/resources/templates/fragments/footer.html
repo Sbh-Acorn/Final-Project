@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<footer>
+    <div class="footer_box">
+        <div class="footer_ul_wrap">
+            <ul class="footer_list_wrap">
+                <li class="footer_list footer_link" id="footer_info">
+                    <img th:src="@{/img/footer_info.svg}" alt="" class="footer_icon">
+                    <p class="footer_paragraph">About Us</p>
+                    <a id="footer_info_anchor" th:href="@{/info}"></a>
+                </li>
+                <li class="footer_list footer_link" id="footer_git">
+                    <img th:src="@{/img/footer_git.svg}" alt="" class="footer_icon">
+                    <p class="footer_paragraph">GitHub</p>
+                    <a id="footer_git_anchor" href="https://github.com/Sbh-Acorn/Final-Project"></a>
+                </li>
+            </ul>
+            <ul class="footer_list_wrap">
+                <li class="footer_list">
+                    <img th:src="@{/img/footer_phone.svg}" alt="" class="footer_icon">
+                    <p class="footer_paragraph">010-3016-7609</p>
+                </li>
+                <li class="footer_list">
+                    <img th:src="@{/img/footer_mail.svg}" alt="" class="footer_icon">
+                    <p class="footer_paragraph">abcde@gmail.com</p>
+                </li>
+                <li class="footer_list">
+                    <img th:src="@{/img/footer_talk.svg}" alt="" class="footer_icon">
+                    <p class="footer_paragraph">TwT</p>
+                </li>
+            </ul>
+        </div>
+        <a th:href="@{https://www.cultizm.com/}">
+            <div class="footer_box2">
+                <h2>Visit the page for more details</h2>
+                <div class="footer_box2_btn">
+                    <p>go cultizm</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</footer>
+</body>
+</html>
