@@ -47,7 +47,7 @@ public class MyPageController {
         System.out.println(email);
         System.out.println(user);
 
-        return "myPage/mypage";
+        return "myPage/myPage";
 
     }
 

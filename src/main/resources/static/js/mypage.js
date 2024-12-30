@@ -115,7 +115,7 @@ function sendRequest(){
     let pcc = document.querySelector("#pcc").value;
 
     if(name.split(" ").length !== 2){
-        alert("이름은 2개의 단어로 이루어져야 합니다.");
+        alert("이름이 유효하지 않습니다.");
         window.location.reload();
         return;
     }
