@@ -126,6 +126,15 @@ function sendRequest(){
         return;
     }
 
+    let minDate = new Date("1925-01-01");
+    let maxDate = new Date("2006-12-31");
+    let userBirth = new Date(birth);
+    if(userBirth < minDate || userBirth > maxDate){
+        alert("생년월일이 유효하지 않습니다.");
+        window.location.reload();
+        return;
+    }
+
     if(!checkValidDate(birth)){
         alert("생년월일이 유효하지 않습니다.");
         window.location.reload();
