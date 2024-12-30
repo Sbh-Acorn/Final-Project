@@ -79,8 +79,10 @@
 </head>
 <body>
 <main>
-    <h1>CALTIZM</h1>
-    <form th:action="@{/signup}" method="post">
+    <a th:href="@{/main}">
+        <h1>CALTIZM</h1>
+    </a>
+    <form th:action="@{/signup}" method="post" onsubmit="return validateForm()">
         <div id="margin_box"></div>
         <span class="title">필수입력</span><br>
         <div id="signUp_box">
@@ -96,17 +98,17 @@
                     <input type="text" name="phone_number" id="phone" class="input" placeholder="- 없이 전화번호를 입력해주세요" required>
                 </div>
                 <div id="birth_box" class="box">
-                    <input type="date" name="birth_date" id="birth" class="input" placeholder="생년월일을 8자로 적어주세요" required>
+                    <input type="date" name="birth_date" id="birth" class="input" min="1925-01-01" max="2006-12-31" placeholder="생년월일을 8자로 적어주세요" required>
                 </div>
             </div>
             <div class="bigbox address_bigbox" id="address_box_box">
                 <div id="address_box" class="box" onclick="execDaumPostcode(event)">
                     <p class="input addressEnglishText">영문주소</p>
-                    <input type="text" name="address" class="addressEnglish" style="display: none;" required>
+                    <input type="text" name="address" class="addressEnglish" style="display: none;">
                 </div>
                 <div id="postcode_box" class="box" onclick="execDaumPostcode(event)">
                     <p class="input postcodeText">우편번호</p>
-                    <input type="text" name="zip_code" class="postcode" style="display: none;" required>
+                    <input type="text" name="zip_code" class="postcode" style="display: none;">
                 </div>
                 <div id="detailed_address_box" class="box">
                     <input type="text" name="detail" class="input detailAddress" placeholder="상세주소를 입력해주세요" required>
