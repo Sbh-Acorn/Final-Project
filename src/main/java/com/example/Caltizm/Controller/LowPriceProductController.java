@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
-public class NotTaxProductController {
+public class LowPriceProductController {
 
     private static final int taxBaseAmount = 150;
     private static final int ITEMS_PER_PAGE = 20; // 페이지당 표시할 상품 수

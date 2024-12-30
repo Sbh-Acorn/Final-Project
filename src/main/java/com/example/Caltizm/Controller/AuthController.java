@@ -86,7 +86,6 @@ public class AuthController {
             System.out.println("로그아웃 : " + userID);
             if (userID != null) {
                 List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
-                System.out.println("세션 장바구니 : " + cartList);
                 if (cartList != null && !cartList.isEmpty()) {
                     Map<String, Object> input = new HashMap<>();
                     input.put("user_id", userID);
