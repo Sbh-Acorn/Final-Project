@@ -19,6 +19,4 @@ public class CartDTO {
         this.productName = productName;
         this.price = price;
     }
-
-
 }

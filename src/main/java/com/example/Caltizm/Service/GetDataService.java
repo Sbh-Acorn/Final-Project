@@ -360,22 +360,45 @@ public class GetDataService {
         WebDriver driver = new ChromeDriver(options);
         List<String> imageUrls = new ArrayList<>();
 
-        try {
-            driver.get(BASE_URL);
-            Thread.sleep(5000);
-            List<WebElement> images = driver.findElements(By.cssSelector("div.emotion--row.row--1 img.banner-slider--image"));
+        int retryCount = 3; // 최대 3번 재시도
+        int attempt = 0;
+        boolean success = false;
 
-            for (WebElement img : images) {
-                String srcset = img.getAttribute("srcset");
-                imageUrls.add(extract1920Image(srcset)); // 수정된 메서드 호출
+        while (attempt < retryCount && !success) {
+            try {
+                driver.get(BASE_URL);
+                Thread.sleep(5000); // 페이지 로딩 대기
+                List<WebElement> images = driver.findElements(By.cssSelector("div.emotion--row.row--1 img.banner-slider--image"));
+
+                if (images.isEmpty()) {
+                    throw new Exception("No banner images found.");
+                }
+
+                for (WebElement img : images) {
+                    String srcset = img.getAttribute("srcset");
+                    imageUrls.add(extract1920Image(srcset)); // 수정된 메서드 호출
+                }
+
+                success = true; // 작업 성공
+            } catch (Exception e) {
+                attempt++;
+                System.out.println("Attempt " + attempt + " failed: " + e.getMessage());
+                if (attempt >= retryCount) {
+                    System.out.println("Max retry attempts reached. Exiting...");
+                } else {
+                    try {
+                        Thread.sleep(2000); // 재시도 전에 잠시 대기
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } finally {
-            driver.quit();
         }
+
+        driver.quit();
         return imageUrls;
     }
+
 
     private static String extract1920Image(String srcset) {
         // 정규식을 1920x720 이미지에 맞게 변경

@@ -21,7 +21,6 @@ public class CartListDTO {
     public boolean is_fta;
     public int quantity;
 
-
     public CartListDTO(CartDTO cartDTO , ProductDTO productDTO){
         this.brand = productDTO.getBrand();
         this.product_id = productDTO.getProduct_id();
