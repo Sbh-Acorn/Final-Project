@@ -95,14 +95,15 @@
         FROM Product p
         LEFT JOIN Brand b ON p.brand_id = b.brand_id
         WHERE p.is_deleted = false
-        AND p.product_id IN
-        <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+        <if test="list != null and list.size() > 0">
+            AND p.product_id IN
+            <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
         ORDER BY b.name;
     </select>
 
-    <!-- 검색된 상품 ID로 카테고리 목록 조회 -->
     <select id="findCategoriesByProductIds" parameterType="list" resultType="string">
         SELECT name
         FROM Category1
@@ -110,10 +111,12 @@
         SELECT 1 FROM Product p
         WHERE p.category1_id = Category1.category1_id
         AND p.is_deleted = false
-        AND p.product_id IN
-        <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+        <if test="list != null and list.size() > 0">
+            AND p.product_id IN
+            <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
         )
         UNION
         SELECT name
@@ -122,10 +125,12 @@
         SELECT 1 FROM Product p
         WHERE p.category2_id = Category2.category2_id
         AND p.is_deleted = false
-        AND p.product_id IN
-        <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+        <if test="list != null and list.size() > 0">
+            AND p.product_id IN
+            <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
         )
         UNION
         SELECT name
@@ -134,22 +139,25 @@
         SELECT 1 FROM Product p
         WHERE p.category3_id = Category3.category3_id
         AND p.is_deleted = false
-        AND p.product_id IN
-        <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
-            #{id}
-        </foreach>
+        <if test="list != null and list.size() > 0">
+            AND p.product_id IN
+            <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
         )
         ORDER BY name;
     </select>
 
-    <!-- 검색된 상품 ID로 최대 가격 조회 -->
     <select id="findMaxPriceByProductIds" parameterType="list" resultType="map">
         SELECT MAX(p.current_price) AS max_price
         FROM Product p
         WHERE p.is_deleted = false
-        AND p.product_id IN
-        <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
-            #{id}
-        </foreach>;
+        <if test="list != null and list.size() > 0">
+            AND p.product_id IN
+            <foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>;
     </select>
 </mapper>

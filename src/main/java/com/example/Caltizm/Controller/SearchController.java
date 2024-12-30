@@ -60,23 +60,26 @@ public class SearchController {
     public List<Map<String, Object>> searchProducts(@RequestParam("query") String query) {
         return searchProductRepository.findProductsByName(query);
     }
-    
+
     @GetMapping("/searchResultProduct")
-    public String searchResultProductPage() {
+    public String searchResultProductPage(@RequestParam("query") String query, Model model) {
+        model.addAttribute("query", query);
+
         return "product/product-searchresult";
     }
+
     @GetMapping("/searchResultProduct/")
     public ResponseEntity<Map<String, Object>> getSearchResults(
             @RequestParam("query") String query,
             @RequestParam(name = "page", defaultValue = "1") int page
     ) {
         System.out.println("Received query: " + query); // 로그 추가
-        // 검색된 상품 ID 리스트 가져오기
         List<String> productIds = searchProductRepository.findAllProductIdsByName(query);
-        System.out.println("Product IDs: " + productIds);
-        // ID 리스트로 상품 세부 데이터 가져오기
         List<ProductDTO> products = searchProductRepository.findProductsByIds(productIds);
+
+        System.out.println("Product IDs: " + productIds);
         System.out.println("Products: " + products);
+
         // 페이징 처리
         int start = (page - 1) * ITEMS_PER_PAGE;
         if (start >= products.size()) {
@@ -86,6 +89,7 @@ public class SearchController {
 
         // 필요한 범위의 상품 리스트 추출
         List<ProductDTO> paginatedProducts = products.subList(start, end);
+        System.out.println("Paginated Products: " + paginatedProducts);
 
         // 가격 변환
         for (ProductDTO product : paginatedProducts) {

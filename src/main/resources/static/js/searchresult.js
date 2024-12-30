@@ -1,8 +1,6 @@
-// query 값을 URL에서 추출
-const params = new URLSearchParams(window.location.search);
-const query = params.get('query'); // URL에서 query 값 추출
+console.log(searchQuery); // 값 확인
 
-let currentPage = 1;
+let currentPage = 0;
 let isFiltered = isFilterApplied();
 let selectedBrands = [];
 let selectedCategories = [];
@@ -18,7 +16,7 @@ if (isFiltered) {
     loadFilteredProducts(currentPage);
 } else {
     // 기본 상태일 경우
-    loadMoreProducts(query);
+    loadMoreProducts(searchQuery);
 }
 
 $('#filter_btn').click(() => {
@@ -76,16 +74,18 @@ $('#filter_btn').click(() => {
 });
 
 
-function loadMoreProducts(query) {
+function loadMoreProducts(searchQuery) {
     const nextPage = currentPage + 1;
     if (isLoading) return; // 로딩 중이면 함수 종료
     isLoading = true; // 로딩 시작
 
     // AJAX 요청으로 데이터 로드
-    $.get(`/searchResultProduct/?query=${encodeURIComponent(query)}&page=${nextPage}`, (response) => {
+    $.get(`/searchResultProduct/?query=${encodeURIComponent(searchQuery)}&page=${nextPage}`, (response) => {
+        console.log(response);
         const newProducts = response.products;
-
+        console.log(newProducts);
         newProducts.forEach((product) => {
+        console.log(product)
             const productHtml = `
                 <li class="item_box">
                     <a href="/product/${product.product_id}">
@@ -175,7 +175,7 @@ $(window).scroll(function() {
             loadFilteredProducts(currentPage + 1);
         } else {
             // 기본 상품 목록 로드
-            loadMoreProducts(query);
+            loadMoreProducts(searchQuery);
         }
     }
 });

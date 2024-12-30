@@ -182,13 +182,15 @@ $(document).ready(function() {
 // Enter 키로 전체 검색 페이지 이동
 $searchInput.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
-        const query = $searchInput.value.trim();
+        const query = $searchInput.value.trim(); // 검색어 가져오기
         if (query.length >= 2) {
-            searchQuery = query; // 검색어 저장
-            // 페이지 이동
-            window.location.href = `/searchResultProduct?query=${encodeURIComponent(query)}`;
+            // 검색어가 유효하면 페이지 이동
+            const encodedQuery = encodeURIComponent(query); // 쿼리 파라미터로 변환
+            console.log(encodedQuery)
+            window.location.href = `/searchResultProduct?query=${encodedQuery}`;
         } else {
-            alert("검색어를 입력해주세요!");
+            // 검색어가 비어있거나 짧으면 알림 표시
+            alert("검색어를 2글자 이상 입력해주세요!");
         }
     }
 });
