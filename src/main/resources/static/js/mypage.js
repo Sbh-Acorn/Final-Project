@@ -128,7 +128,6 @@ function sendRequest(){
 
     if(!checkValidDate(birth)){
         alert("생년월일이 유효하지 않습니다.");
-        console.log("dd");
         window.location.reload();
         return;
     }

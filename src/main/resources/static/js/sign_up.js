@@ -39,3 +39,58 @@ document.getElementById('plus_btn').addEventListener('click', function () {
         newBigBox.remove();
     });
 });
+
+function validateForm(){
+    let lastName = document.querySelector("#last_name").value;
+    let firstName = document.querySelector("#first_name").value;
+    let email = document.querySelector("#email").value;
+    let phoneNumber = document.querySelector("#phone").value;
+    let birthDate = document.querySelector("#birth").value;
+    let pccc = document.querySelector("#pcc").value;
+
+    if(lastName.includes(" ") || lastName.trim() === "" || firstName.includes(" ") || firstName.trim() === ""){
+        alert("이름이 유효하지 않습니다.");
+        return false;
+    }
+
+    if(!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}(\.[A-Za-z]{2,})*$/.test(email)){
+        alert("이메일이 유효하지 않습니다.");
+        return false;
+    }
+
+    if(!/^010\d{8}$/.test(phoneNumber)){
+        alert("전화번호가 유효하지 않습니다.");
+        return false;
+    }
+
+    if(!checkValidDate(birthDate)){
+        alert("생년월일이 유효하지 않습니다.");
+        return false;
+    }
+
+    if(pccc.trim() !== ""){
+        // 개인통관고유부호 검사
+        if(!/^P\d{12}$/.test(pccc)){
+            alert("개인통관고유번호가 유효하지 않습니다.");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function checkValidDate(value) {
+	var result = true;
+	try {
+	    var date = value.split("-");
+	    var y = parseInt(date[0], 10),
+	        m = parseInt(date[1], 10),
+	        d = parseInt(date[2], 10);
+
+	    var dateRegex = /^(?=\d)(?:(?:31(?!.(?:0?[2469]|11))|(?:30|29)(?!.0?2)|29(?=.0?2.(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00)))(?:\x20|$))|(?:2[0-8]|1\d|0?[1-9]))([-.\/])(?:1[012]|0?[1-9])\1(?:1[6-9]|[2-9]\d)?\d\d(?:(?=\x20\d)\x20|$))?(((0?[1-9]|1[012])(:[0-5]\d){0,2}(\x20[AP]M))|([01]\d|2[0-3])(:[0-5]\d){1,2})?$/;
+	    result = dateRegex.test(d+'-'+m+'-'+y);
+	} catch (err) {
+		result = false;
+	}
+    return result;
+}
