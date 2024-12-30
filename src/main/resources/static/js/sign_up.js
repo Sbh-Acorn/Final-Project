@@ -16,11 +16,11 @@ document.getElementById('plus_btn').addEventListener('click', function () {
     newBigBox.innerHTML = `
         <div id="address_box" class="box" onclick="execDaumPostcode(event)">
             <p class="input addressEnglishText">영문주소</p>
-            <input type="text" name="address" class="addressEnglish" style="display: none;" required>
+            <input type="text" name="address" class="addressEnglish" style="display: none;">
         </div>
         <div id="postcode_box" class="box" onclick="execDaumPostcode(event)">
             <p class="input postcodeText">우편번호</p>
-            <input type="text" name="zip_code" class="postcode" style="display: none;" required>
+            <input type="text" name="zip_code" class="postcode" style="display: none;">
         </div>
         <div id="detailed_address_box" class="box">
             <input type="text" name="detail" class="input detailAddress" placeholder="상세주소를 입력해주세요" required>
@@ -48,6 +48,10 @@ function validateForm(){
     let birthDate = document.querySelector("#birth").value;
     let pccc = document.querySelector("#pcc").value;
 
+    let addressEnglishList = document.querySelectorAll(".addressEnglish");
+    let postcodeList = document.querySelectorAll(".postcode");
+    let detailAddressList = document.querySelectorAll(".detailAddress");
+
     if(lastName.includes(" ") || lastName.trim() === "" || firstName.includes(" ") || firstName.trim() === ""){
         alert("이름이 유효하지 않습니다.");
         return false;
@@ -66,6 +70,32 @@ function validateForm(){
     if(!checkValidDate(birthDate)){
         alert("생년월일이 유효하지 않습니다.");
         return false;
+    }
+
+    if(addressEnglishList.length === 0 || postcodeList.length === 0 || detailAddressList.length === 0){
+        alert("주소가 유효하지 않습니다.");
+        return false;
+    }
+
+    for(let i=0; i<addressEnglishList.length; i++){
+        if(addressEnglishList[i].value.trim() === ""){
+            alert("주소가 유효하지 않습니다.");
+            return false;
+        }
+    }
+
+    for(let i=0; i<postcodeList.length; i++){
+        if(postcodeList[i].value.trim() === ""){
+            alert("주소가 유효하지 않습니다.");
+            return false;
+        }
+    }
+
+    for(let i=0; i<detailAddressList.length; i++){
+        if(detailAddressList[i].value.trim() === ""){
+            alert("주소가 유효하지 않습니다.");
+            return false;
+        }
     }
 
     if(pccc.trim() !== ""){
