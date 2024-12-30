@@ -26,20 +26,12 @@ $profile.addEventListener("click", () => {
     $drop.classList.toggle("active");
 });
 
-// 검색창 이벤트: 입력 감지 및 AJAX 요청
 $searchInput.addEventListener("input", () => {
     let query = $searchInput.value.trim();
 
     if (query.length >= 2) {
-        fetch(` /search?query=${encodeURIComponent(query)}`)
-            .then(response => {
-
-               if (!response.ok) {
-                console.error(`HTTP Error: ${response.status} ${response.statusText}`);
-                throw new Error("Network response was not ok");
-               }
-               return response.json();
-            })
+        fetch(`/search?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
             .then(data => {
                 $searchResults.innerHTML = "";
                 if (data.length > 0) {
@@ -66,7 +58,6 @@ $searchInput.addEventListener("input", () => {
         $searchResults.innerHTML = "";
     }
 });
-
 
 // 외부 클릭 시 검색 결과 숨기기
 document.addEventListener("click", (e) => {
@@ -163,27 +154,41 @@ $headerList.forEach((list) => {
 });
 
 // 장바구니 수량 업데이트 함수
-                function updateCartQuantity() {
-                    $.ajax({
-                        url: '/cart/quantity', // 장바구니 수량을 가져오는 API
-                        type: 'GET',
-                        success: function(response) {
-                            var quantity = response.quantity;
+function updateCartQuantity() {
+    $.ajax({
+        url: '/cart/quantity', // 장바구니 수량을 가져오는 API
+        type: 'GET',
+        success: function(response) {
+            var quantity = response.quantity;
 
-                            // 수량에 따라 동그라미 표시 여부 결정
-                            if (quantity > 0) {
-                                $("#cart_quantity").text(quantity).show(); // 수량이 0 이상일 때 표시
-                            } else {
-                                $("#cart_quantity").hide(); // 수량이 0일 때 숨김
-                            }
-                        },
-                        error: function(error) {
-                            console.log("장바구니 수량 요청 실패:", error);
-                        }
-                    });
-                }
+            // 수량에 따라 동그라미 표시 여부 결정
+            if (quantity > 0) {
+                $("#cart_quantity").text(quantity).show(); // 수량이 0 이상일 때 표시
+            } else {
+                $("#cart_quantity").hide(); // 수량이 0일 때 숨김
+            }
+        },
+        error: function(error) {
+            console.log("장바구니 수량 요청 실패:", error);
+        }
+    });
+}
 
-                // 페이지 로드 시 장바구니 수량을 초기화
-                $(document).ready(function() {
-                    updateCartQuantity();
-                });
+// 페이지 로드 시 장바구니 수량을 초기화
+$(document).ready(function() {
+    updateCartQuantity();
+});
+
+// Enter 키로 전체 검색 페이지 이동
+$searchInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        const query = $searchInput.value.trim();
+        if (query.length >= 2) {
+            searchQuery = query; // 검색어 저장
+            // 페이지 이동
+            window.location.href = `/searchResultProduct?query=${encodeURIComponent(query)}`;
+        } else {
+            alert("검색어를 입력해주세요!");
+        }
+    }
+});

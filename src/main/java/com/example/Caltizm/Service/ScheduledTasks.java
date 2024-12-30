@@ -33,9 +33,9 @@ public class ScheduledTasks {
 //            Map<String, Double> exchangeRates = exchangeRateService.getExchangeRates();
 
             // 사진 데이터 초기화
-            List<String> bannerImages = getDataService.collectBannerImage();
-            String bannerDirectory = "src/main/resources/static/bannerImages";
-            getDataService.saveImage(bannerImages, bannerDirectory);
+//            List<String> bannerImages = getDataService.collectBannerImage();
+//            String bannerDirectory = "src/main/resources/static/bannerImages";
+//            getDataService.saveImage(bannerImages, bannerDirectory);
 //            System.out.println("환율 데이터 초기화 완료");
 //            System.out.println("EUR to KRW: " + exchangeRates.get("EUR_TO_KRW"));
 //            System.out.println("USD to EUR: " + exchangeRates.get("USD_TO_EUR"));
