@@ -31,4 +31,4 @@ jobs:
             docker-compose down -v
             docker-compose up -d --build
           EOF
-      #되라
+      #되라제발
