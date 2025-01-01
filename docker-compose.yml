@@ -35,6 +35,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: 1234
     ports:
       - "8080:8080"
+    volumes:
+      - ./upload:/app/upload  # 호스트의 ./upload를 컨테이너의 /app/upload에 연결
     depends_on:
       mysql_container:
         condition: service_healthy

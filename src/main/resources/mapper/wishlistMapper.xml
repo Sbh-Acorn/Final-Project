@@ -83,7 +83,7 @@
 
 
     <select id="selectWishlistSize" resultType="int">
-        select count(*) from wishlist where user_id = (select user_id from user where email = #{email})
+        SELECT count(*) from Wishlist where user_id = (select user_id from User where email = #{email})
     </select>
 
 

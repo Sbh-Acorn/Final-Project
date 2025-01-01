@@ -76,7 +76,7 @@ $('#filter_btn').click(() => {
 function loadMoreProducts() {
     const nextPage = currentPage + 1;
     if (isLoading) return; // 로딩 중이면 함수 종료
-        isLoading = true; // 로딩 시작
+    isLoading = true; // 로딩 시작
 
     $.get(`/product/?page=${currentPage}`, (response) => {
         const newProducts = response.products;
@@ -101,7 +101,7 @@ function loadMoreProducts() {
         });
         formatPrices();
         currentPage = nextPage;
-            isLoading = false; // 로딩 완료
+        isLoading = false; // 로딩 완료
         }).fail(() => {
             console.error("Failed to load products");
             isLoading = false; // 실패 시에도 로딩 플래그 해제

@@ -41,6 +41,17 @@ CREATE TABLE Category3 (
     FOREIGN KEY (category2_id) REFERENCES Category2(category2_id)
 );
 
+-- 주소 테이블
+CREATE TABLE Address (
+    address_id INT AUTO_INCREMENT PRIMARY KEY,  -- 주소ID(PK)
+    user_id INT,              -- 유저아이디 (FK)
+    address VARCHAR(255),                 -- 주소
+    detail VARCHAR(255),       -- 상세주소
+    zip_code VARCHAR(20),           -- 우편번호
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
+);
+
+
 -- 제품 테이블
 CREATE TABLE Product (
     product_id VARCHAR(255) PRIMARY KEY,         -- 제품ID (PK)
@@ -64,21 +75,15 @@ CREATE TABLE Product (
 
 -- 장바구니 테이블
 CREATE TABLE Cart (
-    cart_id INT AUTO_INCREMENT PRIMARY KEY,   -- 장바구니ID (PK)
-    user_id INT,                              -- 유저아이디 (FK)
-    product_id VARCHAR(255),                  -- 제품ID (FK)
+    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    product_id VARCHAR(255),
+    quantity INT NOT NULL DEFAULT 1,
+    price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
 
--- 나머지 테이블 추가 (순서 유지)
-CREATE TABLE Wishlist (
-    wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    product_id VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
-    FOREIGN KEY (product_id) REFERENCES Product(product_id)
-);
 
 CREATE TABLE Post (
     post_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -128,6 +133,15 @@ CREATE TABLE PriceDrop (
     current_price INT NOT NULL,
     created_at DATETIME NOT NULL,
     notification_sent BOOLEAN NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (product_id) REFERENCES Product(product_id)
+);
+
+-- 나머지 테이블 추가 (순서 유지)
+CREATE TABLE Wishlist (
+    wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    product_id VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
     FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
 
