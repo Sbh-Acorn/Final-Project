@@ -16,6 +16,20 @@ $input.addEventListener('keydown', (event) => {
     }
 });
 
+const taxBaseAmount = document.getElementById('wrap_wrap2').dataset.taxbaseamount;
+
+// 모든 .list_wrap 요소를 선택
+const listWraps = document.querySelectorAll('.list_wrap');
+
+// 각 요소에 대해 클릭 이벤트 추가
+listWraps.forEach((listWrap) => {
+    listWrap.addEventListener('click', (event) => {
+        const productId = event.target.closest('.list').querySelector('.close').dataset.productId;
+        window.location.href = `/product/${productId}`;
+    });
+});
+
+
 
 // 페이지 로드 시 함수 호출
 totalItemPrice();
@@ -39,10 +53,14 @@ $('.count_wrap .count').click(function() {
 });
 
 // 장바구니 항목 삭제 버튼 클릭 이벤트
-$('.close').click(function() {
+$('.close').click(function(event) {
+    // 이벤트 버블링 방지
+    event.stopPropagation();
+
     const productId = $(this).data('product-id');
     removeCartItem(productId);
 });
+
 
 // 쿠폰 적용 함수
 function coupon() {
@@ -316,7 +334,17 @@ function removeCartItem(productId) {
         type: 'POST',
         data: { product_id: productId },
         success: function(response) {
+            // 해당 항목 삭제
             $(`.close[data-product-id='${productId}']`).closest('.list').remove();
+
+            // 남아 있는 항목 수 확인
+            if ($('.list').length === 0) {
+                $('.list_wrap').hide(); // 리스트 숨기기
+                $('.final_wrap').hide(); // 결제 정보 숨기기
+                $('.list_wrap').after('<div class="empty_message"><p>장바구니에 상품이 없습니다.</p></div>');
+            }
+
+            // 장바구니 정보 업데이트
             updateCartQuantity();
             totalItemPrice();
             OriginalTotalPrice();
@@ -330,5 +358,8 @@ function removeCartItem(productId) {
         }
     });
 }
+
+
+
 
 

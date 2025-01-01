@@ -60,8 +60,6 @@ function sendData(action) {
         $("#bucket_btn").click(function() {
             var productId = $(this).data("product-id");
 
-            console.log("상품 ID:", productId);
-
             $.ajax({
                 url: '/cart/add',
                 type: 'POST',
