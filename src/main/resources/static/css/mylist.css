@@ -50,7 +50,7 @@ main hr {
     height: 24px;
     right: 16px;
     top: 16px;
-    cursor: auto;
+    cursor: pointer;
 }
 
 .close {
