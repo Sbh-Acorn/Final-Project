@@ -5,42 +5,40 @@
 
 <mapper namespace="address">
 
-
     <select id="selectAddressAll" resultType="AddressResponseDTO">
         select a.address_id as addressId, u.email, a.address, a.detail, a.zip_code as zipCode
-        from address a
-        join user u
+        from Address a
+        join User u
         on a.user_id = u.user_id
-        where email = #{email}
+        where u.email = #{email}
     </select>
 
     <insert id="insertAddress" parameterType="AddressRequestDTO">
-        insert into address(user_id, address, detail, zip_code)
-        values((select user_id from user where email = #{email}), #{address}, #{detail}, #{zipCode})
+        insert into Address(user_id, address, detail, zip_code)
+        values((select user_id from User where email = #{email}), #{address}, #{detail}, #{zipCode})
     </insert>
 
     <delete id="deleteAddress">
-        delete from address
+        delete from Address
         where address_id = #{addressId}
     </delete>
 
     <select id="selectAddress" resultType="AddressResponseDTO">
         select address_id as addressId, user_id as userId, address, detail, zip_code as zipCode
-        from address
+        from Address
         where address_id = #{addressId}
     </select>
 
     <update id="updateAddress">
-        update address
+        update Address
         set address = #{address}, detail = #{detail}, zip_code = #{zipCode}
         where address_id = #{addressId}
     </update>
 
     <select id="checkMaxAddressLimit" resultType="int">
         select count(*)
-        from address
-        where user_id = (select user_id from user where email = #{email})
+        from Address
+        where user_id = (select user_id from User where email = #{email})
     </select>
-
 
 </mapper>

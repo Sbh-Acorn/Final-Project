@@ -356,7 +356,12 @@ public class GetDataService {
 
     public static List<String> collectBannerImage() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+      options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080");
+//        options.addArguments("--headless"); // 브라우저 없는 실행
+//        options.addArguments("--no-sandbox"); // Sandbox 비활성화
+//        options.addArguments("--disable-dev-shm-usage"); // 공유 메모리 사용 비활성화
+//        options.addArguments("--disable-gpu"); // GPU 비활성화
+//        options.addArguments("--window-size=1920,1080"); // 창 크기 설정
         WebDriver driver = new ChromeDriver(options);
         List<String> imageUrls = new ArrayList<>();
 

@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="product">
+
     <update id="setSafeUpdateOff">
         SET SQL_SAFE_UPDATES = 0;
     </update>
@@ -55,10 +56,10 @@
     </select>
 
     <insert id="insert" parameterType="Map">
-        INSERT INTO Product (product_id, brand_id, image_url, name,original_price,current_price,description,
-        category1_id,category2_id,category3_id,is_excludedVoucher)
-        VALUES (#{product_id}, #{brand_id}, #{image_url}, #{name},#{original_price},#{current_price},#{description},
-        #{category1_id},#{category2_id},#{category3_id},#{is_excludedVoucher});
+        INSERT INTO Product (product_id, brand_id, image_url, name, original_price, current_price, description,
+        category1_id, category2_id, category3_id, is_excludedVoucher)
+        VALUES (#{product_id}, #{brand_id}, #{image_url}, #{name}, #{original_price}, #{current_price}, #{description},
+        #{category1_id}, #{category2_id}, #{category3_id}, #{is_excludedVoucher});
     </insert>
 
     <update id="setFTA" parameterType="String">
@@ -74,69 +75,68 @@
     <select id="selectAll" resultType="ProductDTO">
         SELECT
         p.product_id,
-        b.name AS brand, -- 브랜드 이름
+        b.name AS brand,
         p.image_url,
         p.name,
         p.original_price,
         p.current_price,
         p.description,
-        c1.name AS category1, -- 카테고리1 이름
-        c2.name AS category2, -- 카테고리2 이름
-        c3.name AS category3, -- 카테고리3 이름
+        c1.name AS category1,
+        c2.name AS category2,
+        c3.name AS category3,
         p.is_excludedVoucher,
         p.is_fta
         FROM Product p
-        LEFT JOIN Brand b ON p.brand_id = b.brand_id -- 브랜드 테이블과 조인
-        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id -- 카테고리1 테이블과 조인
-        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id -- 카테고리2 테이블과 조인
-        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id -- 카테고리3 테이블과 조인
-        WHERE p.is_deleted = false -- 삭제되지 않은 제품만 조회
-        ORDER BY b.name ASC, p.name ASC; -- 브랜드 이름, 제품 이름 순으로 오름차순 정렬
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id
+        WHERE p.is_deleted = false
+        ORDER BY b.name ASC, p.name ASC;
     </select>
-
 
     <select id="selectOne" resultType="ProductDTO" parameterType="String">
         SELECT
         p.product_id,
-        b.name AS brand, -- 브랜드 이름
+        b.name AS brand,
         p.image_url,
         p.name,
         p.original_price,
         p.current_price,
         p.description,
-        c1.name AS category1, -- 카테고리1 이름
-        c2.name AS category2, -- 카테고리2 이름
-        c3.name AS category3, -- 카테고리3 이름
+        c1.name AS category1,
+        c2.name AS category2,
+        c3.name AS category3,
         p.is_excludedVoucher,
         p.is_fta
         FROM Product p
-        LEFT JOIN Brand b ON p.brand_id = b.brand_id -- 브랜드 테이블과 조인
-        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id -- 카테고리1 테이블과 조인
-        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id -- 카테고리2 테이블과 조인
-        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id -- 카테고리3 테이블과 조인
-        WHERE p.name = #{name} AND p.is_deleted = false; -- 제품 이름으로 검색, 삭제되지 않은 제품만 조회
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id
+        WHERE p.name = #{name} AND p.is_deleted = false;
     </select>
 
     <select id="selectProductInBrand" resultType="ProductDTO" parameterType="String">
         SELECT
         p.product_id,
-        b.name AS brand, -- 브랜드 이름
+        b.name AS brand,
         p.image_url,
         p.name,
         p.original_price,
         p.current_price,
         p.description,
-        c1.name AS category1, -- 카테고리1 이름
-        c2.name AS category2, -- 카테고리2 이름
-        c3.name AS category3, -- 카테고리3 이름
+        c1.name AS category1,
+        c2.name AS category2,
+        c3.name AS category3,
         p.is_excludedVoucher,
         p.is_fta
         FROM Product p
-        LEFT JOIN Brand b ON p.brand_id = b.brand_id -- 브랜드 테이블과 조인
-        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id -- 카테고리1 테이블과 조인
-        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id -- 카테고리2 테이블과 조인
-        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id -- 카테고리3 테이블과 조인
-        WHERE p.is_deleted = false AND b.name = #{name} -- 삭제되지 않은 제품만 조회
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id
+        WHERE p.is_deleted = false AND b.name = #{name}
         ORDER BY p.name;
     </select>
 
@@ -147,124 +147,107 @@
     </select>
 
     <select id="selectPreviousPrice" resultType="double">
-        select current_price from product where product_id = #{product_id}
+        SELECT current_price FROM Product WHERE product_id = #{product_id};
     </select>
 
     <update id="updateCurrentPrice" parameterType="ProductPriceDTO">
-        update product set current_price = #{currentPrice} where product_id = #{productId}
+        UPDATE Product SET current_price = #{currentPrice} WHERE product_id = #{productId};
     </update>
 
     <insert id="insertPriceDrop" parameterType="PriceDropDTO">
-        insert into pricedrop(product_id, previous_price, current_price, created_at)
-        values(#{productId}, #{previousPrice}, #{currentPrice}, now())
+        INSERT INTO PriceDrop (product_id, previous_price, current_price, created_at)
+        VALUES (#{productId}, #{previousPrice}, #{currentPrice}, NOW());
     </insert>
 
     <select id="selectAllBrandName" resultType="String">
         SELECT DISTINCT b.name
         FROM Product p
-        LEFT JOIN brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
         WHERE b.is_deleted = false
         ORDER BY b.name;
     </select>
 
     <select id="selectAllCategoryName" resultType="String">
-        SELECT name FROM category1
+        SELECT name FROM Category1
         UNION
-        SELECT name FROM category2
+        SELECT name FROM Category2
         UNION
-        SELECT name FROM category3
+        SELECT name FROM Category3
         ORDER BY name;
     </select>
 
     <select id="selectMaxPrice" resultType="Map">
-        SELECT
-        MAX(current_price) AS max_price
-        FROM
-        Product
-        WHERE
-        is_deleted = FALSE
+        SELECT MAX(current_price) AS max_price
+        FROM Product
+        WHERE is_deleted = false;
     </select>
 
     <select id="selectAllFTA" resultType="ProductDTO">
         SELECT
         p.product_id,
-        b.name AS brand, -- 브랜드 이름
+        b.name AS brand,
         p.image_url,
         p.name,
         p.original_price,
         p.current_price,
         p.description,
-        c1.name AS category1, -- 카테고리1 이름
-        c2.name AS category2, -- 카테고리2 이름
-        c3.name AS category3, -- 카테고리3 이름
+        c1.name AS category1,
+        c2.name AS category2,
+        c3.name AS category3,
         p.is_excludedVoucher,
         p.is_fta
         FROM Product p
-        LEFT JOIN Brand b ON p.brand_id = b.brand_id -- 브랜드 테이블과 조인
-        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id -- 카테고리1 테이블과 조인
-        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id -- 카테고리2 테이블과 조인
-        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id -- 카테고리3 테이블과 조인
-        WHERE p.is_deleted = false -- 삭제되지 않은 제품만 조회
-        AND p.is_fta = true
-        ORDER BY b.name ASC, p.name ASC; -- 브랜드 이름, 제품 이름 순으로 오름차순 정렬
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Category1 c1 ON p.category1_id = c1.category1_id
+        LEFT JOIN Category2 c2 ON p.category2_id = c2.category2_id
+        LEFT JOIN Category3 c3 ON p.category3_id = c3.category3_id
+        WHERE p.is_deleted = false AND p.is_fta = true
+        ORDER BY b.name ASC, p.name ASC;
     </select>
 
     <select id="selectAllFTABrandName" resultType="String">
         SELECT DISTINCT b.name
         FROM Product p
-        LEFT JOIN brand b ON p.brand_id = b.brand_id
+        LEFT JOIN Brand b ON p.brand_id = b.brand_id
         WHERE p.is_fta = true
         ORDER BY b.name;
     </select>
 
     <select id="selectAllFTACategoryName" resultType="String">
-        SELECT name FROM category1
+        SELECT name FROM Category1
         WHERE EXISTS (
         SELECT 1 FROM Product p
-        WHERE p.category1_id = category1.category1_id
+        WHERE p.category1_id = Category1.category1_id
         AND p.is_fta = true
         )
         UNION
-        SELECT name FROM category2
+        SELECT name FROM Category2
         WHERE EXISTS (
         SELECT 1 FROM Product p
-        WHERE p.category2_id = category2.category2_id
+        WHERE p.category2_id = Category2.category2_id
         AND p.is_fta = true
         )
         UNION
-        SELECT name FROM category3
+        SELECT name FROM Category3
         WHERE EXISTS (
         SELECT 1 FROM Product p
-        WHERE p.category3_id = category3.category3_id
+        WHERE p.category3_id = Category3.category3_id
         AND p.is_fta = true
         )
         ORDER BY name;
     </select>
 
     <select id="selectFTAMaxPrice" resultType="Map">
-        SELECT
-        MAX(current_price) AS max_price
-        FROM
-        Product
-        WHERE
-        is_deleted = FALSE
-        AND is_fta = true;
+        SELECT MAX(current_price) AS max_price
+        FROM Product
+        WHERE is_deleted = false AND is_fta = true;
     </select>
 
     <select id="selectBrandMaxPrice" resultType="Map" parameterType="String">
-        SELECT
-        MAX(p.current_price) AS max_price
-        FROM
-        Product p
-        JOIN
-        Brand b
-        ON
-        p.brand_id = b.brand_id
-        WHERE
-        p.is_deleted = FALSE
-        AND b.is_deleted = FALSE
-        AND b.name = #{brandName};
+        SELECT MAX(p.current_price) AS max_price
+        FROM Product p
+        JOIN Brand b ON p.brand_id = b.brand_id
+        WHERE p.is_deleted = false AND b.is_deleted = false AND b.name = #{brandName};
     </select>
-
 
 </mapper>

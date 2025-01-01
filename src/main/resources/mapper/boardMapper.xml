@@ -7,136 +7,133 @@
 
     <!-- 게시글 조회 -->
     <select id="all" resultType="PostDTO">
-        select * from post
+        select * from Post
         where is_deleted = false
         order by created_at desc
     </select>
 
     <select id="notice" resultType="PostDTO">
-        select * from post
+        select * from Post
         where subject = '공지사항' and is_deleted = false
         order by created_at desc
     </select>
 
     <select id="free" resultType="PostDTO">
-        select * from post
+        select * from Post
         where subject = '자유게시판' and is_deleted = false
         order by created_at desc
     </select>
 
     <select id="review" resultType="PostDTO">
-        select * from post
+        select * from Post
         where subject = '리뷰' and is_deleted = false
         order by created_at desc
     </select>
 
     <select id="qna" resultType="PostDTO">
-        select * from post
+        select * from Post
         where subject = 'Q&amp;A' and is_deleted = false
         order by created_at desc
     </select>
 
-
     <!-- 게시글 하나 조회 -->
     <select id="postOne" parameterType="Integer" resultType="PostDTO">
-        select * from post where post_id = #{post_id}
+        select * from Post where post_id = #{post_id}
     </select>
 
-    <!--게시글 등록-->
+    <!-- 게시글 등록 -->
     <insert id="insert-post" parameterType="PostDTO">
-        insert into Post(subject, title, content, user_id, created_at, updated_at) values (#{subject},#{title},#{content},#{user_id},now(),now())
+        insert into Post(subject, title, content, user_id, created_at, updated_at)
+        values (#{subject}, #{title}, #{content}, #{user_id}, now(), now())
     </insert>
 
     <select id="user_id" parameterType="String" resultType="Integer">
-        select user_id from user where email = #{email}
+        select user_id from User where email = #{email}
     </select>
 
     <!-- 게시글 삭제 -->
     <update id="delete-post" parameterType="Integer">
-        update post set is_deleted = true where post_id = #{post_id};
+        update Post set is_deleted = true where post_id = #{post_id}
     </update>
 
     <!-- 게시글 수정 -->
     <update id="edit-post" parameterType="PostDTO">
-        update post set subject = #{subject}, title = #{title}, content = #{content}, updated_at = NOW() where post_id = #{post_id}
+        update Post
+        set subject = #{subject}, title = #{title}, content = #{content}, updated_at = now()
+        where post_id = #{post_id}
     </update>
 
     <!-- 게시글 조회 시 조회수 증가 -->
     <update id="incViews">
-        update post set views = views + 1 where post_id = #{post_id}
+        update Post set views = views + 1 where post_id = #{post_id}
     </update>
 
     <!-- 좋아요 -->
     <update id="incLikes">
-        update post set likes = likes +1 where post_id = #{post_id}
-    </update>
-    <update id="decLikes">
-        update post set likes = likes -1 where post_id = #{post_id}
+        update Post set likes = likes + 1 where post_id = #{post_id}
     </update>
 
+    <update id="decLikes">
+        update Post set likes = likes - 1 where post_id = #{post_id}
+    </update>
 
     <!-- 좋아요 테이블 추가 -->
     <insert id="insert-likes" parameterType="map">
-        insert into postlike (post_id, user_id) values (#{post_id}, #{user_id})
+        insert into PostLike (post_id, user_id) values (#{post_id}, #{user_id})
     </insert>
 
     <delete id="delete-likes" parameterType="map">
-        delete from postlike where post_id = #{post_id} and user_id = #{user_id}
+        delete from PostLike where post_id = #{post_id} and user_id = #{user_id}
     </delete>
 
     <!-- 좋아요 테이블 검색 -->
     <select id="check-likes" parameterType="map" resultType="int">
-        select count(*) from postlike where post_id = #{post_id} and user_id = #{user_id}
+        select count(*) from PostLike where post_id = #{post_id} and user_id = #{user_id}
     </select>
 
-    <!--좋아요 수-->
+    <!-- 좋아요 수 -->
     <select id="count-likes" resultType="int">
-        select likes from post where post_id = #{post_id}
+        select likes from Post where post_id = #{post_id}
     </select>
 
     <!-- 댓글 작성 -->
     <insert id="insert-comment" parameterType="CommentDTO">
-        insert into comment (content, post_id, user_id, created_at, updated_at) values (#{content}, #{post_id}, #{user_id}, now(), now() )
+        insert into Comment (content, post_id, user_id, created_at, updated_at)
+        values (#{content}, #{post_id}, #{user_id}, now(), now())
     </insert>
 
     <!-- 댓글 목록 -->
     <select id="list-comment" resultType="CommentDTO">
-        select * from comment where post_id = #{post_id} and is_deleted = false  order by created_at
+        select * from Comment where post_id = #{post_id} and is_deleted = false order by created_at
     </select>
 
     <!-- 댓글 삭제 -->
     <update id="delete-comment" parameterType="Integer">
-        update comment set is_deleted = true where comment_id = #{comment_id}
+        update Comment set is_deleted = true where comment_id = #{comment_id}
     </update>
 
-    <!-- 댓글이 작성된 포스트ID 가져오기 -->
+    <!-- 댓글이 작성된 포스트 ID 가져오기 -->
     <select id="getPost_id" resultType="Integer">
         select post_id from Comment where comment_id = #{comment_id}
     </select>
 
     <select id="hotview" resultType="PostDTO">
-        select * from post where is_deleted = false order by views desc limit 4
+        select * from Post where is_deleted = false order by views desc limit 4
     </select>
 
     <select id="allByEmail" resultType="PostDTO">
-        select * from post
-        where user_id = (select user_id from user where email = #{email})
+        select * from Post
+        where user_id = (select user_id from User where email = #{email})
         and is_deleted = false
     </select>
 
-
-
     <!-- 제목 + 내용 검색 -->
     <select id="searchPosts" parameterType="string" resultType="PostDTO">
-        SELECT *
-        FROM post
-        WHERE (title LIKE CONCAT('%', #{query}, '%') OR content LIKE CONCAT('%', #{query}, '%'))
-        AND is_deleted = FALSE
-        ORDER BY created_at DESC
+        select *
+        from Post
+        where (title like concat('%', #{query}, '%') or content like concat('%', #{query}, '%'))
+        and is_deleted = false
+        order by created_at desc
     </select>
-
-
-
-
 
 </mapper>
