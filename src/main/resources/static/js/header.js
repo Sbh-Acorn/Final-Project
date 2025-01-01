@@ -66,19 +66,43 @@ document.addEventListener("click", (e) => {
     }
 });
 
+document.addEventListener("DOMContentLoaded", loadNotification);
+document.addEventListener("DOMContentLoaded", loadWishlistSize);
 
+function loadWishlistSize(){
+    $.ajax({
+        url: "/wishlist/size",
+        type: "GET",
+        success: function(response){
+            if(response.status === "fetch_success"){
+                if(response.wishlistSize > 0){
+                    $("#wishlist_size").text(response.wishlistSize);
+                    $("#wishlist_small_icon").addClass("active");
+                }
+            }
+        },
+        error: function(xhr, status, error){
+            console.log("Error", error);
+        }
+    });
+}
 
 function loadNotification(){
     $.ajax({
         url: "/notification",
         type: "GET",
         success: function(response){
+            if(response.status === "session_invalid"){
+                $("#header_alarm_dropdown").html("<li class='header_alarm_dropdown_list' style='text-decoration: none; cursor: auto'>로그인이 필요합니다.</li>");
+                return;
+            }
             if(response.status === "fetch_success"){
                 console.log(response);
                 if(!response.notificationList || response.notificationList.length === 0){
                     $("#header_alarm_dropdown").html("<li class='header_alarm_dropdown_list' style='text-decoration: none; cursor: auto'>알림이 없습니다.</li>");
                     return;
                 }
+                $("#alarm_small_icon").addClass("active");
                 let notificationHtml = "";
                 response.notificationList.forEach((notification) => {
                     notificationHtml += `
@@ -87,8 +111,8 @@ function loadNotification(){
                         data-notification-id="${notification.notificationId}"
                         data-product-id="${notification.productId}">
                             [${notification.productName}] 제품의 가격이 하락했습니다.<br>
-                            이전 가격: €${notification.previousPrice}<br>
-                            현재 가격: €${notification.currentPrice}<br>
+                            이전 가격: ￦${notification.previousPrice.toLocaleString('ko-KR')}<br>
+                            현재 가격: ￦${notification.currentPrice.toLocaleString('ko-KR')}<br>
                             ${notification.createdAt}
                         </li>
                     `;
@@ -105,9 +129,6 @@ function loadNotification(){
 function readNotification(element){
     let notificationId = element.dataset.notificationId;
     let productId = element.dataset.productId;
-    console.log(element);
-    console.log(notificationId);
-    console.log(productId);
     $.ajax({
         url: "/notification/read",
         type: "POST",
@@ -132,6 +153,7 @@ function readNotification(element){
 function checkNotification(){
     let notifications = document.querySelectorAll(".header_alarm_dropdown_list");
         if(!notifications || notifications.length === 0){
+            $("#alarm_small_icon").removeClass("active");
             $("#header_alarm_dropdown").html("<li class='header_alarm_dropdown_list' style='text-decoration: none; cursor: auto'>알림이 없습니다.</li>");
             return;
         }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -25,6 +24,7 @@ public class ScheduledTasks {
     @PostConstruct
     public void initializeData() {
         try {
+
             //사진 데이터 초기화
             List<String> bannerImages = getDataService.collectBannerImage();
             String bannerDirectory = "src/main/resources/static/bannerImages";
@@ -40,6 +40,7 @@ public class ScheduledTasks {
             System.out.println("환율 데이터 초기화 완료");
             System.out.println("EUR to KRW: " + exchangeRates.get("EUR_TO_KRW"));
             System.out.println("USD to EUR: " + exchangeRates.get("USD_TO_EUR"));
+
         } catch (Exception e) {
             System.err.println("초기 데이터 삽입 중 오류 발생:");
             e.printStackTrace();

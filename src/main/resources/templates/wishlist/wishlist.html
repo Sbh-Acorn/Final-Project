@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Wishlist</title>
     <link rel="stylesheet" th:href="@{/css/mylist.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
@@ -55,6 +55,12 @@
                     if(response.status === "delete_success"){
                         if(item){
                             item.remove();
+                            let size = Number(response.wishlistSize);
+                            if(size === 0){
+                                $("#wishlist_small_icon").removeClass("active");
+                            } else{
+                                $("#wishlist_size").text(size);
+                            }
                         }
                     }
                 },

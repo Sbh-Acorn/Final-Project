@@ -115,7 +115,7 @@ function sendRequest(){
     let pcc = document.querySelector("#pcc").value;
 
     if(name.split(" ").length !== 2){
-        alert("이름은 2개의 단어로 이루어져야 합니다.");
+        alert("이름이 유효하지 않습니다.");
         window.location.reload();
         return;
     }
@@ -126,9 +126,17 @@ function sendRequest(){
         return;
     }
 
+    let minDate = new Date("1925-01-01");
+    let maxDate = new Date("2006-12-31");
+    let userBirth = new Date(birth);
+    if(userBirth < minDate || userBirth > maxDate){
+        alert("생년월일이 유효하지 않습니다.");
+        window.location.reload();
+        return;
+    }
+
     if(!checkValidDate(birth)){
         alert("생년월일이 유효하지 않습니다.");
-        console.log("dd");
         window.location.reload();
         return;
     }

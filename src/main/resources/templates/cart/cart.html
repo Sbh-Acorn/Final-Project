@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cart</title>
     <link rel="stylesheet" th:href="@{/css/mylist.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <script defer th:src="@{/js/header.js}"></script>
-    <script defer th:src="@{/js/mylist.js}"></script>
+    <script defer th:src="@{/js/cart.js}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
     <div id="wrap_wrap2" >
         <p class="title">장바구니</p>
         <hr>
-        
+
         <!-- 장바구니에 상품이 없을 때 표시될 메시지 -->
         <div th:if="${#lists.isEmpty(cartProducts)}">
             <p>장바구니에 상품이 없습니다.</p>
@@ -47,7 +47,7 @@
                             <div th:unless="${item.is_excludedVoucher}" class="coupon" style="color: green;">* 쿠폰 적용 가능</div>
                             <div th:if="${item.is_excludedVoucher}" class="coupon" style="color: red;">* 쿠폰 적용 불가능</div>
                             <div th:if="${item.is_fta}" class="fta" style="color: green;">* FTA 적용</div>
-                            <div th:unless="${item.is_fta}" class="fta" style="color: red;">* FTA 미적용</div>
+                            <div th:unless="${item.is_fta}" class="fta" style="color: red;">* FTA 미적용 (관세 부가 대상)</div>
                         </ul>
                         <div class="count_wrap">
                             <div class="count count_minus" th:data-product-id="${item.product_id}">

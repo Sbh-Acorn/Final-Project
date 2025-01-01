@@ -67,6 +67,7 @@ $('#filter_btn').click(() => {
         params.append('fta', isFta);
     }
 
+
     // 페이지 리다이렉션
     window.location.href = `/product/filter?${params.toString()}`;
 });
@@ -258,6 +259,61 @@ function formatPrices() {
 
 
 
+    $(".original_price").each(function() {
+        const priceText = $(this).text().trim();
+        const priceNumber = parseFloat(priceText.replace(/[^0-9.]/g, ''));
+        if (!isNaN(priceNumber)) {
+            const formattedPrice = Math.round(priceNumber).toLocaleString();
+            $(this).text(" (￦" + formattedPrice + ")");
+        }
+    });
+}
+
+const selectedUl = document.getElementById("selected_ul");
+const filterCheckboxes = document.querySelectorAll(".filter_checkbox input");
+
+filterCheckboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+        const value = checkbox.nextElementSibling.innerText;
+
+        if (![...selectedUl.children].some(li => li.innerText.includes(value))) {
+            const listItem = document.createElement("li");
+            listItem.classList.add("selected_li");
+            listItem.innerHTML = `
+                <p class="selected_li_txt">${value}</p>
+                <img src="/img/close.svg" alt="Close" class="selected_li_close">
+            `;
+            listItem.querySelector(".selected_li_close").addEventListener('click', function () {
+                selectedUl.removeChild(listItem);
+                checkbox.checked = false;
+            });
+            selectedUl.appendChild(listItem);
+        }
+    }
+
+    checkbox.addEventListener('change', function () {
+        const value = this.nextElementSibling.innerText;
+
+        if (this.checked) {
+            const listItem = document.createElement("li");
+            listItem.classList.add("selected_li");
+            listItem.innerHTML = `
+                <p class="selected_li_txt">${value}</p>
+                <img src="/img/close.svg" alt="Close" class="selected_li_close">
+            `;
+            listItem.querySelector(".selected_li_close").addEventListener('click', function () {
+                selectedUl.removeChild(listItem);
+                checkbox.checked = false;
+            });
+            selectedUl.appendChild(listItem);
+        } else {
+            removeLiByValue(value);
+        }
+    });
+});
+
+$("#tax, #not_tax").change(function () {
+    const value = $(this).closest('label').text().trim();
 
 
 
@@ -324,6 +380,7 @@ $('#tax, #not_tax').change(function () {
             // 이미 추가된 li가 있는지 확인
             const exists = [...selectedUl.children].some(li => li.innerText.includes(value));
             if (!exists) {
+
                 const listItem = document.createElement("li");
                 listItem.classList.add("selected_li");
                 listItem.innerHTML = `
@@ -347,10 +404,12 @@ $('#tax, #not_tax').change(function () {
             }
         } else {
             // 체크 해제 시 해당 li 삭제
+
             removeLiByValue(value);
         }
     }
 });
+
 
 $('#fta, #not_fta').change(function () {
     const label = $(this).closest('label').text().trim(); // input의 부모 label을 찾아 텍스트 가져오기
@@ -361,6 +420,7 @@ $('#fta, #not_fta').change(function () {
             // 이미 추가된 li가 있는지 확인
             const exists = [...selectedUl.children].some(li => li.innerText.includes(value));
             if (!exists) {
+
                 const listItem = document.createElement("li");
                 listItem.classList.add("selected_li");
                 listItem.innerHTML = `
@@ -374,6 +434,7 @@ $('#fta, #not_fta').change(function () {
                 selectedUl.appendChild(listItem);
             }
 
+
             // 반대 체크박스 해제 및 해당 li 제거
             if (this.id === 'fta') {
                 $('#not_fta').prop('checked', false);
@@ -384,12 +445,11 @@ $('#fta, #not_fta').change(function () {
             }
         } else {
             // 체크 해제 시 해당 li 삭제
+
             removeLiByValue(value);
         }
     }
 });
-
-
 
 
 let $leftThumb = document.querySelector(".thumb-left");
@@ -398,10 +458,12 @@ let $rangeTrack = document.querySelector(".range-track");
 
 // 조건에 따라 leftValue 설정
 let leftValue =
+
     sortedMinPrice === 0 ? 0: (sortedMinPrice / parseFloat($range.max)) * 100;
 
 let rightValue =
     sortedMaxPrice === parseFloat($range.max) ? 100 :(sortedMaxPrice / parseFloat($range.max)) * 100 ; // 최대값은 기본적으로 100%
+
 
 
 const $value1 = document.getElementById("value1");
@@ -483,3 +545,4 @@ $rightThumb.addEventListener("mousedown", () => {
 // 초기화
 updateUI();
 updateValues();
+

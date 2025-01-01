@@ -81,4 +81,12 @@
         WHERE notification_id = #{notificationId}
     </update>
 
+
+    <select id="selectWishlistSize" resultType="int">
+        select count(*) from wishlist where user_id = (select user_id from user where email = #{email})
+    </select>
+
+
+
 </mapper>
+

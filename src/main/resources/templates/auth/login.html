@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login</title>
     <link rel="stylesheet" th:href="@{/css/login.css}">
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <!-- 메시지를 처리하는 스크립트 -->
@@ -21,7 +21,9 @@
 </head>
 <body>
 <main>
-    <h1>CALTIZM</h1>
+    <a th:href="@{/main}">
+        <h1>CALTIZM</h1>
+    </a>
     <p id="title">로그인</p>
     <form th:action="@{/login}" method="post">
 

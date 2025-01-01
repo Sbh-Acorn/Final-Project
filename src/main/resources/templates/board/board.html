@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Post</title>
     <link rel="stylesheet" th:href="@{/css/font.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/board.css}">
@@ -77,15 +77,15 @@
                 response.forEach((comment) => {
                   let commentHTML = `
                     <li class="comment_box">
+                        <div class="comment_writer_wrap">
                         <p class="comment_writer">익명</p>
-                        <p class="comment">${comment.content}</p>
-                        <small>${comment.created_at}</small>
+                        <p class="comment_record">${comment.created_at}</p>
                   `;
                   let userId = [[${user}]];
                   if(userId === comment.user_id){
-                    commentHTML += `<button class="delete-comment-btn" data-comment-id="${comment.comment_id}">삭제</button>`;
+                    commentHTML += `<p class="comment_rm delete-comment-btn" data-comment-id="${comment.comment_id}">삭제</p>`;
                   }
-                  commentHTML += `</li>`;
+                  commentHTML += `</div><p class="comment">${comment.content}</p></li>`;
                   commentList.append(commentHTML);
                 });
                 $("#comment_title").text(`댓글 [ ${response.length} ]`);
@@ -116,15 +116,15 @@
                 response.forEach((comment) => {
                   let commentHTML = `
                     <li class="comment_box">
+                        <div class="comment_writer_wrap">
                         <p class="comment_writer">익명</p>
-                        <p class="comment">${comment.content}</p>
-                        <small>${comment.created_at}</small>
+                        <p class="comment_record">${comment.created_at}</p>
                   `;
                   let userId = [[${user}]];
                   if(userId === comment.user_id){
-                    commentHTML += `<button class="delete-comment-btn" data-comment-id="${comment.comment_id}">삭제</button>`;
+                    commentHTML += `<p class="comment_rm delete-comment-btn" data-comment-id="${comment.comment_id}">삭제</p>`;
                   }
-                  commentHTML += `</li>`;
+                  commentHTML += `</div><p class="comment">${comment.content}</p></li>`;
                   commentList.append(commentHTML);
                 });
                 $("#comment_title").text(`댓글 [ ${response.length} ]`);
@@ -199,15 +199,17 @@
             <ul class="comment_list_wrap">
                 <!-- 예시입니다 제거하시면됩니다 -->
                 <li class="comment_box" th:each="comment : ${commentList}">
-                    <p class="comment_writer">익명</p>
+                    <div class="comment_writer_wrap">
+                        <p class="comment_writer">익명</p>
+                        <p class="comment_record" th:text="${comment.created_at}"></p>
+                        <p class="comment_rm delete-comment-btn" th:data-comment-id="${comment.comment_id}" th:if="${user == comment.user_id}">삭제</p>
+                    </div>
                     <p class="comment" th:text="${comment.content}"></p>
-                    <small th:text="${comment.created_at}"></small>
-                    <button class="delete-comment-btn" th:data-comment-id="${comment.comment_id}"  th:if="${user == comment.user_id}">삭제</button>
                 </li>
             </ul>
                 <div class="comment_write">
                     <div class="write_title">
-                        <p class="write_title_txt">댓글 작성</p>
+                        <p id="www" class="write_title_txt">댓글 작성</p>
                         <!-- 작성자 이름 -->
                         <p class="write_title_txt">익명</p>
                     </div>

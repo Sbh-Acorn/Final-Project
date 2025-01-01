@@ -14,12 +14,17 @@
                 <img th:src="@{/img/header_search.svg}" alt="" id="header_search">
             </div>
             <div id="header_icon_wrap">
+                <div id="wishlist_small_icon" class="small_icon_wrap">
+                    <span id="wishlist_size" class="small_txt"></span>
+                </div>
                 <a th:href="@{/wishlist}">
                     <img th:src="@{/img/header_wishlist.svg}" alt="Wishlist" id="header_wishlist" class="header_icon">
                 </a>
                 <!-- 알림 아이콘 -->
-                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon"
-                     onclick="loadNotification()">
+                <div id="alarm_small_icon" class="small_icon_wrap">
+                    <img src="/img/dot.svg" alt="" class="small_icon">
+                </div>
+                <img th:src="@{/img/header_alarm.svg}" alt="" id="header_alarm" class="header_icon">
                 <ul id="header_alarm_dropdown">
                 </ul>
 
@@ -60,7 +65,7 @@
                 <li id="header_all" class="header_list">ALL</li>
                 <li id="header_brand" class="header_list">BRAND</li>
                 <li id="header_fta" class="header_list">FTA</li>
-                <li id="header_tax" class="header_list">TAX</li>
+                <li id="header_tax" class="header_list">LOW PRICE</li>
                 <li id="header_community" class="header_list">COMMUNITY</li>
             </ul>
             <a id="all_anchor" th:href="@{/product}"></a>

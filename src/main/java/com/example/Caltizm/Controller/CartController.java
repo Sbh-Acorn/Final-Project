@@ -42,7 +42,7 @@ public class CartController {
         return calculatorService.convertEurToKrwWithTax(25);
     }
 
-//    // 모든 메서드에서 사용할 제품 리스트를 미리 로드
+//   // 모든 메서드에서 사용할 제품 리스트를 미리 로드
     @ModelAttribute("products")
     public List<ProductDTO> getAllProducts() {
         List<ProductDTO> products = repository.getProduct();
@@ -58,8 +58,7 @@ public class CartController {
 
     @PostMapping("/add")
     @ResponseBody
-    public String addCart(@RequestParam(name = "product_id") String product_id, HttpSession session, Model model) {
-
+    public String addCart(@RequestParam(name = "product_id") String product_id, HttpSession session) {
 
         // 상품 정보를 DB에서 가져오기
         CartDTO addCartItem = repository.getCartItemInfo(product_id);
@@ -73,16 +72,12 @@ public class CartController {
         for (CartDTO cartItem : cartList) {
             if (cartItem.getProduct_id().equals(product_id)) {
                 cartItem.setQuantity(cartItem.getQuantity() + 1);
-//                System.out.println("수량 추가");
-//                System.out.println("현재 장바구니 : " + cartList);
                 session.setAttribute("cartList", cartList);
                 return "수량을 증가하였습니다."; // 이미 존재하면 수량만 증가하고 메서드 종료
             }
         }
 
         cartList.add(addCartItem);
-//        System.out.println("장바구니 추가");
-//        System.out.println("현재 장바구니 : " + cartList);
         session.setAttribute("cartList", cartList);
         return "상품이 정상적으로 추가되었습니다.";
     }
@@ -108,9 +103,7 @@ public class CartController {
     @GetMapping("/view")
     public String cartView(Model model, HttpSession session) {
 
-
         List<CartDTO> cartList = (List<CartDTO>) session.getAttribute("cartList");
-        System.out.println(cartList);
         if (cartList == null) {
             cartList = new ArrayList<>();
             session.setAttribute("cartList", cartList);
