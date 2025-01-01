@@ -26,10 +26,10 @@
 
     <select id="selectCartListByUserId" parameterType="Integer" resultType="CartDTO">
         SELECT
-        c.product_id AS product_id,    -- DTO 필드와 매칭
-        p.name AS productName, -- DTO 필드와 매칭
-        p.current_price AS price,              -- 가격 정보
-        c.quantity AS quantity         -- 수량
+        c.product_id AS product_id,         -- DTO 필드와 매칭
+        p.name AS productName,              -- DTO 필드와 매칭
+        p.current_price AS price,           -- 가격 정보
+        c.quantity AS quantity              -- 수량
         FROM Cart c
         JOIN Product p ON c.product_id = p.product_id
         WHERE c.user_id = #{user_id}
@@ -44,7 +44,7 @@
     <insert id="insertCartList" parameterType="Map">
         INSERT INTO Cart (user_id, product_id, quantity, price)
         VALUES
-            (#{user_id}, #{addCartItem.product_id}, #{addCartItem.quantity}, #{addCartItem.price})
+        (#{user_id}, #{addCartItem.product_id}, #{addCartItem.quantity}, #{addCartItem.price})
     </insert>
 
 </mapper>

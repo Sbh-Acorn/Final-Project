@@ -1,27 +1,48 @@
-version: '3'
+version: '3.8'
+
 services:
-  db:
+  mysql_container:
     image: mysql:8.0
     container_name: mysql_container
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: root1234
       MYSQL_DATABASE: caltizm
       MYSQL_USER: caltizm
       MYSQL_PASSWORD: 1234
     ports:
       - "3306:3306"
     volumes:
-      - ./db:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "mysql_container", "-u", "root", "-proot1234" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - caltizm_network
 
-  app:
+  spring_app:
     build:
       context: .
+      dockerfile: Dockerfile
     container_name: spring_app
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_container:3306/caltizm
+      SPRING_DATASOURCE_USERNAME: caltizm
+      SPRING_DATASOURCE_PASSWORD: 1234
     ports:
       - "8080:8080"
     depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/caltizm
-      SPRING_DATASOURCE_USERNAME: caltizm
-      SPRING_DATASOURCE_PASSWORD: 1234
+      mysql_container:
+        condition: service_healthy
+    networks:
+      - caltizm_network
+
+volumes:
+  db_data:
+
+networks:
+  caltizm_network:

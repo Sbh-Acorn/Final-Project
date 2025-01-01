@@ -72,8 +72,9 @@
 
                 $.get(`/fta-product/?page=${nextPage}`, (response) => {
                     const newProducts = response.products;
-
+//                    console.log(newProducts);
                     newProducts.forEach((product) => {
+//                           console.log(product)
                         const productHtml = `
                             <li class="item_box">
                                 <a href="/product/${product.product_id}">
@@ -93,7 +94,7 @@
                     });
                     formatPrices();
                     currentPage = nextPage;
-                        isLoading = false; // 로딩 완료
+                    isLoading = false; // 로딩 완료
                     }).fail(() => {
                         console.error("Failed to load products");
                         isLoading = false; // 실패 시에도 로딩 플래그 해제

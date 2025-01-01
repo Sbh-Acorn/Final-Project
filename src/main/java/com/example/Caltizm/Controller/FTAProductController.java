@@ -63,6 +63,7 @@ public class FTAProductController {
         // 전체 상품 리스트를 가져옴
         List<ProductDTO> products = repository.getFTAProduct();
 
+//        System.out.println("Products: " + products);
 
         // 페이징 처리
         int start = (page - 1) * ITEMS_PER_PAGE;
@@ -74,6 +75,7 @@ public class FTAProductController {
 
         // 필요한 범위의 상품 리스트 추출
         List<ProductDTO> paginatedProducts = products.subList(start, end);
+//        System.out.println("Paginated Products: " + paginatedProducts);
 
         // 가격 변환
         for (ProductDTO product : paginatedProducts) {
@@ -85,6 +87,7 @@ public class FTAProductController {
 
         // JSON 응답 생성
         Map<String, Object> response = Map.of("products", paginatedProducts);
+
         return ResponseEntity.ok(response);
     }
 
