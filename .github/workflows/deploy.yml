@@ -28,7 +28,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@43.201.100.240 << 'EOF'
             cd /home/ec2-user/Final-Project
             git pull origin main
-            docker-compose down -v
+            docker-compose down
             docker-compose up -d --build
           EOF
       #되라제발
