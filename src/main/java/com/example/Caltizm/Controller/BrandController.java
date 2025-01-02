@@ -63,9 +63,9 @@ public class BrandController {
     }
 
 
-    @GetMapping("/brand/{brandName}")
+    @GetMapping("/brand/{brandName:.+}")
     public String selectBrand(@PathVariable(name = "brandName") String brandName, Model model) {
-
+        System.out.println(brandName);
         Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         BrandDTO brand = (BrandDTO) brandAndProduct.get("brand");
         model.addAttribute("brand", brand);  // 해당 브랜드 상세 정보 추가
@@ -80,7 +80,7 @@ public class BrandController {
     }
 
 
-    @GetMapping("/brand/{brandName}/")
+    @GetMapping("/brand/{brandName:.+}/")
     public ResponseEntity<Map<String, Object>> getProductList(
             @PathVariable(name = "brandName") String brandName,
             @RequestParam(name = "page", defaultValue = "1") int page) {

@@ -112,31 +112,36 @@ function loadFilteredProducts(page) {
     const params = new URLSearchParams(window.location.search);
     params.set('page', page);
 
-     if (isLoading) return; // 로딩 중이면 함수 종료
-         isLoading = true; // 로딩 시작
-
+    if (isLoading) return; // 로딩 중이면 함수 종료
+    isLoading = true; // 로딩 시작
 
     $.get(`/product/filter/?${params.toString()}`, (response) => {
         const newProducts = response.products;
 
-        newProducts.forEach((product) => {
-            const productHtml = `
-                <li class="item_box">
-                    <a href="/product/${product.product_id}">
-                        <img src="${product.image_url}" alt="Image" class="item_img">
-                        <p class="item_brand">${product.brand}</p>
-                        <p class="item_name">${product.name}</p>
-                        <p class="item_price">
-                            <span class="current_price">￦${product.current_price}</span>
-                            ${product.original_price > product.current_price
-                                ? `<span class="original_price">(￦${product.original_price})</span>`
-                                : ''}
-                        </p>
-                    </a>
-                </li>
-            `;
-            $('#item_box_wrap').append(productHtml);
-        });
+        // 상품이 없으면 "상품이 없습니다" 메시지를 표시
+        if (newProducts.length === 0) {
+            $('#item_box_wrap').html('<p class="no-products">상품이 없습니다.</p>');
+        } else {
+            newProducts.forEach((product) => {
+                const productHtml = `
+                    <li class="item_box">
+                        <a href="/product/${product.product_id}">
+                            <img src="${product.image_url}" alt="Image" class="item_img">
+                            <p class="item_brand">${product.brand}</p>
+                            <p class="item_name">${product.name}</p>
+                            <p class="item_price">
+                                <span class="current_price">￦${product.current_price}</span>
+                                ${product.original_price > product.current_price
+                                    ? `<span class="original_price">(￦${product.original_price})</span>`
+                                    : ''}
+                            </p>
+                        </a>
+                    </li>
+                `;
+                $('#item_box_wrap').append(productHtml);
+            });
+        }
+
         formatPrices();
         currentPage = page;
         isLoading = false; // 로딩 완료
