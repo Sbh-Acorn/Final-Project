@@ -93,6 +93,7 @@ nav form {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
     border: 1px solid rgba(195, 185, 185, 0.6);
 }
 

@@ -56,6 +56,7 @@ public class BoardController {
     // 공지사항 조회
     @GetMapping("/boardNotice")
     public String boardNotice(Model model){
+        model.addAttribute("isSearch", false); // 기본값 설정
         List<PostDTO> boardList = repository.selectNotice();
         List<PostDTO> boardNotice = repository.selectNotice();
         List<PostDTO> hotview = repository.hotview();
@@ -69,6 +70,7 @@ public class BoardController {
     // 자유게시판 조회
     @GetMapping("/boardFree")
     public String boardFree(Model model){
+        model.addAttribute("isSearch", false); // 기본값 설정
         List<PostDTO> boardList = repository.selectFree();
         List<PostDTO> boardNotice = repository.selectNotice();
         List<PostDTO> hotview = repository.hotview();
@@ -82,6 +84,7 @@ public class BoardController {
     // 리뷰 조회
     @GetMapping("/boardReview")
     public String boardReview(Model model){
+        model.addAttribute("isSearch", false); // 기본값 설정
         List<PostDTO> boardList = repository.selectReview();
         List<PostDTO> boardNotice = repository.selectNotice();
         List<PostDTO> hotview = repository.hotview();
@@ -95,6 +98,7 @@ public class BoardController {
     // Q&A 조회
     @GetMapping("/boardQna")
     public String boardQna(Model model){
+        model.addAttribute("isSearch", false); // 기본값 설정
         List<PostDTO> boardList = repository.selectQna();
         List<PostDTO> boardNotice = repository.selectNotice();
         List<PostDTO> hotview = repository.hotview();
@@ -107,7 +111,11 @@ public class BoardController {
 
     //Test
     @GetMapping("/post")
-    public String postTest(Model model){
+    public String postTest(@SessionAttribute(value = "email", required = false) String email, Model model){
+
+        if(email == null){
+            return "redirect:/login";
+        }
 
         List<PostDTO> hotview = repository.hotview();
         model.addAttribute("hotview", hotview);
