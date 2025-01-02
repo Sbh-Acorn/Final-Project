@@ -95,7 +95,7 @@ public class FTAProductController {
     @GetMapping("/fta-product/filter")
     public String filter() {
         // 필터 페이지로 이동
-        return "product/product-list"; // HTML 뷰 반환
+        return "product/fta-product-list"; // HTML 뷰 반환
     }
 
 
