@@ -24,7 +24,7 @@
                 <!-- 근데 a태그를 이용해서 이동하면 아마 제대로 작동하지 않을것으로 예상됩니다 -->
                 <!-- 그렇게 된다면 타임리프를 통해 if로 처리하면 되실겁니다 -->
                 <li class="nav_list" th:classappend="${boardName == 'all' ? 'active' : ''}"><a th:href="@{/boardAll}"><p>ALL</p></a><hr></li>
-                    <li class="nav_list" th:classappend="${boardName == 'notice' ? 'active' : ''}"><a th:href="@{/boardNotice}"><p>공지사항</p></a><hr></li>
+                <li class="nav_list" th:classappend="${boardName == 'notice' ? 'active' : ''}"><a th:href="@{/boardNotice}"><p>공지사항</p></a><hr></li>
                 <li class="nav_list" th:classappend="${boardName == 'free' ? 'active' : ''}"><a th:href="@{/boardFree}"><p>자유게시판</p></a><hr></li>
                 <li class="nav_list" th:classappend="${boardName == 'review' ? 'active' : ''}"><a th:href="@{/boardReview}"><p>후기</p></a><hr></li>
                 <li class="nav_list" th:classappend="${boardName == 'qna' ? 'active' : ''}"><a th:href="@{/boardQna}"><p>Q&A</p></a><hr></li>
