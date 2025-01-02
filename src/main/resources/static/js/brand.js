@@ -6,8 +6,16 @@ let maxPrice = 0;
 let isTax = null;
 let isFta = null;
 let isLoading = false;
-const brandElement = document.getElementById("brand_name");
-const brand_name = brandElement.getAttribute("data-brand");
+const brandElement = document.querySelector("[data-brand]");
+let brand_name = brandElement.getAttribute("data-brand");
+
+// "/"를 "^"로 변경
+brand_name = brand_name.replace(/\//g, "^");
+
+console.log(brand_name); // 변경된 결과 확인
+
+
+
 
 // 초기 데이터 로드
 if (isFiltered) {
@@ -393,7 +401,6 @@ function updateValues() {
     // 값 표시
     $value1.textContent = minValue.toLocaleString();
     $value2.textContent = maxValue.toLocaleString();
-    console.log($value2.textContent);
 }
 
 function updateUI() {

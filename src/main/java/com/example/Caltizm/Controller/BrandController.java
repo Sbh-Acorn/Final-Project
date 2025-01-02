@@ -58,14 +58,13 @@ public class BrandController {
 
         model.addAttribute("BrandNames", orderedBrands);
 
-
         return "product/brand_list";
     }
 
 
     @GetMapping("/brand/{brandName:.+}")
     public String selectBrand(@PathVariable(name = "brandName") String brandName, Model model) {
-        System.out.println(brandName);
+        brandName = brandName.replaceAll("\\^","/");
         Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         BrandDTO brand = (BrandDTO) brandAndProduct.get("brand");
         model.addAttribute("brand", brand);  // 해당 브랜드 상세 정보 추가
@@ -85,6 +84,9 @@ public class BrandController {
             @PathVariable(name = "brandName") String brandName,
             @RequestParam(name = "page", defaultValue = "1") int page) {
 
+        System.out.println(brandName);
+        brandName = brandName.replaceAll("\\^","/");
+        System.out.println(brandName);
         Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         List<ProductDTO> products = (List<ProductDTO>) brandAndProduct.get("products");
 
@@ -115,6 +117,7 @@ public class BrandController {
 
     @GetMapping("/brand/{brandName}/filter")
     public String filter(@PathVariable(name = "brandName") String brandName, Model model) {
+        brandName = brandName.replaceAll("\\^","/");
         Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         BrandDTO brand = (BrandDTO) brandAndProduct.get("brand");
         model.addAttribute("brand", brand);  // 해당 브랜드 상세 정보 추가
@@ -139,7 +142,7 @@ public class BrandController {
             @RequestParam(required = false) String tax,
             @RequestParam(required = false) String fta
     ) {
-
+        brandName = brandName.replaceAll("\\^","/");
         // 전체 상품 가져오기
         Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         List<ProductDTO> allProducts = (List<ProductDTO>) brandAndProduct.get("products");
@@ -207,6 +210,8 @@ public class BrandController {
         Map<String, Object> response = Map.of("products", paginatedProducts);
         return ResponseEntity.ok(response);
     }
+
+
 
 
 }
