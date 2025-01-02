@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public class SignupRepository {
 
-    String namespace = "singup";
+    String namespace = "signup";
 
     @Autowired
     SqlSession session;

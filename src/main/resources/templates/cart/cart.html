@@ -16,7 +16,7 @@
 <th:block th:replace="fragments/header1 :: header"></th:block>
 <main>
 
-    <div id="wrap_wrap2" >
+    <div id="wrap_wrap2" th:data-taxBaseAmount="${taxBaseAmount}">
         <p class="title">장바구니</p>
         <hr>
 
@@ -78,12 +78,12 @@
     </div>
 </main>
 
+
 <script>
     const taxBaseAmount = [[${taxBaseAmount}]];
 </script>
 
-
-
 <th:block th:replace="fragments/footer :: footer"></th:block>
+
 </body>
 </html>

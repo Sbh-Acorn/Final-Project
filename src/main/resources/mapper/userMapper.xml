@@ -5,43 +5,44 @@
 
 <mapper namespace="user">
 
-
     <select id="selectUserLogin" resultType="LoginRequestDTO">
-        select email, password from user where email = #{email}
+        SELECT email, password
+        FROM User
+        WHERE email = #{email}
     </select>
 
     <select id="selectUserInfo" resultType="MyPageResponseDTO">
-        select first_name as firstName, last_name as lastName, email,
-        phone_number as phoneNumber, birth_date as birthDate, join_date as joinDate, pccc
-        from user
-        where email = #{email}
+        SELECT first_name AS firstName, last_name AS lastName, email,
+        phone_number AS phoneNumber, birth_date AS birthDate, join_date AS joinDate, pccc
+        FROM User
+        WHERE email = #{email}
     </select>
 
     <update id="updateUserInfo" parameterType="UserUpdateDTO">
         <if test="pccc != null">
-            update user
-            set first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
+            UPDATE User
+            SET first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
             birth_date = #{birthDate}, pccc = #{pccc}
-            where email = #{email}
+            WHERE email = #{email}
         </if>
         <if test="pccc == null">
-            update user
-            set first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
-            birth_date = #{birthDate}, pccc = null
-            where email = #{email}
+            UPDATE User
+            SET first_name = #{firstName}, last_name = #{lastName}, phone_number = #{phoneNumber},
+            birth_date = #{birthDate}, pccc = NULL
+            WHERE email = #{email}
         </if>
     </update>
 
     <update id="updatePassword" parameterType="PasswordUpdateDTO">
-        update user
-        set password = #{newPassword}
-        where email = #{email}
+        UPDATE User
+        SET password = #{newPassword}
+        WHERE email = #{email}
     </update>
 
     <select id="selectUserIdByEmail" parameterType="String" resultType="Integer">
         SELECT user_id
-        FROM user
-        WHERE email = #{email};
+        FROM User
+        WHERE email = #{email}
     </select>
 
 </mapper>

@@ -24,13 +24,14 @@
                 <!-- 근데 a태그를 이용해서 이동하면 아마 제대로 작동하지 않을것으로 예상됩니다 -->
                 <!-- 그렇게 된다면 타임리프를 통해 if로 처리하면 되실겁니다 -->
                 <li class="nav_list" th:classappend="${boardName == 'all' ? 'active' : ''}"><a th:href="@{/boardAll}"><p>ALL</p></a><hr></li>
-                <li class="nav_list" th:classappend="${boardName == 'notice' ? 'active' : ''}"><a th:href="@{/boardNotice}"><p>공지사항</p></a><hr></li>
+                    <li class="nav_list" th:classappend="${boardName == 'notice' ? 'active' : ''}"><a th:href="@{/boardNotice}"><p>공지사항</p></a><hr></li>
                 <li class="nav_list" th:classappend="${boardName == 'free' ? 'active' : ''}"><a th:href="@{/boardFree}"><p>자유게시판</p></a><hr></li>
                 <li class="nav_list" th:classappend="${boardName == 'review' ? 'active' : ''}"><a th:href="@{/boardReview}"><p>후기</p></a><hr></li>
                 <li class="nav_list" th:classappend="${boardName == 'qna' ? 'active' : ''}"><a th:href="@{/boardQna}"><p>Q&A</p></a><hr></li>
             </ul>
-            <form th:action="@{/}">
-                <input type="text" id="search">
+            <form th:action="@{/boardAll}" method="get">
+                <input type="text" id="search" name="query" placeholder="검색어를 입력하세요"
+                       th:value="${query != null ? query : ''}">
                 <button type="submit" id="search_btn">검색</button>
             </form>
             <a th:href="@{/post}" class="write_btn">
@@ -48,7 +49,23 @@
             <span class="board_title_span">조회수</span>
             <span class="board_title_span">추천수</span>
         </div>
-        <ul class="board_list_wrap">
+
+        <ul class="board_list_wrap" th:if="${isSearch != null and isSearch}">
+            <li th:if="${#lists.isEmpty(searchResults)}">검색 결과가 없습니다.</li>
+            <li class="board_list" th:each="post : ${searchResults}">
+                <p class="board_list_p" th:text="${post.subject}"></p>
+                <p class="board_list_p" th:text="${post.title}"></p>
+                <p class="board_list_p">익명</p>
+                <p class="board_list_p" th:text="${#temporals.createDate(post.created_at, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                <p class="board_list_p" th:text="${post.views}"></p>
+                <p class="board_list_p" th:text="${post.likes}"></p>
+                <a th:href="@{/postone/{id}(id=${post.post_id})}"></a>
+            </li>
+        </ul>
+
+
+        <ul class="board_list_wrap" th:if="${isSearch != null and !isSearch}">
+<!--        <ul class="board_list_wrap">-->
             <!-- 글자수가 일정 개수를 넘어가면 뒷부분이... 으로 표시되도록 -->
             <!-- 페이징 테스트를 위해 js를 통해 요소를 추가해둔 상태입니다 -->
             <!-- 해당 코드는 board_main.js 에서 27번째줄에 있습니다 -->
@@ -75,7 +92,7 @@
         <div class="page_wrap_wrap">
             <ul class="page_wrap">
                 <li class="page" id="left_wrap"><img th:src="@{/img/left.svg}" alt="" class="left"></li>
-                <li class="page active">1</li>
+                <li c lass="page active">1</li>
                 <!-- 여기에 추가되어야 하는데... -->
                 <li class="page" id="right_wrap"><img th:src="@{/img/right.svg}" alt=""></li>
             </ul>

@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +51,7 @@ public class GetDataService {
         List<String> baseUrls = List.of(BRAND_URL1, BRAND_URL2, BRAND_URL3);
         Set<String> brand = ConcurrentHashMap.newKeySet();
         List<CompletableFuture<Void>> futureList = new ArrayList<>();
-
+        ExecutorService executor = Executors.newFixedThreadPool(5); // 동시에 최대 5개 작업
         for (String url : baseUrls) {
             futureList.add(CompletableFuture.supplyAsync(() -> {
                 Set<String> localBrandSet = new HashSet<>();
@@ -356,7 +358,12 @@ public class GetDataService {
 
     public static List<String> collectBannerImage() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+      options.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080");
+//        options.addArguments("--headless"); // 브라우저 없는 실행
+//        options.addArguments("--no-sandbox"); // Sandbox 비활성화
+//        options.addArguments("--disable-dev-shm-usage"); // 공유 메모리 사용 비활성화
+//        options.addArguments("--disable-gpu"); // GPU 비활성화
+//        options.addArguments("--window-size=1920,1080"); // 창 크기 설정
         WebDriver driver = new ChromeDriver(options);
         List<String> imageUrls = new ArrayList<>();
 
@@ -468,7 +475,7 @@ public class GetDataService {
             try {
                 return Jsoup.connect(url)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-                        .timeout(10000)
+                        .timeout(20000)
                         .get();
             } catch (IOException e) {
                 retries++;
@@ -477,7 +484,7 @@ public class GetDataService {
                     throw new IOException("Failed to fetch page after " + retries + " attempts: " + url, e);
                 }
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException interruptedException) {
                     interruptedException.printStackTrace();
                 }

@@ -31,15 +31,15 @@ public class BoardController {
 
     // 전체 게시판 조회
     @GetMapping("/boardAll")
-    public String boardAll(@RequestParam(value = "query", required = false) String query, Model model){
+    public String boardAll(@RequestParam(value = "query", required = false) String query, Model model) {
+        model.addAttribute("isSearch", false); // 기본값 설정
+
         if (query != null && !query.trim().isEmpty()) {
             // 검색 결과가 있을 경우
             List<PostDTO> searchResults = repository.searchPosts(query);
             model.addAttribute("searchResults", searchResults);
             model.addAttribute("isSearch", true);
-            model.addAttribute("query", query); // 검색어 전달
-        } else {
-            model.addAttribute("isSearch", false);
+            model.addAttribute("query", query);
         }
   
         List<PostDTO> boardList = repository.selectAll();

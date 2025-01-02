@@ -12,7 +12,10 @@ import java.util.List;
 
 @Controller
 public class MainController {
-
+    @GetMapping("/")
+    public String redirectToMain() {
+        return "redirect:/main";
+    }
     private static final String BANNER_IMAGE_PATH = new File("src/main/resources/static/bannerImages").getAbsolutePath();
 
     @GetMapping("/main")

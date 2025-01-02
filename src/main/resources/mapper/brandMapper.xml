@@ -4,7 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="brand">
-<!-- 안전모두 온&오프 -->
+
+    <!-- 안전모드 온/오프 -->
     <update id="setSafeUpdateOff">
         SET SQL_SAFE_UPDATES = 0;
     </update>
@@ -13,37 +14,35 @@
         SET SQL_SAFE_UPDATES = 1;
     </update>
 
-    <!--    1. 모든 브랜드의 삭제 여부를 true로  -->
+    <!-- 모든 브랜드의 삭제 여부를 true로 -->
     <update id="setDeletedTrue">
         UPDATE Brand SET is_deleted = true;
     </update>
 
-<!-- 동일한 이름 존재 여부 -->
-
+    <!-- 동일한 이름 존재 여부 -->
     <select id="checkName" resultType="int" parameterType="string">
         SELECT COUNT(1)
         FROM Brand
         WHERE name = #{name};
     </select>
 
-<!--  동일한 이름이 테이블에 존재하면 삭제여부를 false로  -->
+    <!-- 동일한 이름이 테이블에 존재하면 삭제 여부를 false로 -->
     <update id="setDeletedFalse" parameterType="string">
         UPDATE Brand SET is_deleted = false WHERE name = #{name};
     </update>
 
-
+    <!-- 브랜드 추가 -->
     <insert id="insert" parameterType="com.example.Caltizm.DTO.BrandDTO">
         INSERT INTO Brand (name, logo_url, description, is_deleted)
         VALUES (#{name}, #{logo_url}, #{description}, #{is_deleted});
     </insert>
 
-
-<!--    전체조회-->
+    <!-- 전체 조회 -->
     <select id="selectAll" resultType="BrandDTO">
         SELECT * FROM Brand WHERE is_deleted = false;
     </select>
 
-<!--    개별조회-->
+    <!-- 개별 조회 -->
     <select id="selectOne" resultType="BrandDTO" parameterType="String">
         SELECT * FROM Brand WHERE name = #{name};
     </select>

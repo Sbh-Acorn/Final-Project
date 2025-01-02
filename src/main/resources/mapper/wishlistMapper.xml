@@ -5,49 +5,52 @@
 
 <mapper namespace="wishlist">
 
-
     <insert id="insertWishlist" parameterType="WishlistRequestDTO">
-        insert into wishlist(user_id, product_id)
-        values((select user_id from user where email = #{email}), #{productId})
+        INSERT INTO Wishlist(user_id, product_id)
+        VALUES ((SELECT user_id FROM User WHERE email = #{email}), #{productId})
     </insert>
 
     <select id="selectWishlist" resultType="WishlistDTO">
-        select w.wishlist_id as wishlistId, p.product_id as productId,
-        p.name, b.name as brandName, p.image_url as imageUrl,
-        p.original_price as originalPrice, p.current_price as currentPrice
-        from wishlist w
-        join product p
-        on w.product_id = p.product_id
-        join user u
-        on w.user_id = u.user_id
-        join brand b
-        on b.brand_id = p.brand_id
-        where u.email = #{email} and p.is_deleted = FALSE
-        order by wishlist_id
+        SELECT w.wishlist_id AS wishlistId, p.product_id AS productId,
+        p.name, b.name AS brandName, p.image_url AS imageUrl,
+        p.original_price AS originalPrice, p.current_price AS currentPrice
+        FROM Wishlist w
+        JOIN Product p
+        ON w.product_id = p.product_id
+        JOIN User u
+        ON w.user_id = u.user_id
+        JOIN Brand b
+        ON b.brand_id = p.brand_id
+        WHERE u.email = #{email} AND p.is_deleted = FALSE
+        ORDER BY wishlist_id
     </select>
 
     <delete id="deleteWishlist" parameterType="WishlistRequestDTO">
-        delete from wishlist where user_id = (select user_id from user where email = #{email}) and product_id = #{productId}
+        DELETE FROM Wishlist
+        WHERE user_id = (SELECT user_id FROM User WHERE email = #{email})
+        AND product_id = #{productId}
     </delete>
 
     <select id="isInWishlist" parameterType="WishlistRequestDTO" resultType="int">
-        select count(*) from wishlist
-        where user_id = (select user_id from user where email = #{email}) and product_id = #{productId}
+        SELECT COUNT(*)
+        FROM Wishlist
+        WHERE user_id = (SELECT user_id FROM User WHERE email = #{email})
+        AND product_id = #{productId}
     </select>
 
     <insert id="insertNotification">
-        insert into notification(user_id, product_id, created_at)
-        select w.user_id, w.product_id, now()
-        from wishlist w
-        join pricedrop p
-        on w.product_id = p.product_id
-        where p.notification_sent = FALSE;
+        INSERT INTO Notification(user_id, product_id, created_at)
+        SELECT w.user_id, w.product_id, NOW()
+        FROM Wishlist w
+        JOIN PriceDrop p
+        ON w.product_id = p.product_id
+        WHERE p.notification_sent = FALSE;
     </insert>
 
     <update id="updateNotificationSent">
-        update pricedrop
-        set notification_sent = TRUE
-        where notification_sent = FALSE;
+        UPDATE PriceDrop
+        SET notification_sent = TRUE
+        WHERE notification_sent = FALSE;
     </update>
 
     <update id="setSafeUpdateOff">
@@ -59,27 +62,31 @@
     </update>
 
     <select id="selectNotification" resultType="NotificationDTO">
-        select n.notification_id as notificationId, u.email, p.product_id as productId,
-        p.name as productName, d.previous_price as previousPrice, d.current_price as currentPrice,
-        n.created_at as createdAt, n.is_read as isRead
-        from notification n
-        join pricedrop d
-        on n.product_id = d.product_id
-        join product p
-        on n.product_id = p.product_id
-        join user u
-        on n.user_id = u.user_id
-        where u.email = #{email} and n.is_read = FALSE
+        SELECT n.notification_id AS notificationId, u.email, p.product_id AS productId,
+        p.name AS productName, d.previous_price AS previousPrice, d.current_price AS currentPrice,
+        n.created_at AS createdAt, n.is_read AS isRead
+        FROM Notification n
+        JOIN PriceDrop d
+        ON n.product_id = d.product_id
+        JOIN Product p
+        ON n.product_id = p.product_id
+        JOIN User u
+        ON n.user_id = u.user_id
+        WHERE u.email = #{email} AND n.is_read = FALSE
     </select>
 
     <update id="readNotification">
-        update notification set is_read = TRUE where notification_id = #{notificationId}
+        UPDATE Notification
+        SET is_read = TRUE
+        WHERE notification_id = #{notificationId}
     </update>
 
+
     <select id="selectWishlistSize" resultType="int">
-        select count(*) from wishlist where user_id = (select user_id from user where email = #{email})
+        SELECT count(*) from Wishlist where user_id = (select user_id from User where email = #{email})
     </select>
 
 
 
 </mapper>
+
