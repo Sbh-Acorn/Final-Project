@@ -31,7 +31,7 @@ public class ScheduledTasks {
             String bannerDirectory = "src/main/resources/static/bannerImages";
             getDataService.saveImage(bannerImages, bannerDirectory);
             // 상품 데이터 초기화
-            dataRepository.collectAndInsertData();
+//            dataRepository.collectAndInsertData();
 //            System.out.println("초기 상품 데이터 삽입 완료");
 //
 //            // 환율 데이터 초기화
@@ -86,5 +86,6 @@ public class ScheduledTasks {
             System.err.println("BannerImage 로딩 중 오류 발생:");
             e.printStackTrace();
         }
+
     }
 }
