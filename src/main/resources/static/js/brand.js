@@ -139,8 +139,6 @@ function loadFilteredProducts(page) {
                     `;
                     $('#item_box_wrap').append(productHtml);
                 });
-        }
-
         formatPrices();
         currentPage = page;
         isLoading = false; // 로딩 완료

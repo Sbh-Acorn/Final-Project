@@ -136,7 +136,6 @@ function loadFilteredProducts(page) {
                     `;
                     $('#item_box_wrap').append(productHtml);
                 });
-        }
 
         formatPrices();
         currentPage = page;

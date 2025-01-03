@@ -115,7 +115,7 @@ function loadFilteredProducts(page) {
                                 <li class="item_box">
                                     <a href="/product/${product.product_id}">
                                         <img src="${product.image_url}" alt="Image" class="item_img">
-                                        <p class="item_brand">${brand_name}</p>
+                                        <p class="item_brand">${product.brand}</p>
                                         <p class="item_name">${product.name}</p>
                                         <p class="item_price">
                                             <span class="current_price">￦${product.current_price}</span>
@@ -128,8 +128,6 @@ function loadFilteredProducts(page) {
                             `;
                             $('#item_box_wrap').append(productHtml);
                         });
-        }
-
         formatPrices();
         currentPage = page;
         isLoading = false; // 로딩 완료
