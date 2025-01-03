@@ -58,14 +58,13 @@ public class BrandController {
 
         model.addAttribute("BrandNames", orderedBrands);
 
-
         return "product/brand_list";
     }
 
 
-    @GetMapping("/brand/{brandName}")
+    @GetMapping("/brand/{brandName:.+}")
     public String selectBrand(@PathVariable(name = "brandName") String brandName, Model model) {
-
+        brandName = brandName.replaceAll("\\^","/");
         Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         BrandDTO brand = (BrandDTO) brandAndProduct.get("brand");
         model.addAttribute("brand", brand);  // 해당 브랜드 상세 정보 추가
@@ -80,11 +79,14 @@ public class BrandController {
     }
 
 
-    @GetMapping("/brand/{brandName}/")
+    @GetMapping("/brand/{brandName:.+}/")
     public ResponseEntity<Map<String, Object>> getProductList(
             @PathVariable(name = "brandName") String brandName,
             @RequestParam(name = "page", defaultValue = "1") int page) {
 
+        System.out.println(brandName);
+        brandName = brandName.replaceAll("\\^","/");
+        System.out.println(brandName);
         Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         List<ProductDTO> products = (List<ProductDTO>) brandAndProduct.get("products");
 
@@ -114,8 +116,18 @@ public class BrandController {
     }
 
     @GetMapping("/brand/{brandName}/filter")
-    public String filter() {
-        // 필터 페이지로 이동
+    public String filter(@PathVariable(name = "brandName") String brandName, Model model) {
+        brandName = brandName.replaceAll("\\^","/");
+        Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
+        BrandDTO brand = (BrandDTO) brandAndProduct.get("brand");
+        model.addAttribute("brand", brand);  // 해당 브랜드 상세 정보 추가
+
+        Map<String, Object> priceData = repository.getBrandMaxPrice(brandName);
+        BigDecimal maxPrice = (BigDecimal) priceData.get("max_price");
+        Double maxPriceAsDouble = maxPrice.doubleValue();
+        Double maxPriceInWon = calculatorService.convertEurToKrw(maxPriceAsDouble);
+        priceData.put("max_price_in_won", maxPriceInWon);
+        model.addAttribute("maxPrice", priceData);
         return "product/brand"; // HTML 뷰 반환
     }
 
@@ -130,6 +142,7 @@ public class BrandController {
             @RequestParam(required = false) String tax,
             @RequestParam(required = false) String fta
     ) {
+        brandName = brandName.replaceAll("\\^","/");
         // 전체 상품 가져오기
         Map<String, Object> brandAndProduct = repository.getBrandAndProduct(brandName);
         List<ProductDTO> allProducts = (List<ProductDTO>) brandAndProduct.get("products");
@@ -197,6 +210,8 @@ public class BrandController {
         Map<String, Object> response = Map.of("products", paginatedProducts);
         return ResponseEntity.ok(response);
     }
+
+
 
 
 }

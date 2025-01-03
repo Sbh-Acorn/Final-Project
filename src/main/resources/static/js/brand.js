@@ -6,8 +6,16 @@ let maxPrice = 0;
 let isTax = null;
 let isFta = null;
 let isLoading = false;
-const brandElement = document.getElementById("brand_name");
-const brand_name = brandElement.getAttribute("data-brand");
+const brandElement = document.querySelector("[data-brand]");
+let brand_name = brandElement.getAttribute("data-brand");
+
+// "/"를 "^"로 변경
+brand_name = brand_name.replace(/\//g, "^");
+
+console.log(brand_name); // 변경된 결과 확인
+
+
+
 
 // 초기 데이터 로드
 if (isFiltered) {
@@ -113,24 +121,30 @@ function loadFilteredProducts(page) {
     $.get(`/brand/${brand_name}/filter/?${params.toString()}`, (response) => {
         const newProducts = response.products;
 
-        newProducts.forEach((product) => {
-            const productHtml = `
-                <li class="item_box">
-                    <a href="/product/${product.product_id}">
-                        <img src="${product.image_url}" alt="Image" class="item_img">
-                        <p class="item_brand">${brand_name}</p>
-                        <p class="item_name">${product.name}</p>
-                        <p class="item_price">
-                            <span class="current_price">￦${product.current_price}</span>
-                            ${product.original_price > product.current_price
-                                ? `<span class="original_price">(￦${product.original_price})</span>`
-                                : ''}
-                        </p>
-                    </a>
-                </li>
-            `;
-            $('#item_box_wrap').append(productHtml);
-        });
+        // 상품이 없으면 "상품이 없습니다" 메시지를 표시
+        if (newProducts.length === 0) {
+            $('#item_box_wrap').html('<p class="no-products">상품이 없습니다.</p>');
+        } else {
+            newProducts.forEach((product) => {
+                const productHtml = `
+                    <li class="item_box">
+                        <a href="/product/${product.product_id}">
+                            <img src="${product.image_url}" alt="Image" class="item_img">
+                            <p class="item_brand">${brand_name}</p>
+                            <p class="item_name">${product.name}</p>
+                            <p class="item_price">
+                                <span class="current_price">￦${product.current_price}</span>
+                                ${product.original_price > product.current_price
+                                    ? `<span class="original_price">(￦${product.original_price})</span>`
+                                    : ''}
+                            </p>
+                        </a>
+                    </li>
+                `;
+                $('#item_box_wrap').append(productHtml);
+            });
+        }
+
         formatPrices();
         currentPage = page;
         isLoading = false; // 로딩 완료
@@ -139,6 +153,7 @@ function loadFilteredProducts(page) {
         isLoading = false; // 실패 시에도 로딩 플래그 해제
     });
 }
+
 
 function isFilterApplied() {
     const params = new URLSearchParams(window.location.search);
@@ -372,7 +387,7 @@ let rightValue =
 
 const $value1 = document.getElementById("value1");
 const $value2 = document.getElementById("value2");
-const minDifference = 500000; // 50만원
+const minDifference = 100000; // 50만원
 
 function updateValues() {
     // 최소값 출력: 10,000 단위로 반올림
@@ -386,7 +401,6 @@ function updateValues() {
     // 값 표시
     $value1.textContent = minValue.toLocaleString();
     $value2.textContent = maxValue.toLocaleString();
-    console.log($value2.textContent);
 }
 
 function updateUI() {

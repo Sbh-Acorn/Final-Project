@@ -88,7 +88,10 @@
     <div id="right_box">
         <p id="brand_name" class="brand_name" th:text="${brand.name}" th:data-brand="${brand.name}">Brand Name</p>
         <div class="brand_info_wrap">
-            <img th:src="${brand.logo_url}" alt="Brand Logo" class="brand_img">
+            <th:block th:if="${brand.logo_url != null and !brand.logo_url.isEmpty()}">
+                <img th:src="${brand.logo_url}" alt="Brand Logo" class="brand_img">
+            </th:block>
+
             <div class="brand_info">
                 <p class="brand_info_txt" th:text="${brand.description}">Brand Description</p>
             </div>

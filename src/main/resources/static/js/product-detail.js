@@ -29,53 +29,54 @@ function sendData(action) {
     });
 }
 
-        $("#wishlist_btn").click(function(){
-            let productId = $(this).data("product-id");
+$("#wishlist_btn").click(function() {
+    let productId = $(this).data("product-id");
 
-            $.ajax({
-                url: "/wishlist/add",
-                type: "POST",
-                data: {
-                    productId: productId
-                },
-                success: function(response){
-                    alert(response.message);
-                    if(response.status === "session_invalid"){
-                        window.location.href = "/login";
-                    }
-                    if(response.status === "add_success"){
-                        let size = Number(response.wishlistSize);
-                        $("#wishlist_size").text(size);
-                        if(size === 1){
-                            $("#wishlist_small_icon").addClass("active");
-                        }
-                    }
-                },
-                error: function(xhr, status, error){
-                    console.log("Error:", error);
+    $.ajax({
+        url: "/wishlist/add",
+        type: "POST",
+        data: {
+            productId: productId
+        },
+        success: function(response) {
+            alert(response.message);
+            if (response.status === "session_invalid") {
+                window.location.href = "/login";
+            }
+            if (response.status === "add_success") {
+                let size = Number(response.wishlistSize);
+                $("#wishlist_size").text(size);
+                if (size === 1) {
+                    $("#wishlist_small_icon").addClass("active");
                 }
-            });
-        });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Error:", error);
+        }
+    });
+});
 
-        $("#bucket_btn").click(function() {
-            var productId = $(this).data("product-id");
+$("#bucket_btn").click(function() {
+    var productId = $(this).data("product-id");
 
-            $.ajax({
-                url: '/cart/add',
-                type: 'POST',
-                data: {
-                    product_id: productId
-                },
-                success: function(response) {
-                    alert(response);
-                    updateCartQuantity(); // 장바구니 수량 업데이트 함수 호출
-                },
-                error: function(error) {
-                    console.log("AJAX 요청 실패:", error);
-                    alert("장바구니에 상품을 추가하는데 실패했습니다.");
-                }
-            });
-        });
+    $.ajax({
+        url: '/cart/add',
+        type: 'POST',
+        data: {
+            product_id: productId
+        },
+        success: function(response) {
+            alert(response);
+            updateCartQuantity(); // 장바구니 수량 업데이트 함수 호출
+        },
+        error: function(error) {
+            console.log("AJAX 요청 실패:", error);
+            alert("장바구니에 상품을 추가하는데 실패했습니다.");
+        }
+    });
+});
+
 
 
 

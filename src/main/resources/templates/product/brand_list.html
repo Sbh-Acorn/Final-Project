@@ -20,7 +20,7 @@
                 <p class="brand_first_name" th:text="${group.key == '0' ? '0-9' : group.key}"></p>
                 <th:block th:each="brand : ${group.value}">
                     <li class="brand_list">
-                        <a th:href="@{'/brand/' + ${brand}}" th:text="${brand}"></a>
+                        <a th:href="@{'/brand/' + ${brand.replace('/', '^')}}" th:text="${brand}"></a>
                     </li>
                 </th:block>
             </ul>
