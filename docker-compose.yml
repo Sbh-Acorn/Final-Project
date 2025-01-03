@@ -10,6 +10,8 @@ services:
       MYSQL_DATABASE: caltizm
       MYSQL_USER: caltizm
       MYSQL_PASSWORD: 1234
+      CHARACTER_SET_SERVER: utf8mb4
+      COLLATION_SERVER: utf8mb4_general_ci
     ports:
       - "3306:3306"
     volumes:
