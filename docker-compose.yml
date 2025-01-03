@@ -12,6 +12,7 @@ services:
       MYSQL_PASSWORD: 1234
       CHARACTER_SET_SERVER: utf8mb4
       COLLATION_SERVER: utf8mb4_general_ci
+      LANG: C.UTF-8
     ports:
       - "3306:3306"
     volumes:
