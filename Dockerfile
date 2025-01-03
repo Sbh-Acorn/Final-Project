@@ -1,17 +1,3 @@
-## Gradle 빌드 이미지
-#FROM gradle:8.4.0-jdk17 AS build
-#WORKDIR /app
-#COPY . .
-#RUN gradle clean build -x test --no-daemon
-#
-## 애플리케이션 실행 이미지
-#FROM openjdk:17-jdk-slim
-#WORKDIR /app
-#COPY --from=build /app/build/libs/Caltizm-0.0.1-SNAPSHOT.jar app.jar
-#EXPOSE 8080
-#ENTRYPOINT ["java", "-jar", "app.jar"]
-
-# Gradle 빌드 이미지
 FROM gradle:8.4.0-jdk17 AS build
 WORKDIR /app
 COPY . .

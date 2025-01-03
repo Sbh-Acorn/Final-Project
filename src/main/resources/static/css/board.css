@@ -35,6 +35,7 @@
 .text_area {
     padding: 5px;
     width: 1080px;
+    white-space:wrap;
 }
 
 .daebyeonghak {

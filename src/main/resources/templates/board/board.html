@@ -176,7 +176,7 @@
                     <p class="info date">작성일 [[${#temporals.createDate(postOne.created_at, 'yyyy-MM-dd HH:mm:ss')}]]</p>
                 </div>
             </div>
-            <div class="text_area" th:utext="${postOne.content}">
+            <div class="text_area" th:utext="${postOne.content.replace('\n', '<br>')}"></div>
             </div>
             <!-- ajax를 사용해서 페이지 리로딩 없이 추천, 비추천을 적용해야하는 부분입니다 -->
             <!-- 추천 클릭시 이미지는 /img/star.svg, /img/star_fill.svg 를 이용해주시면 됩니다 -->

@@ -195,7 +195,7 @@ public class BoardController {
 
         List<CommentDTO> comments = repository.commentList(post_id);
 
-        model.addAttribute("postOne",post);
+        model.addAttribute("postOne", post);
         model.addAttribute("commentList", comments);
 
         List<PostDTO> hotview = repository.hotview();
