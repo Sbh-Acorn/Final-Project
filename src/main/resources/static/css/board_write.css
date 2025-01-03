@@ -72,3 +72,8 @@
 .submit:hover {
     background-color: rgba(172, 170, 170, 0.1);
 }
+
+.note-editable {
+    width: 800px;
+    white-space: wrap;
+}
