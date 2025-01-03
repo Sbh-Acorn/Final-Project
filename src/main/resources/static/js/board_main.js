@@ -23,18 +23,3 @@ $listWrap.addEventListener('click', (event) => {
     }
 });
 
-// 테스트용 함수. 편하게 지워주세요.
-//for (let i = 0; i < 84; i++) {
-//    let list = document.createElement('li');
-//    list.className = 'board_list';
-//    list.innerHTML = `
-//        <p class="board_list_p">자유</p>
-//        <p class="board_list_p">자유로운123</p>
-//        <p class="board_list_p">울라숑</p>
-//        <p class="board_list_p">12.03</p>
-//        <p class="board_list_p">177</p>
-//        <p class="board_list_p">0</p>
-//        <a href='#'></a>
-//    `;
-//    $listWrap.appendChild(list);
-//}

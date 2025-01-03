@@ -30,8 +30,9 @@
                 <li class="nav_list"><a th:href="@{/boardReview}"><p>후기</p></a><hr></li>
                 <li class="nav_list"><a th:href="@{/boardQna}"><p>Q&A</p></a><hr></li>
             </ul>
-            <form th:action="@{/}">
-                <input type="text" id="search">
+            <form th:action="@{/boardAll}" method="get">
+                <input type="text" id="search" name="query" placeholder="검색어를 입력하세요"
+                       th:value="${query != null ? query : ''}">
                 <button type="submit" id="search_btn">검색</button>
             </form>
             <a th:href="@{/post}" class="write_btn">
