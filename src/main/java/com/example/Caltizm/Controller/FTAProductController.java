@@ -102,11 +102,11 @@ public class FTAProductController {
     @GetMapping("/fta-product/filter/")
     public ResponseEntity<Map<String, Object>> getFilterList(
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(required = false) List<String> brands,
-            @RequestParam(required = false) List<String> categories,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) String tax
+            @RequestParam(name = "brands",required = false) List<String> brands,
+            @RequestParam(name = "categories",required = false) List<String> categories,
+            @RequestParam(name = "minPrice",required = false) Double minPrice,
+            @RequestParam(name = "maxPrice",required = false) Double maxPrice,
+            @RequestParam(name = "tax",required = false) String tax
     ) {
         // 전체 상품 가져오기
         List<ProductDTO> allProducts = repository.getFTAProduct();

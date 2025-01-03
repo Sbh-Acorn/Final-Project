@@ -136,11 +136,11 @@ public class BrandController {
     public ResponseEntity<Map<String, Object>> getFilterList(
             @PathVariable(name = "brandName") String brandName,
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(required = false) List<String> categories,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) String tax,
-            @RequestParam(required = false) String fta
+            @RequestParam(name = "categories",required = false) List<String> categories,
+            @RequestParam(name = "minPrice",required = false) Double minPrice,
+            @RequestParam(name = "maxPrice",required = false) Double maxPrice,
+            @RequestParam(name = "tax",required = false) String tax,
+            @RequestParam(name = "fta",required = false) String fta
     ) {
         brandName = brandName.replaceAll("\\^","/");
         // 전체 상품 가져오기
