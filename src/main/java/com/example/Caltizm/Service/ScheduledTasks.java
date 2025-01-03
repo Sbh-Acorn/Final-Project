@@ -26,12 +26,12 @@ public class ScheduledTasks {
     public void initializeData() {
         try {
 
-            //사진 데이터 초기화
-//            List<String> bannerImages = getDataService.collectBannerImage();
-//            String bannerDirectory = "src/main/resources/static/bannerImages";
-//            getDataService.saveImage(bannerImages, bannerDirectory);
-//            // 상품 데이터 초기화
-//            dataRepository.collectAndInsertData();
+//            사진 데이터 초기화
+            List<String> bannerImages = getDataService.collectBannerImage();
+            String bannerDirectory = "src/main/resources/static/bannerImages";
+            getDataService.saveImage(bannerImages, bannerDirectory);
+            // 상품 데이터 초기화
+            dataRepository.collectAndInsertData();
 //            System.out.println("초기 상품 데이터 삽입 완료");
 //
 //            // 환율 데이터 초기화
