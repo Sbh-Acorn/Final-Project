@@ -21,7 +21,7 @@ public class ScheduledTasks {
     @Autowired
     private GetDataService getDataService;
 
-    // 앱 시작 시 초기 데이터 수집 및 삽입
+//    // 앱 시작 시 초기 데이터 수집 및 삽입
     @PostConstruct
     public void initializeData() {
         try {
